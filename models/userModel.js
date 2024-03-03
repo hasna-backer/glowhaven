@@ -1,0 +1,62 @@
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.ObjectId;
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    phone: {
+        type: Number,
+        required: true
+    },
+    isBanned:{
+        type:Boolean,
+        default: false
+    },
+    cart: [{
+        product_id: {
+            type: ObjectId,
+            required: true
+        },
+        quantity: {
+            type: Number,
+            required: true
+        }
+    }],
+    wish_list: [{
+        product_id: {
+            type: ObjectId,
+            required: true
+        }
+    }],
+    wallet_history: [
+        {
+            amount: {
+                type: Number
+            },
+            status: {
+                type: String,
+                enum: ["Debit", "Credit"]
+            },
+            time: {
+                type:Date
+            }
+        }
+    ],
+    user_status: {
+        type: Boolean,
+        required: true,
+        default: true
+    }
+  
+}, { timestamps: true });
+
+module.exports = mongoose.model('User', userSchema);
