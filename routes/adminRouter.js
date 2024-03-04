@@ -1,11 +1,13 @@
 const express=require('express');
 const router=express.Router();
+const {authAdmin}=require('../middlewares/authMiddleware')
+
 const adminController=require('../controllers/adminController')
 const customerController=require('../controllers/customerController');
 
 
 //Admin Actions
-router.get('/',adminController.dashboard)
+router.get('/',authAdmin,adminController.dashboard)
 router.get('/login',adminController.renderLogin)
 router.post('/login',adminController.doLogin)
 router.get('/logout',adminController.logout)

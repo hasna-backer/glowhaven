@@ -12,11 +12,11 @@ var flash = require('connect-flash');
 
 
 const app = express();
-const port = 4003 || process.env.PORT;
+const port = 4010 || process.env.PORT;
 
 // db connection
 const connetDB = require('./config/db')
-connetDB(); 
+connetDB();
 
 
 
@@ -26,7 +26,7 @@ app.use(logger('dev'));
 
 
 app.use(session({
-    secret: process.env.SESSION_SECRET_KEY, 
+    secret: process.env.SESSION_SECRET_KEY,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -42,25 +42,25 @@ app.use(flash());
 app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store')
     next()
-  })
+})
 //static files
 app.use(express.static('public'));
- 
+
 //template engine 
 app.use(expressLayout);
 app.set('layout', './layouts/main');
 app.set('view engine', 'ejs');
-  
-//requiring routes
-const userRoutes=require('./routes/userRouter');
-const adminRoutes=require('./routes/adminRouter');
 
-app.use("/",userRoutes)
-app.use("/admin",adminRoutes)
+//requiring routes
+const userRoutes = require('./routes/userRouter');
+const adminRoutes = require('./routes/adminRouter');
+
+app.use("/", userRoutes)
+app.use("/admin", adminRoutes)
 
 
 
 
 app.listen(port, () => {
-    console.log(`server is running on http://localhost:${4003}`)
+    console.log(`server is running on http://localhost:${4010}`)
 }); 

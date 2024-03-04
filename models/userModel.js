@@ -17,8 +17,8 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    isBanned:{
-        type:Boolean,
+    isBanned: {
+        type: Boolean,
         default: false
     },
     cart: [{
@@ -47,16 +47,16 @@ const userSchema = new mongoose.Schema({
                 enum: ["Debit", "Credit"]
             },
             time: {
-                type:Date
+                type: Date
             }
         }
     ],
-    user_status: {
+    is_verified: {
         type: Boolean,
         required: true,
-        default: true
+        default: false
     }
-  
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
