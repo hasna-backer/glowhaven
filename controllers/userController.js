@@ -1,8 +1,10 @@
-const User = require('../models/userModel');
+const { render } = require('ejs');
 const bcrypt = require('bcrypt');
+const Joi = require('joi');
 const sendmail = require('../utils/mailer');
 const generateOtp = require('../utils/generateOtp');
-const { render } = require('ejs');
+const User = require('../models/userModel');
+const validate = require('../validations/signupValidation');
 
 let homepage = async function (req, res, next) {
     const userId = req.session.user.user._id;
@@ -31,6 +33,7 @@ let renderSignup = async (req, res) => {
 
 let doSignup = async (req, res) => {
     const { name, email, pass, phone } = req.body
+    console.log(req.body);
     const isExist = await User.findOne({ email: email })
     // console.log('is exist : ', isExist)
     if (isExist == null) {

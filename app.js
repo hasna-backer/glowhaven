@@ -7,6 +7,7 @@ const nocache = require('nocache');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var flash = require('connect-flash');
+const bodyParser = require('body-parser');
 
 // var flash = require('connect-flash');
 
@@ -21,8 +22,12 @@ connetDB();
 
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.json({ extended: true }));
 app.use(logger('dev'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+// cookie parser
+app.use(cookieParser());
 
 
 app.use(session({
@@ -63,4 +68,4 @@ app.use("/admin", adminRoutes)
 
 app.listen(port, () => {
     console.log(`server is running on http://localhost:${4010}`)
-}); 
+});  

@@ -85,14 +85,12 @@
 
 
 <script>
-
+    //added
     const sendOtp = async () => {
         try {
             const form = document.getElementById('otp-form')
             const inputs = [...form.querySelectorAll('input[type=text]')]
-            const outputs = inputs.map(el => {
-                return el.value
-            }).join('')
+            const outputs = inputs.map(el => el.value).join('')
             const res = await axios.post('/verify-user', {
                 otp: outputs
             })
@@ -105,6 +103,8 @@
             message.textContent = "Enter a valid OTP"
         }
     }
+
+
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('otp-form')
         const inputs = [...form.querySelectorAll('input[type=text]')]

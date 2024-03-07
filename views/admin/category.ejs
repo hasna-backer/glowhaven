@@ -1,0 +1,56 @@
+<%- include('../partials/adminHeader.ejs') %>
+    <%- include('../partials/adminSidebar.ejs') %>
+
+        <main id="main" class="main">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Categories</h5>
+
+                        <!-- Table with hoverable rows -->
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Category Name</th>
+                                    <th scope="col">Discription</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Created on</th>
+                                    <th scope="col">Delete/Edit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% category.forEach(element=> { %>
+                                    <tr>
+                                        <th scope="row">
+                                            <%= element.cat_name %>
+                                        </th>
+                                        <td>
+                                            <%= element.description %>
+                                        </td>
+                                        <td>
+                                            <%= element.cat_status ? "Active" :"Inactive" %>
+                                        </td>
+                                        <td>
+                                            <%= new Date(element.createdAt).toLocaleDateString() %>
+                                        </td>
+                                        <td>
+                                            <a href="/admin/delete-category/<%= element._id %>" class="ms-3"
+                                                onclick="return confirm('Are you sure,You want to delete <%= element.cat_name %>')"><i
+                                                    class="ri-delete-bin-6-line"></i></a>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <a href="/admin/edit-category/<%= element._id %>"><i
+                                                    class="ri-edit-2-line"></i></a>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                        <!-- End Table with hoverable rows -->
+
+                    </div>
+                </div>
+            </div>
+            </div>
+            </section>
+
+        </main><!-- End #main -

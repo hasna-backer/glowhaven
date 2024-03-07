@@ -15,7 +15,7 @@
 
                 <div class="signin-form">
                     <h2 class="form-title">Login</h2>
-                    <form method="POST" class="register-form" id="login-form" action="/admin/login">
+                    <form method="POST" class="register-form" id="myform" action="/admin/login">
                         <!-- Display flash messages -->
                         <% if (error && error.length> 0) { %>
                             <div id="alertMessage" class="alert alert-danger">
@@ -37,7 +37,8 @@
                                         me</label>
                                 </div>
                                 <div class="form-group form-button">
-                                    <input type="submit" name="signin" id="signin" class="form-submit" value="Log in" />
+                                    <input type="submit" name="signin" id="signin" class="form-submit" value="Log in"
+                                        onsubmit="return validateLogin()" />
                                 </div>
                     </form>
                     <div class="social-login">
@@ -53,3 +54,18 @@
         </div>
     </section>
 </div>
+
+<script>
+    function validateform() {
+        var email = document.myform.email.value;
+        var password = document.myform.pass.value;
+
+        if (email == null || email == "") {
+            alert("Name can't be blank");
+            return false;
+        } else if (password.length < 6) {
+            alert("Password must be at least 6 characters long.");
+            return false;
+        }
+    }  
+</script>
