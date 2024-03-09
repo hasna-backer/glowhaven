@@ -1,3 +1,4 @@
+console.log("validation.jsssss")
 const form = document.getElementById('register-form');
 const username = document.getElementById('name');
 const password = document.getElementById('pass');
@@ -10,7 +11,7 @@ form.addEventListener('submit', (e) => {
     const result = validateInputs();
     console.log("resultr", result);
     if (result) console.log("validation done3");
-    validationPassed();
+    validatioCompleted();
 })
 
 const setError = (element, message) => {
@@ -97,25 +98,81 @@ const validateInputs = () => {
 
 // Perform client-side validation
 const validationPassed = validateInputs();
+const validatioCompleted = async () => {
 
-if (validationPassed) {
     // If validation passed, send an AJAX request to the server
     const formData = new FormData(form);
     try {
-        const response = await fetch('/submit', {
-            method: 'POST',
-            body: formData,
-        });
-
-        if (response.ok) {
-            // Server responded with success, redirect to login page
-            window.location.href = '/login';
-        } else {
-            // Server responded with error, handle accordingly
-            const errorData = await response.json();
-            console.error('Server error:', errorData.error);
+        const form = {}
+        for (let [key, value] of formData.entries()) {
+            form[key] = value
+            console.log(key, value);
         }
+
+        axios
+            .post('/signup', form)
+            .then(response => {
+                if (response.status) {
+                    window.location.href = "/verify-user"
+                }
+            })
+            .catch(error => {
+                const message = document.querySelector('#alertMessage')
+                message.style.display = 'block'
+                message.textContent = "Email already Exist!"
+            });
+
+        // const res = await axios.post('/signup', formData, {
+        //     headers: {
+        //         "Content-Type": "multipart/form-data", 
+        //     }
+        // })
+
+
+        // const response = await fetch('/signup', {
+        //     method: 'POST',
+        //     body: formData,
+        // });
+
+        // if (res.ok) {
+        //     // Server responded with success, redirect to login page
+        //     window.location.href = '/login';
+        // } else {
+        //     // Server responded with error, handle accordingly
+        //     const errorData = res;
+        //     console.error('Server error:', errorData.error);
+        // }
     } catch (error) {
         console.error('Network error:', error);
     }
+
 }
+
+
+
+
+(async () => {
+    if (validationPassed) {
+        // If validation passed, send an AJAX request to the server
+        const formData = new FormData(form);
+        try {
+            const response = await fetch('/submit', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                // Server responded with success, redirect to login page
+                window.location.href = '/login';
+            } else {
+                // Server responded with error, handle accordingly
+                const errorData = await response.json();
+                console.error('Server error:', errorData.error);
+            }
+        } catch (error) {
+            console.error('Network error:', error);
+        }
+    }
+}
+
+)()

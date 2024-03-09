@@ -1,0 +1,461 @@
+<!-- css for picture upload -->
+<style>
+    @import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+    @import url('https://fonts.googleapis.com/css?family=Raleway');
+
+    /* body {
+        font-family: 'Raleway', sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: #eff5f6;
+    } */
+
+    .wrapper {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* h1 {
+        font-family: inherit;
+        margin: 0 0 0.75em 0;
+        color: #728c8d;
+        text-align: center;
+    } */
+
+    .box {
+        display: block;
+        min-width: 300px;
+        height: 300px;
+        margin: 10px;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        overflow: hidden;
+    }
+
+    .upload-options {
+        position: relative;
+        height: 75px;
+        background-color: rgb(95, 130, 160);
+        cursor: pointer;
+        overflow: hidden;
+        text-align: center;
+        transition: background-color ease-in-out 150ms;
+    }
+
+    .upload-options:hover {
+        background-color: #7fb1b3;
+    }
+
+    .upload-options input {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+    .upload-options label {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        font-weight: 400;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .upload-options label::after {
+        content: 'add';
+        font-family: 'Material Icons';
+        position: absolute;
+        font-size: 2.5rem;
+        color: rgba(230, 230, 230, 1);
+        top: calc(50% - 2.5rem);
+        left: calc(50% - 1.25rem);
+        z-index: 0;
+    }
+
+    .upload-options label span {
+        display: inline-block;
+        width: 50%;
+        height: 100%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .upload-options label span:hover i.material-icons {
+        color: lightgray;
+    }
+
+    .js--image-preview {
+        height: 225px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background-image: url('');
+        background-color: white;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .js--image-preview::after {
+        content: "photo_size_select_actual";
+        font-family: 'Material Icons';
+        position: relative;
+        font-size: 4.5em;
+        color: rgba(230, 230, 230, 1);
+        top: calc(50% - 3rem);
+        left: calc(50% - 2.25rem);
+        z-index: 0;
+    }
+
+    .js--image-preview.js--no-default::after {
+        display: none;
+    }
+
+    .js--image-preview:nth-child(2) {
+        background-image: url('http://bastianandre.at/giphy.gif');
+    }
+
+    i.material-icons {
+        transition: color 100ms ease-in-out;
+        font-size: 2.25em;
+        line-height: 55px;
+        color: white;
+        display: block;
+    }
+
+    .drop {
+        display: block;
+        position: absolute;
+        background: rgba(95, 158, 160, 0.2);
+        border-radius: 100%;
+        transform: scale(0);
+    }
+
+    .animate {
+        animation: ripple 0.4s linear;
+    }
+
+    @keyframes ripple {
+        100% {
+            opacity: 0;
+            transform: scale(2.5);
+        }
+    }
+</style>
+<!-- css for picture upload -->
+
+
+
+
+
+
+
+
+
+
+
+<%- include('../partials/adminHeader.ejs') %>
+    <%- include('../partials/adminSidebar.ejs') %>
+        <main id="main" class="main">
+            <div class="pagetitle">
+                <!-- <h1>Product</h1> -->
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                        <li class="breadcrumb-item "><a href="/admin/edit-product">Product</a></li>
+                        <li class="breadcrumb-item active">Edit Product</li>
+                    </ol>
+                </nav>
+            </div><!-- End Page Title -->
+
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Edit Product</h5>
+
+                        <!-- Table with hoverable rows -->
+                        <!-- Vertical Form -->
+                        <form class="row g-3" method="post" action="/admin/edit-product/<%= product._id %>"
+                            enctype="multipart/form-data">
+                            <% if (error && error.length> 0) { %>
+                                <div id="alertMessage" class="alert alert-danger">
+                                    <%= error %>
+                                </div>
+                                <% } %>
+                                    <div class="col-12">
+                                        <label for="inputNanme4" class="form-label">Product title</label>
+                                        <input type="text" class="form-control" id="title" name="product_name"
+                                            value="<%= product.product_name %>">
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="inputEmail4" class="form-label">Description</label>
+                                        <input type="text" class="form-control" id="description" name="description"
+                                            value="<%= product.description %>">
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="inputEmail4" class="form-label">Actual Price</label>
+                                        <input type="text" class="form-control" id="description" name="actual_price"
+                                            value="<%= product.actual_price %>">
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="inputEmail4" class="form-label">Sale Price</label>
+                                        <input type="text" class="form-control" id="description" name="selling_price"
+                                            value="<%= product.selling_price %>">
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="inputEmail4" class="form-label">stock</label>
+                                        <input type="text" class="form-control" id="description" name="stock"
+                                            value="<%= product.stock %>">
+                                    </div>
+                                    <label class="fw-bold my-2" for="exampleFormControlInput1">Status</label>
+                                    <select class="form-select" name="status" aria-label="Default select example">
+                                        <option value="true">List</option>
+                                        <option value="false">Unlist</option>
+                                    </select>
+                                    <div class="col-6">
+                                        <label class="inputNanme4" for="exampleFormControlInput1">Suited to</label>
+                                        <select class="form-select" name="type" aria-label="Default select example">
+                                            <option value="All Skin Types">All Skin Types</option>
+                                            <option value="Oily Skin">Oily Skin</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="inputNanme4" for="exampleFormControlInput1">Category</label>
+                                        <select class="form-select" name="category_id"
+                                            aria-label="Default select example">
+
+                                            <% category&&category.forEach(element=> { %>
+                                                <option value="<%= element._id.toString() %>">
+                                                    <%= element.cat_name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="inputAddress" class="form-label">Key ingredients</label>
+                                        <textarea type="text" class="form-control" id="inputAddress" name="ingredients"
+                                            placeholder="Glycolic Acid, Aloe Barbadensis Leaf Water"><%= product.ingredients %></textarea>
+                                    </div>
+                                    <!-- <div class="text-center">
+                                <button type="submit" class="btn btn-primary"
+                                    style="background-color: #0d6efd !important;">Submit</button>
+                                <button type="reset" class="btn btn-secondary"
+                                    style="background-color: #6c757d !important;">Reset</button>
+                            </div> -->
+                                    <!-- Vertical Form -->
+                                    <!-- End Table with hoverable rows -->
+
+                    </div>
+                </div>
+
+
+
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Media</h5>
+
+                        <!-- Table with hoverable rows -->
+                        <!-- Vertical Form -->
+
+                        <div class="wrapper">
+                            <div class="box">
+                                <div class="js--image-preview"></div>
+                                <div class="upload-options">
+                                    <label>
+                                        <input type="file" class="image-upload" accept="image/*" name="img1" />
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="box">
+                                <div class="js--image-preview"></div>
+                                <div class="upload-options">
+                                    <label>
+                                        <input type="file" class="image-upload" accept="image/*" name="img2" />
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="box">
+                                <div class="js--image-preview"></div>
+                                <div class="upload-options">
+                                    <label>
+                                        <input type="file" class="image-upload" accept="image/*" name="img3" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        <!-- Vertical Form -->
+                        <!-- End Table with hoverable rows -->
+
+                    </div>
+
+
+
+                    <div class="text-center py-5">
+                        <button type="submit" class="btn btn-primary"
+                            style="background-color: #0d6efd !important;">Submit</button>
+                        <button type="reset" class="btn btn-secondary"
+                            style="background-color: #6c757d !important;">Reset</button>
+                    </div>
+                    </form>
+                </div>
+
+
+
+            </div>
+            </div>
+            </section>
+
+        </main><!-- End #main -->
+
+
+        <script>
+
+            // script.js
+            const form = document.getElementById("form");
+
+            form.addEventListener("submit", submitForm);
+
+            function submitForm(e) {
+                e.preventDefault();
+                const name = document.getElementById("name");
+                const files = document.getElementById("files");
+                const formData = new FormData();
+                formData.append("name", name.value);
+                for (let i = 0; i < files.files.length; i++) {
+                    formData.append("files", files.files[i]);
+                }
+                fetch("http://localhost:5000/upload_files", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                })
+                    .then((res) => console.log(res))
+                    .catch((err) => ("Error occured", err));
+            }
+
+
+
+
+
+
+            function initImageUpload(box) {
+                let uploadField = box.querySelector('.image-upload');
+
+                uploadField.addEventListener('change', getFile);
+
+                function getFile(e) {
+                    let file = e.currentTarget.files[0];
+                    checkType(file);
+                }
+
+                function previewImage(file) {
+                    let thumb = box.querySelector('.js--image-preview'),
+                        reader = new FileReader();
+
+                    reader.onload = function () {
+                        thumb.style.backgroundImage = 'url(' + reader.result + ')';
+                    }
+                    reader.readAsDataURL(file);
+                    thumb.className += ' js--no-default';
+                }
+
+                function checkType(file) {
+                    let imageType = /image.*/;
+                    if (!file.type.match(imageType)) {
+                        throw 'Datei ist kein Bild';
+                    } else if (!file) {
+                        throw 'Kein Bild gewählt';
+                    } else {
+                        previewImage(file);
+                    }
+                }
+
+            }
+
+            // initialize box-scope
+            var boxes = document.querySelectorAll('.box');
+
+            for (let i = 0; i < boxes.length; i++) {
+                let box = boxes[i];
+                initDropEffect(box);
+                initImageUpload(box);
+            }
+
+
+
+            /// drop-effect
+            function initDropEffect(box) {
+                let area, drop, areaWidth, areaHeight, maxDistance, dropWidth, dropHeight, x, y;
+
+                // get clickable area for drop effect
+                area = box.querySelector('.js--image-preview');
+                area.addEventListener('click', fireRipple);
+
+                function fireRipple(e) {
+                    area = e.currentTarget
+                    // create drop
+                    if (!drop) {
+                        drop = document.createElement('span');
+                        drop.className = 'drop';
+                        this.appendChild(drop);
+                    }
+                    // reset animate class
+                    drop.className = 'drop';
+
+                    // calculate dimensions of area (longest side)
+                    areaWidth = getComputedStyle(this, null).getPropertyValue("width");
+                    areaHeight = getComputedStyle(this, null).getPropertyValue("height");
+                    maxDistance = Math.max(parseInt(areaWidth, 10), parseInt(areaHeight, 10));
+
+                    // set drop dimensions to fill area
+                    drop.style.width = maxDistance + 'px';
+                    drop.style.height = maxDistance + 'px';
+
+                    // calculate dimensions of drop
+                    dropWidth = getComputedStyle(this, null).getPropertyValue("width");
+                    dropHeight = getComputedStyle(this, null).getPropertyValue("height");
+
+                    // calculate relative coordinates of click
+                    // logic: click coordinates relative to page - parent's position relative to page - half of self height/width to make it controllable from the center
+                    x = e.pageX - this.offsetLeft - (parseInt(dropWidth, 10) / 2);
+                    y = e.pageY - this.offsetTop - (parseInt(dropHeight, 10) / 2) - 30;
+
+                    // position drop and animate
+                    drop.style.top = y + 'px';
+                    drop.style.left = x + 'px';
+                    drop.className += ' animate';
+                    e.stopPropagation();
+
+                }
+            }
+
+
+        </script>

@@ -7,19 +7,17 @@
             <div class="signup-content">
                 <div class="signup-form">
                     <h2 class="form-title">Sign up</h2>
-                    <form method="POST" class="register-form" id="register-form" action="/signup">
+                    <form method="POST" class="register-form" id="register-form" action="/signup"
+                        enctype="multipart/form-data">
                         <div class="form-group">
 
                             <!-- Display flash messages -->
-                            <% if (error && error.length> 0) { %>
-                                <div id="alertMessage" class="alert alert-danger">
-                                    <%= error %>
-                                </div>
-                                <% } %>
+                            <div style="display: none;" id="alertMessage" class="alert alert-danger">
+                            </div>
 
-                                    <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                                    <input type="text" name="name" id="name" placeholder="Your Name" required />
-                                    <div class="error" style="color:red"></div>
+                            <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="text" name="name" id="name" placeholder="Your Name" required />
+                            <div class="error" style="color:red"></div>
                         </div>
 
                         <div class="form-group">
@@ -48,15 +46,10 @@
                                 placeholder="Password" required />
                             <div class="error" style="color:red" style="color:red"></div>
                         </div>
-                        <% if (error && error.length> 0) { %>
-                            <div id="alertMessage" class="alert alert-danger">
-                                <%= error %>
-                            </div>
-                            <% } %>
-                                <div class="form-group form-button">
-                                    <input type="submit" name="signup" id="signup" class="form-submit"
-                                        value="Register" />
-                                </div>
+
+                        <div class="form-group form-button">
+                            <input type="submit" name="signup" id="signup" class="form-submit" value="Register" />
+                        </div>
                     </form>
                 </div>
                 <div class="signup-image">

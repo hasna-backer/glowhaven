@@ -4,15 +4,19 @@ const Joi = require('joi');
 const sendmail = require('../utils/mailer');
 const generateOtp = require('../utils/generateOtp');
 const User = require('../models/userModel');
+const Product = require('../models/productModel');
 const validate = require('../validations/signupValidation');
+const { response } = require('express');
+
 
 let homepage = async function (req, res, next) {
+    const products = await Product.find({});
     const userId = req.session.user.user._id;
     console.log("req.session.user", req.session.user.user)
     console.log("userId", userId)
     const user = await User.findOne({ _id: userId });
     // console.log("user", user)
-    res.render('user/home', { title: 'Express', user });
+    res.render('user/home', { title: 'Express', user, products });
     console.log("user===", user)
 
 }
@@ -35,7 +39,7 @@ let doSignup = async (req, res) => {
     const { name, email, pass, phone } = req.body
     console.log(req.body);
     const isExist = await User.findOne({ email: email })
-    // console.log('is exist : ', isExist)
+    console.log('is exist : ', isExist)
     if (isExist == null) {
         let user = new User();
         user.email = email
@@ -46,16 +50,19 @@ let doSignup = async (req, res) => {
         req.session.user = newUser;
         console.log("new user:", newUser)
         if (newUser) {
-            res.redirect('/verify-user')
+            res.status(200).json({ message: 'signup succes!' })
         }
     }
     else {
         console.log('flash triggered')
-        req.flash('error', 'Email already exist!')
-        res.redirect('/signup')
+        res.status(400).json({ error: 'Email already exist!' })
+        // req.flash('error', 'Email already exist!')
 
     }
 }
+
+
+
 
 let renderOtp = async (req, res) => {
     try {
@@ -124,15 +131,17 @@ let doLogin = async (req, res, next) => {
     }
 }
 
-// const sendMail = async (req, res) => {
-//     try {
-//         const otp = await generateOtp.generateOTP();
-//         await sendmail.sendMail("hasnabacker25@gmail.com", String(otp), "OTP")
-//         res.send("done")
-//     } catch (error) {
-//         console.log(error)
-//     }
-// };
+
+let renderViewProducts = async (req, res) => {
+    const products = await Product.find({});
+    res.render('user/product', { products });
+};
+
+let renderSingleProducts = async (req, res) => {
+    const products = await Product.findById(req.params.id);
+    res.render('user/singleProduct', { products })
+};
+
 
 
 
@@ -143,4 +152,4 @@ const logout = (req, res) => {
     req.session.destroy()
     res.redirect('/login')
 }
-module.exports = { homepage, renderSignup, doSignup, logout, renderLogin, doLogin, renderOtp, verifyUser }
+module.exports = { homepage, renderSignup, doSignup, logout, renderLogin, doLogin, renderOtp, verifyUser, renderViewProducts, renderSingleProducts }

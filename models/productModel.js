@@ -5,13 +5,18 @@ const ObjectId = Schema.ObjectId;
 const productShema = new Schema({
     product_name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
-    brand_name: {
+    type: {
         type: String,
         required: true
     },
     description: {
+        type: String,
+        required: true
+    },
+    ingredients: {
         type: String,
         required: true
     },
@@ -23,35 +28,24 @@ const productShema = new Schema({
         type: Number,
         required: true
     },
-    primary_image: {
-        name: {
-            type: String,
-            required: true
-        },
-        path: {
-            type: String,
-            required: true
-        }
+    img1: {
+        type: String,
+        required: true,
     },
-    secondary_images: [{
-        name: {
-            type: String,
-            required: true,
-        },
-        path: {
-            type: String,
-            required: true
-        }
-    }],
+    img2: {
+        type: String,
+        required: true,
+    },
+    img3: {
+        type: String,
+        required: true,
+    },
+
     actual_price: {
         type: String,
         required: true
     },
     selling_price: {
-        type: String,
-        required: true
-    },
-    color: {
         type: String,
         required: true
     },

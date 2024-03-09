@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+var path = require('path');
 const expressLayout = require('express-ejs-layouts');
 const session = require('express-session');
 const nocache = require('nocache');
@@ -13,9 +14,9 @@ const bodyParser = require('body-parser');
 
 
 const app = express();
-const port = 4010 || process.env.PORT;
+const port = 4011 || process.env.PORT;
 
-// db connection
+// db connection 
 const connetDB = require('./config/db')
 connetDB();
 
@@ -50,6 +51,7 @@ app.use((req, res, next) => {
 })
 //static files
 app.use(express.static('public'));
+// app.use(express.static(path.resolve('./public')));
 
 //template engine 
 app.use(expressLayout);
@@ -64,8 +66,18 @@ app.use("/", userRoutes)
 app.use("/admin", adminRoutes)
 
 
+// //upload picture
+// app.use(
+//     fileUpload({
+//         limits: {
+//             fileSize: 10000000,
+//         },
+//         abortOnLimit: true,
+//     })
+// );
+
 
 
 app.listen(port, () => {
-    console.log(`server is running on http://localhost:${4010}`)
+    console.log(`server is running on http://localhost:${4011}`)
 });  
