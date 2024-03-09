@@ -8,7 +8,7 @@ router.get('/', authUser, userController.homepage);
 router.get('/signup', userController.renderSignup);
 router.post('/signup', userController.doSignup);
 
-router.get('/verify-user', authUser, userController.renderOtp);
+router.get('/verify-user', userController.renderOtp);
 router.post('/verify-user', userController.verifyUser);
 router.get('/login', userController.renderLogin);
 router.post('/login', userController.doLogin);

@@ -12,7 +12,6 @@ const { response } = require('express');
 let homepage = async function (req, res, next) {
     const products = await Product.find({});
     const userId = req.session.user.user._id;
-    console.log("req.session.user", req.session.user.user)
     console.log("userId", userId)
     const user = await User.findOne({ _id: userId });
     // console.log("user", user)
@@ -32,6 +31,7 @@ let renderSignup = async (req, res) => {
         }
     } catch (err) {
         console.error(err);
+        res.status(500).send('Internal Server Error');
     }
 }
 
@@ -69,7 +69,6 @@ let renderOtp = async (req, res) => {
         const err = req.flash('error')[0]
         const otp = await generateOtp.generateOTP();
         req.session.user.otp = otp;
-        console.log(req.session.user)
         const { email } = req.session.user;
         console.log("email:", email);
         await sendmail.sendMail(email, String(otp), "OTP");
@@ -101,8 +100,10 @@ let verifyUser = async (req, res) => {
 }
 
 let renderLogin = async (req, res) => {
+    if(req.session.user){
+        res.redirect('/')
+    }
     const err = req.flash('error')[0]
-    console.log(req.session.user)
     if (req.session.user) res.redirect('/')
     res.render('user/login', { error: err })
 }
@@ -111,25 +112,24 @@ let renderLogin = async (req, res) => {
 // res.render('user/login')
 let doLogin = async (req, res, next) => {
     const { email, pass } = req.body;
-    const isExist = await User.findOne({ email: email })
-    if (isExist == null) {
-        // console.log("is exist", isExist)
+    const isExist = await User.findOne({ email: email });
+    if (!isExist) {
         req.flash('error', 'email is not registered');
-        res.redirect('/login')
+        return res.redirect('/login');
     }
-    else {
-        const isPasswordMatch = await bcrypt.compare(pass, isExist.password)
+    try {
+        const isPasswordMatch = await bcrypt.compare(pass, isExist.password);
         if (isPasswordMatch) {
-            delete isExist.password;
-            req.session.user = { user: isExist, isLoggedin: true }
-            console.log("is exist", isExist)
-            res.redirect('/');
-        } else {
-            req.flash('error', 'Wrong password')
-            res.redirect('/login')
+            const { _id, name, email, role } = isExist;
+            req.session.user = { user: { _id, name, email, role }, isLoggedin: true };
+            return res.redirect('/');
         }
+        req.flash('error', 'Wrong password');
+        return res.redirect('/login');
+    } catch (error) {
+        next(error);
     }
-}
+};
 
 
 let renderViewProducts = async (req, res) => {
