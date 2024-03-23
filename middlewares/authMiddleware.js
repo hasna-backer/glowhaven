@@ -1,7 +1,7 @@
 const authUser = (req, res, next) => {
     if (!req || !req.session || !req.session.user || !req.session.user.isLoggedin) {
         console.error('NullPointerReference: req, req.session, or req.session.user is null');
-        return res.status(500).send('Internal Server Error');
+        return res.redirect('/login');
     }
     next();
 }
@@ -9,7 +9,7 @@ const authUser = (req, res, next) => {
 const authAdmin = (req, res, next) => {
     if (!req || !req.session || !req.session.admin) {
         console.error('NullPointerReference: req.session.admin is null');
-        return res.status(500).send('Internal Server Error');
+        return res.redirect('/admin/login');
     }
     if (req.session.admin.isloggedin !== true) {
         console.error('UnhandledException: req.session.admin.isloggedin is not true');
@@ -18,7 +18,27 @@ const authAdmin = (req, res, next) => {
     next();
 }
 
-module.exports ={
+// const authUser = (req, res, next) => {
+//     if (req.session.user && req.session.user.isLoggedin) {
+//         next();
+//     }
+//     else {
+//         res.redirect('/login');
+//     }
+// }
+
+
+// const authAdmin = (req, res, next) => {
+//     if (req.session.admin && req.session.admin.isloggedin) {
+//         next();
+//     }
+//     else {
+//         res.redirect('/admin/login');
+//     }
+// }
+
+
+module.exports = {
     authUser,
     authAdmin
 }

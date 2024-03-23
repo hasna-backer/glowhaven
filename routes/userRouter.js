@@ -10,7 +10,7 @@ router.post('/signup', userController.doSignup);
 
 router.get('/verify-user', userController.renderOtp);
 router.post('/verify-user', userController.verifyUser);
-router.get('/login', userController.renderLogin);
+router.get('/login', userController.renderLogin); //session mngt done
 router.post('/login', userController.doLogin);
 router.get('/logout', userController.logout);
 

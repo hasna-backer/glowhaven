@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    otp: {
+        type: Number,
+        required: false
+    },
     isBanned: {
         type: Boolean,
         default: false
@@ -60,4 +64,4 @@ const userSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema); 

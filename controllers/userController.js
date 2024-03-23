@@ -7,7 +7,7 @@ const User = require('../models/userModel');
 const Product = require('../models/productModel');
 const validate = require('../validations/signupValidation');
 const { response } = require('express');
-
+const { Express } = require('express');
 
 let homepage = async function (req, res, next) {
     const products = await Product.find({});
@@ -27,7 +27,7 @@ let renderSignup = async (req, res) => {
         if (!req.session.user) {
             res.render('user/signup', { error: err })
         } else {
-            res.redirect('user/home')
+            res.redirect('/')
         }
     } catch (err) {
         console.error(err);
@@ -66,45 +66,50 @@ let doSignup = async (req, res) => {
 
 let renderOtp = async (req, res) => {
     try {
+
         const err = req.flash('error')[0]
         const otp = await generateOtp.generateOTP();
-        req.session.user.otp = otp;
         const { email } = req.session.user;
+        await User.findOneAndUpdate({ email }, { otp })
         console.log("email:", email);
-        await sendmail.sendMail(email, String(otp), "OTP");
-        res.render('user/otp', { error: err })
+        sendmail.sendMail(email, String(otp), "OTP");
+        req.session.destroy();
+        res.render('user/otp', { error: err, email })
     } catch (error) {
         console.log(error)
     }
 }
 
 /**
- * @param {express.Request} req
- * @param {express.Response} res
+ * @param {Express.Request} req
+ * @param {Express.Response} res
  */
 let verifyUser = async (req, res) => {
     try {
-        const { otp } = req.body
-        if (req.session.user && otp === req.session.user.otp) {
-            const filter = { email: req.session.user.email }
+        const { otp, email } = req.body
+        const user = await User.findOne({ email })
+        if (user && Number(otp) === user.otp) {
+            const filter = { email }
             const update = { is_verified: true }
             await User.findOneAndUpdate(filter, update)
-            req.session.user = null;
+
             res.redirect('/login')
         } else {
             res.status(400).json({ error: 'Enter a valid OTP!' })
         }
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: 'Enter a valid OTP!' })
     }
 }
 
 let renderLogin = async (req, res) => {
-    if(req.session.user){
-        res.redirect('/')
+    if (req.session.user && req.session.user.isLoggedin) {
+        console.log("user", req.session.user, req.session.user.isLoggedin)
+        return res.redirect('/')
     }
     const err = req.flash('error')[0]
-    if (req.session.user) res.redirect('/')
+
     res.render('user/login', { error: err })
 }
 
