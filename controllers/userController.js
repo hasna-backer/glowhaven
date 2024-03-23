@@ -103,6 +103,7 @@ let verifyUser = async (req, res) => {
     }
 }
 
+
 let renderLogin = async (req, res) => {
     if (req.session.user && req.session.user.isLoggedin) {
         console.log("user", req.session.user, req.session.user.isLoggedin)
@@ -146,10 +147,6 @@ let renderSingleProducts = async (req, res) => {
     const products = await Product.findById(req.params.id);
     res.render('user/singleProduct', { products })
 };
-
-
-
-
 
 
 //logout
