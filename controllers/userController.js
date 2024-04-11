@@ -5,6 +5,7 @@ const sendmail = require('../utils/mailer');
 const generateOtp = require('../utils/generateOtp');
 const User = require('../models/userModel');
 const Product = require('../models/productModel');
+const Address = require('../models/addressModel');
 const validate = require('../validations/signupValidation');
 const { response } = require('express');
 const { Express } = require('express');
@@ -103,6 +104,23 @@ let verifyUser = async (req, res) => {
     }
 }
 
+let resendOtp = async (req, res) => {
+    try {
+        console.log("its working", req.body);
+        const err = req.flash('error')[0]
+        const otp = await generateOtp.generateOTP();
+        const { email } = req.body;
+        await User.findOneAndUpdate({ email }, { otp })
+        console.log("email:", email);
+        sendmail.sendMail(email, String(otp), "OTP");
+        req.session.destroy();
+        res.render('user/otp', { error: err, email })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 
 let renderLogin = async (req, res) => {
     if (req.session.user && req.session.user.isLoggedin) {
@@ -126,8 +144,10 @@ let doLogin = async (req, res, next) => {
     try {
         const isPasswordMatch = await bcrypt.compare(pass, isExist.password);
         if (isPasswordMatch) {
-            const { _id, name, email, role } = isExist;
-            req.session.user = { user: { _id, name, email, role }, isLoggedin: true };
+            console.log("dolgin isExist", isExist);
+            const { _id, name, email, phone } = isExist;
+            req.session.user = { user: { _id, name, email, phone }, isLoggedin: true };
+            console.log("sesssiion", req.session);
             return res.redirect('/');
         }
         req.flash('error', 'Wrong password');
@@ -137,15 +157,46 @@ let doLogin = async (req, res, next) => {
     }
 };
 
+let viewProfile = async (req, res) => {
+    // const { user } = req.session.user
+    const address = await Address.find({ customer_id: req.session.user.user._id })
+    console.log("address", address);
+    const user = await User.findOne({ email: req.session.user.user.email })
+    console.log("profile", user);
+    // if (req.session.user)
+    res.render('user/profile', { user, address })
+}
+
+// let renderEditProfile = async (req, res) => {
+//     const { user } = req.session.user
+//     res.render('user/profileEdit', { user })
+// }
+
+let editProfile = async (req, res) => {
+    console.log("reqqqqq", req.body)
+    try {
+        const filter = { email: req.body.email }
+        let user = await User.findOneAndUpdate(filter, req.body, { new: true }).select("-password")
+        req.session.user.user = user
+        // console.log("userrrrrrrrr", user);
+        // console.log("session.user", req.session.user);
+        // console.log("session.user.user", req.session.user.user);
+        res.status(200).json({ message: 'edit Done' })
+    } catch (error) {
+        res.status(400).json({ message: 'error!!!' })
+
+    }
+}
+
 
 let renderViewProducts = async (req, res) => {
     const products = await Product.find({});
-    res.render('user/product', { products });
+    res.render('user/product', { products, user: req.session.user });
 };
 
 let renderSingleProducts = async (req, res) => {
     const products = await Product.findById(req.params.id);
-    res.render('user/singleProduct', { products })
+    res.render('user/singleProduct', { products, user: req.session.user })
 };
 
 
@@ -154,4 +205,18 @@ const logout = (req, res) => {
     req.session.destroy()
     res.redirect('/login')
 }
-module.exports = { homepage, renderSignup, doSignup, logout, renderLogin, doLogin, renderOtp, verifyUser, renderViewProducts, renderSingleProducts }
+module.exports = {
+    homepage,
+    renderSignup,
+    doSignup,
+    logout,
+    renderLogin,
+    doLogin,
+    renderOtp,
+    verifyUser,
+    resendOtp,
+    renderViewProducts,
+    renderSingleProducts,
+    viewProfile,
+    editProfile,
+}

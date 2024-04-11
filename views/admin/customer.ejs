@@ -1,5 +1,35 @@
 <%- include('../partials/adminHeader.ejs') %>
   <%- include('../partials/adminSidebar.ejs') %>
+    <style>
+      .pagination {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .pagination button {
+        padding: 5px 10px;
+        margin: 0 5px;
+        cursor: pointer;
+        outline: 1px solid #494a4f;
+        border-radius: 1px;
+        border: none;
+      }
+
+      .hidden {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+      }
+
+      .pagination button.active {
+        background-color: #007bff;
+        color: white;
+      }
+    </style>
 
     <main id="main" class="main">
       <div class="pagetitle">
@@ -63,4 +93,60 @@
       </div>
       </section>
 
-    </main><!-- End #main -
+    </main>
+    <!-- <!-- End #main -> -->
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const content = document.querySelector('.main');
+        const itemsPerPage = 15;
+        let currentPage = 0;
+        const items = Array.from(content.getElementsByTagName('tr')).slice(1);
+
+        function showPage(page) {
+          const startIndex = page * itemsPerPage;
+          const endIndex = startIndex + itemsPerPage;
+          items.forEach((item, index) => {
+            item.classList.toggle('hidden', index < startIndex || index >= endIndex);
+          });
+          updateActiveButtonStates();
+        }
+
+        function createPageButtons() {
+          const totalPages = Math.ceil(items.length / itemsPerPage);
+          const paginationContainer = document.createElement('div');
+          const paginationDiv = document.body.appendChild(paginationContainer);
+          paginationContainer.classList.add('pagination');
+
+          // Add page buttons
+          for (let i = 0; i < totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i + 1;
+            pageButton.addEventListener('click', () => {
+              currentPage = i;
+              showPage(currentPage);
+              updateActiveButtonStates();
+            });
+
+            content.appendChild(paginationContainer);
+            paginationDiv.appendChild(pageButton);
+          }
+        }
+
+        function updateActiveButtonStates() {
+          const pageButtons = document.querySelectorAll('.page-item');
+          pageButtons.forEach((button, index) => {
+            if (index === currentPage) {
+              button.classList.add('active');
+            } else {
+              button.classList.remove('active');
+            }
+          });
+        }
+
+        createPageButtons(); // Call this function to create the page buttons initially
+        showPage(currentPage);
+      });
+
+
+    </script>

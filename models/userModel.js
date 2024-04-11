@@ -29,13 +29,18 @@ const userSchema = new mongoose.Schema({
     cart: [{
         product_id: {
             type: ObjectId,
-            required: true
+            required: true,
+            ref: 'Products'
         },
         quantity: {
             type: Number,
             required: true
         }
     }],
+    default_address: {
+        type: ObjectId,
+        ref: 'Address',
+    },
     wish_list: [{
         product_id: {
             type: ObjectId,

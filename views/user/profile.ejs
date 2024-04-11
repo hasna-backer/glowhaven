@@ -1,0 +1,393 @@
+<style>
+    body {
+        margin-top: 20px;
+        background-color: #f2f6fc;
+        color: #69707a;
+    }
+
+    #modalOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Semi-transparent black */
+        z-index: 1000;
+    }
+
+    .modal-content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        z-index: 1001;
+    }
+
+    .css-i680yp {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        letter-spacing: -0.1px;
+        color: rgb(89, 94, 99);
+        cursor: pointer;
+        position: absolute;
+        top: 11px;
+        right: 20px;
+    }
+
+    .css-13a34fv {
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        color: rgba(0, 19, 37, 0.64);
+        cursor: pointer;
+    }
+
+    .css-1kbrfyy {
+        display: inline-block;
+        color: grey;
+        height: 24px;
+        width: 24px;
+    }
+
+    .css-1a9mp6z {
+        display: flex;
+        padding: 1.25rem 0.625rem 0px;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+    }
+
+    .css-1f2twwv {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 24px;
+        letter-spacing: -0.1px;
+        color: rgb(38, 43, 47);
+        text-transform: uppercase;
+        display: flex;
+    }
+
+    .css-ftcyff {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: 0px;
+        border-radius: 2px;
+        box-shadow: rgba(17, 19, 20, 0.12) 0px 2px 4px -2px, rgba(17, 19, 20, 0.12) 0px 2px 8px;
+        display: inline-block;
+        margin: 1rem 1.25rem 1.5rem 0px;
+        padding: 1.25rem 1rem 1.25rem 1.25rem;
+        white-space: normal;
+        width: 340px;
+        min-height: 203px;
+        vertical-align: middle;
+        position: relative;
+    }
+
+    .img-account-profile {
+        height: 10rem;
+    }
+
+    .rounded-circle {
+        border-radius: 50% !important;
+    }
+
+    .card {
+        box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+    }
+
+    .card .card-header {
+        font-weight: 500;
+    }
+
+    .card-header:first-child {
+        border-radius: 0.35rem 0.35rem 0 0;
+    }
+
+    .card-header {
+        padding: 1rem 1.35rem;
+        margin-bottom: 0;
+        background-color: rgba(33, 40, 50, 0.03);
+        border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+    }
+
+    .form-control,
+    .dataTable-input {
+        display: block;
+        width: 100%;
+        padding: 0.875rem 1.125rem;
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1;
+        color: #69707a;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #c5ccd6;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 0.35rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .nav-borders .nav-link.active {
+        color: #0061f2;
+        border-bottom-color: #0061f2;
+    }
+
+    .nav-borders .nav-link {
+        color: #69707a;
+        border-bottom-width: 0.125rem;
+        border-bottom-style: solid;
+        border-bottom-color: transparent;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+</style>
+
+<%- include('../partials/header.ejs') %>
+
+
+    <!-- <div class="main-banner" id="top"> -->
+    <div class="container-xl px-4 mt-8 pt-11">
+        <!-- Account page navigation-->
+
+        <hr class="mt-0 mb-4">
+
+        <div class="row">
+            <%- include('../partials/Sidebar.ejs') %>
+
+                <div class="col-xl-8 card mb-4">
+                    <!-- Account details card-->
+
+                    <!-- <div class="card mb-4"> -->
+                    <div class="card-header">Account Details</div>
+
+
+
+
+
+                    <!-- Main modal -->
+                    <div id="crud-modal" tabindex="-1" aria-hidden="true"
+                        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                        <div class="relative p-4 w-full max-w-md max-h-full">
+                            <!-- Modal content -->
+                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                <!-- Modal header -->
+                                <div
+                                    class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                        Edit Profile </h3>
+                                    <button type="button"
+                                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                        data-modal-toggle="crud-modal">
+                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 14 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                        </svg>
+                                        <span class="sr-only">Close modal</span>
+                                    </button>
+                                </div>
+                                <!-- Modal body -->
+                                <form class="p-4 md:p-5" id="submit-form">
+                                    <div class="grid gap-4 mb-4 grid-cols-2">
+                                        <div class="col-span-2">
+                                            <label for="name"
+                                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Full
+                                                Name</label>
+                                            <input type="text" name="name" id="name"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                placeholder="Type product name" required="" value="<%= user.name %>">
+                                        </div>
+                                        <div class="col-span-2">
+                                            <label for="name"
+                                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                            <input type="text" name="email" id="name"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                placeholder="Type product name" required="" value="<%= user.email %>">
+                                        </div>
+                                        <div class="col-span-2">
+                                            <label for="name"
+                                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone</label>
+                                            <input type="text" name="phone" id="name"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                placeholder="Type product name" required="" value="<%= user.phone %>">
+                                        </div>
+
+
+
+                                    </div>
+                                    <button type="button" onclick="editProfile()"
+                                        class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        DONE
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="editProfileContent"></div>
+                    <div class="card-body  mb-3">
+
+                        <!-- <div class="card mb-3"> -->
+                        <div class="row g-0">
+                            <div class="col-md-4 ">
+                                <img class="img-account-profile  m-2" src="user-assets/images/profile.png"
+                                    class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+
+                                <div class="card-body">
+                                    <div class="tab-content pt-2">
+                                        <div class="tab-pane fade show active profile-overview" id="profile-overview">
+
+
+                                            <h5 class="card-title pb-0">
+                                                <%= user.name.charAt(0).toUpperCase() + user.name.slice(1).toLowerCase()
+                                                    %>
+
+                                            </h5>
+                                            <span class="css-i680yp"><svg viewBox="0 0 24 24" class="css-1dztinq">
+                                                    <title></title>
+                                                    <path
+                                                        d="M20.71 7.65L16.34 3.29C16.1526 3.10375 15.8992 2.99921 15.635 2.99921C15.3708 2.99921 15.1173 3.10375 14.93 3.29L3.28999 14.94C3.1973 15.0334 3.12398 15.1443 3.07421 15.2661C3.02445 15.3879 2.99923 15.5184 2.99999 15.65V20C2.99999 20.2652 3.10534 20.5196 3.29288 20.7071C3.48042 20.8946 3.73477 21 3.99999 21H8.39999C8.53159 21.0008 8.66206 20.9755 8.78389 20.9258C8.90573 20.876 9.01655 20.8027 9.10999 20.71L20.71 9.06C20.8962 8.87264 21.0008 8.61918 21.0008 8.355C21.0008 8.09081 20.8962 7.83736 20.71 7.65ZM8.18999 19.5H4.49999V15.85L12.82 7.52L16.41 11.12L16.49 11.17L8.18999 19.5ZM17.52 10.13C17.5105 10.1023 17.4931 10.078 17.47 10.06L13.88 6.46L15.64 4.71L19.29 8.36L17.52 10.13Z"
+                                                        fill="#001325" fill-opacity="0.92"></path>
+                                                </svg> <button data-modal-target="crud-modal"
+                                                    data-modal-toggle="crud-modal" type="button">Edit</button></span>
+
+
+
+                                            <div class="row">
+                                                <div class="col-lg-3 col-md-4 label ">Email:</div>
+                                                <div class="col-lg-9 col-md-8">
+                                                    <%= user.email %>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-3 col-md-4 label ">Phone:</div>
+                                                <div class="col-lg-9 col-md-8">
+                                                    <%= user.phone %>
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div><!-- End Card with an image on left -->
+
+                           
+                                <!-- <div class="card-body"> -->
+
+                                <div class="css-1a9mp6z">
+                                    <div class="css-1f2twwv"><span class="css-1swlvfq"><svg width="20" height="19"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M9.796.02a.417.417 0 0 0-.253.086L.155 7.433a.412.412 0 0 0-.069.575.412.412 0 0 0 .575.07l.563-.44v10.73a.41.41 0 0 0 .409.408h5.714v-7.347h4.898v7.347h5.714a.41.41 0 0 0 .408-.409V7.637l.564.44a.41.41 0 0 0 .575-.07.412.412 0 0 0-.07-.574L10.05.106a.417.417 0 0 0-.253-.085zm4.082 1.613v.429l2.449 1.91v-2.34h-2.45z"
+                                                    fill="#3F414D" fill-rule="nonzero"></path>
+                                            </svg></span>MY ADDRESSES</div>
+                                    <div class="css-13a34fv"><svg viewBox="0 0 24 24" color="grey" class="css-1kbrfyy">
+                                            <title></title>
+                                            <path
+                                                d="M20.71 7.65L16.34 3.29C16.1526 3.10375 15.8992 2.99921 15.635 2.99921C15.3708 2.99921 15.1173 3.10375 14.93 3.29L3.28999 14.94C3.1973 15.0334 3.12398 15.1443 3.07421 15.2661C3.02445 15.3879 2.99923 15.5184 2.99999 15.65V20C2.99999 20.2652 3.10534 20.5196 3.29288 20.7071C3.48042 20.8946 3.73477 21 3.99999 21H8.39999C8.53159 21.0008 8.66206 20.9755 8.78389 20.9258C8.90573 20.876 9.01655 20.8027 9.10999 20.71L20.71 9.06C20.8962 8.87264 21.0008 8.61918 21.0008 8.355C21.0008 8.09081 20.8962 7.83736 20.71 7.65ZM8.18999 19.5H4.49999V15.85L12.82 7.52L16.41 11.12L16.49 11.17L8.18999 19.5ZM17.52 10.13C17.5105 10.1023 17.4931 10.078 17.47 10.06L13.88 6.46L15.64 4.71L19.29 8.36L17.52 10.13Z"
+                                                fill="#001325" fill-opacity="0.92"></path>
+                                        </svg>ADD NEW ADDRESS</div>
+                                </div>
+
+<% address.forEach(add=> { %>
+
+                                <!-- Card with an image on left -->
+<div class="card m-2 px-2">                    
+    <div class="row ">
+                           
+        <div class="col">
+                <div class="address-container d-flex align-items-center">
+                    <div class="card-title  p-0 "><%= add.address_cust_name %></div>
+                        <div id="total" class="col text-right">
+                            <%= add.address_type %>
+                        </div>
+                </div>
+    
+    
+            <div class="address-container d-flex align-items-left">
+                <div class="col label pl-0">
+                    <p class="text-left">
+                        <%= add.house_name %>(H),
+                        <%= add.locality %>,
+                        <%= add.area_street %>,
+                        <%= add.landmark %>,
+                        <%= add.city %>,
+                        <%= add.state %>
+                        <span class="fw-bold">
+                            -<%= add.pincode %>
+                        </span>
+                    </p>
+                </div>
+             </div>
+
+                 <div class="address-container d-flex align-items-center pb-4">
+                    <div class="col label pl-0 text-left ">
+                        <p> mobile:<%= address[0].phone %></p>
+                    </div>
+                    <div class="col text-right">
+<button type="button" class="text-purple-700 hover:text-purple-700 border border-purple-700 hover:bg-purple-300 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-300 dark:focus:ring-purple-900">Edit</button>
+<button type="button" class="text-purple-700 hover:text-purple-700 border border-purple-700 hover:bg-purple-300 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center me-2 mb-2 dark:border-purple-400 dark:text-purple-400 dark:hover:text-white dark:hover:bg-purple-300 dark:focus:ring-purple-900">Remove</button>
+                    </div>
+                </div>             
+
+        </div>
+            <!-- <hr /> -->
+    </div>
+</div>
+                        <!-- End Card with an image on left -->
+                        <% }); %>
+                           
+                        </div><!-- End Card with titles, buttons, and links -->
+
+
+                    </div>
+                </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        const editProfile = async () => {
+            const form = document.getElementById('submit-form')
+            const closeButton = document.querySelector('#crud-modal > div > div > div > button')
+            const name = document.querySelector('#profile-overview > h5')
+            const email = document.querySelector('#profile-overview > div:nth-child(3) > div.col-lg-9.col-md-8')
+            const phone = document.querySelector('#profile-overview > div:nth-child(4) > div.col-lg-9.col-md-8')
+
+            const formData = new FormData(form);
+            console.log(formData.get("name"))
+            try {
+                const res = await axios.post('/edit-profile', form, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+
+                })
+                if (res.status === 200) {
+                    window.location.href = window.location.href
+
+                    // closeButton.click()
+                }
+            } catch (error) {
+
+            }
+        }
+    </script>

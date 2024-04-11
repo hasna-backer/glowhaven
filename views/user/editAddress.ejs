@@ -1,0 +1,347 @@
+<style>
+    ::placeholder {
+        color: red;
+        opacity: 1;
+        /* Firefox */
+    }
+</style>
+
+
+<%- include('../partials/header.ejs') %>
+
+
+<section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4 "
+    id="product">
+    <div class="container ">
+        <div class="row justify-content-center ">
+            <div class="col-lg-7 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                <div class="card w-100">
+                    <div class="card-body">
+
+                        
+                                <h5 class="card-title"><a href="/checkout"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>Add New Address</h5>
+
+                                <!-- Advanced Form Elements -->
+                                <form action='/add-adress' method="POST">
+                                    <h5 class="mb-0">Deliver To</h5>
+                                <h4 class="card-title pt-0">Address Info</h4>
+
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <div class="form-floating mb-3 border-radius-5">
+                                                <input type="number" class="form-control" id="pincode" name="pincode"
+                                                    placeholder="name@example.com">
+                                                <label for="floatingInput">Pincode</label>
+                                                <div id="error" style="color:red"></div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col">
+
+                                                    <div class="form-floating mb-3 border-radius-5">
+                                                        <input type="text" class="form-control" id="city" name="city"
+                                                        placeholder="name@example.com">
+                                                        <label for="floatingInput">City</label>
+                                                        <div id="error" style="color:red"></div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+
+                                                    <div class="form-floating mb-3 border-radius-5">
+                                                        <input type="text" class="form-control" id="state" name="state"
+                                                        placeholder="name@example.com">
+                                                        <label for="floatingInput">State</label>
+                                                       <div id="error" style="color:red"></div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="house_name" name="house_name"
+                                                    placeholder="text">
+                                                <label for="floatingtext">House Name</label>
+                                                <div id="error" style="color:red"></div>
+                                            </div>
+                                            <div class="row mb-3">
+                                            <div class="col">
+
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="landmark" name="landmark"
+                                                    placeholder="text">
+                                                <label for="floatingtext">Landmark</label>
+                                                <div id="error" style="color:red"></div>
+                                            </div>
+                                            </div>
+                                            <div class="col">
+
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="locality" name="locality"
+                                                    placeholder="text">
+                                                    <label for="floatingtext">Locality</label>
+                                                    <div id="error" style="color:red"></div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <!-- <div class="form-floating mb-3">
+                                                <textarea class="form-control" placeholder="Leave a comment here"
+                                                    id="floatingTextarea" style="height: 100px;"></textarea>
+                                                <label for="floatingTextarea">Locality</label>
+                                            </div> -->
+                                            <!-- <div class="form-floating mb-3">
+                                                <select class="form-select" id="floatingSelect"
+                                                    aria-label="Floating label select example">
+                                                    <option selected>Open this select menu</option>
+                                                    <option value="1">One</option>
+                                                    <option value="2">Two</option>
+                                                    <option value="3">Three</option>
+                                                </select>
+                                                <label for="floatingSelect">Works with selects</label>
+                                            </div> -->
+                                <h5 class="card-title">Contact Info</h5>
+                                <div class="form-floating mb-3 border-radius-5">
+                                                <input type="text" class="form-control" id="address_cust_name" name="address_cust_name"
+                                                    placeholder="name@example.com">
+                                                <label for="floatingInput">Name</label>
+                                                <div id="error" style="color:red"></div>
+                                            </div>
+                                            <div class="form-floating mb-3 border-radius-5">
+                                                <input type="number" class="form-control" id="phone" name="phone"
+                                                    placeholder="name@example.com">
+                                                <label for="floatingInput">Mobile Number</label>
+                                                <div id="error" style="color:red"></div>
+                                            </div>
+                                                <div class="form-floating mb-3 border-radius-5">
+                                                <input type="number" class="form-control" id="alternate_phone" name="alternate_phone"
+                                                    placeholder="name@example.com">
+                                                <label for="floatingInput">Alternate Mobile Number</label>
+                                                <div id="error" style="color:red"></div>
+                                            </div>
+
+                                 <h5 class="card-title">Address Type</h5>
+
+                                 <div class="pb-3 mb-3">
+
+ <div class="row">
+          <div class="form-check pl-10">
+            <input
+              class="form-check-input "
+              type="radio"
+              value="HOME"
+              name="address_type"
+              id="flexRadioDefault1"
+              checked
+            />
+            <label class="form-check-label" for="flexRadioDefault1">
+              HOME
+            </label>
+          </div>
+          <div class="form-check pl-10">
+            <input
+              class="form-check-input"
+              value="WORK"
+              type="radio"
+              name="address_type"
+              id="flexRadioDefault2"
+            />
+            <label class="form-check-label" for="flexRadioDefault2">
+              WORK
+            </label>
+          </div>
+        </div>
+
+
+                                     <!-- <button class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-300 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-purple-500 dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                                         <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                                             Home
+                                            </span>
+                                        </button>
+                                        
+                                        <button class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-300 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-purple-500 dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                                            <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                                                Office
+                                            </span>
+                                        </button> -->
+                                        
+                                    </div>
+                                        
+                                    <p class="mb-3 pb-5"> Address type preferences are used to plan your delivery. However, shipments can sometimes arrive early or later than planned. </p>
+
+                                   <div class="col-12">
+                                    <button class="btn  w-100 text-gray-900 p-2.5 relative inline-flex items-center justify-center overflow-hidden  text-gray-900 rounded-lg group bg-gradient-to-br from-purple-50 to-pink-300 group-hover:from-purple-50 group-hover:to-pink-50 hover:text-pink-500 dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800" type="submit">
+                                       Save Address</button>
+                                </div>
+
+                                        </div>
+                                    </div>
+
+                                   
+
+                                </form><!-- End General Form Elements -->
+
+                         
+
+
+
+
+
+
+
+                    </div>
+                </div>
+
+
+
+
+
+                </form>
+            </div>
+        </div>
+
+
+
+    </div>
+    </div>
+    </div>
+
+</section>
+
+</div>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const pincode=document.getElementById('pincode')
+        const city=document.getElementById('city') 
+        const state=document.getElementById('state') 
+        const houseName=document.getElementById('house_name')  
+        const landmark=document.getElementById('landmark')  
+        const locality=document.getElementById('locality')  
+        const name=document.getElementById('address_cust_name')  
+        const phone=document.getElementById('phone')  
+        const alternatePhone=document.getElementById('alternate_phone')
+
+        // const setError = (element, message) => {
+        // const inputControl = element.parentElement;
+        // const errorDisplay = document.getElementById('error')
+        // console.log(errorDisplay);
+        // errorDisplay.innerText = message
+        // element.focus();
+        // }
+
+        const setError = (element, message) => {
+        const inputControl = element.parentElement;
+        const errorDisplay = inputControl.querySelector('#error')
+        errorDisplay.innerText = message
+        element.focus();
+
+        }
+
+        const setSuccuss = (element) => {
+        const inputControl = element.parentElement;
+        const errorDisplay = inputControl.querySelector('#error')
+        errorDisplay.innerText = ''
+        }
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Validate pincode
+            const pincodeVal = pincode.value;
+            if (!pincodeVal) {
+                setError(pincode, 'Please enter a pincode.')
+                return
+            }else if(pincodeVal.length !==6){
+                setError(pincode, 'Pincode must be 6 digits!')
+                return
+            }
+            else {
+            setSuccuss(pincode);
+            }
+
+            // Validate city
+            const cityVal = document.getElementById('city').value;
+            if (!cityVal) {
+            setError(city,'Please enter a valid city ')  
+             return;
+            }else {
+            setSuccuss(city);
+            }
+
+            // Validate State
+            const stateVal = document.getElementById('state').value;
+            if (!stateVal) {
+            setError(state,'Please enter a valid state ')  
+             return;
+            }else {
+            setSuccuss(state);
+            }
+
+             // Validate houseName
+            const houseNameVal = houseName.value;
+            if (!houseNameVal) {
+            setError(houseName,'Please enter a valid houseName ')  
+             return;
+            }else {
+            setSuccuss(houseName);
+            }
+
+             // Validate landmark
+            const landmarkVal = landmark.value;
+            if (!landmarkVal) {
+            setError(landmark,'Please enter a valid landmark ')  
+             return;
+            }else {
+            setSuccuss(landmark);
+            }
+
+             // Validate locality
+            const localityVal = locality.value;
+            if (!localityVal) {
+            setError(locality,'Please enter a valid locality ')  
+             return;
+            }else {
+            setSuccuss(locality);
+            }
+
+             // Validate name
+            const nameVal = name.value;
+            if (!nameVal) {
+            setError(name,'Please enter a valid Name ')  
+             return;
+            }else {
+            setSuccuss(name);
+            }
+            // validate phone
+            const phoneVal = phone.value;
+            if (!phoneVal) {
+            setError(phone,'Please enter a valid phone ')  
+             return;
+            }else if(phoneVal.length !==10){
+            setError(phone,'Phone number must be 10 digits! ') 
+            return 
+            }else {
+            setSuccuss(phone);
+            }
+            //validate alternate phone
+            const alternatePhoneVal = alternatePhone.value;
+            if (!alternatePhoneVal) {
+            setError(alternatePhone,'Please enter a valid phone ')  
+             return;
+            }else if(alternatePhoneVal.length !==10){
+            setError(alternatePhone,'Phone number must be 10 digits! ') 
+            return 
+            }else {
+            setSuccuss(alternatePhone);
+            }
+
+            // Add more validation checks for other fields...
+
+            // If all validations pass, submit the form
+            form.submit();
+        });
+    });
+</script>

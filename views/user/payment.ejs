@@ -1,0 +1,105 @@
+<style>
+  ::placeholder {
+    color: red;
+    opacity: 1;
+    /* Firefox */
+  }
+</style>
+
+<section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4"
+  id="product">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-7 col-md-6 d-flex flex-column align-items-center justify-content-center">
+        <div class="card  w-100">
+          <div class="card">
+
+
+            <div class="row ">
+              <div class="address-container d-flex align-items-center flex flex-col">
+                <div id="total" class="col text-left p-4 bg-gray-100	">UPI/BHIM</div>
+                <div class="card w-100">
+                  <div class="row py-2 pb-3">
+                    <div class="col-1 pt-1 mx-3"> <button class="btn border-blue-500 px-3 py-1"><i
+                          class="fa fa-plus"></i>
+                      </button>
+                    </div>
+                    <div class="col pl-0 ">
+                      <div class="card-title pt-2 pb-0">ADD NEW UPI ID</div>
+                      <span>You need to have a registered upi id</span>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- <div id="total" class="col text-right">fsdfsdfsf</div> -->
+              </div>
+
+              <div class="address-container d-flex align-items-center flex flex-col">
+                <div id="total" class="col text-left p-4 bg-slate-200	">WALLETS</div>
+                <div class="card w-100">
+                  <div class="row py-2 pb-3">
+                    <div class="col-1 pt-1 mx-3"> <button class="btn border-blue-500 px-3 py-1"><i
+                          class="fa fa-plus"></i>
+                      </button>
+                    </div>
+                    <div class="col pl-0 ">
+                      <div class="card-title pt-2 pb-0">LINK YOUR WALLET</div>
+                      <span>You need to have a registered upi id</span>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- <div id="total" class="col text-right">fsdfsdfsf</div> -->
+              </div>
+
+              <div class="address-container d-flex align-items-center flex flex-col mb-0 pb-0">
+                <div id="total" class="col text-left p-4 bg-slate-200	">CASH ON DELIVERY</div>
+                <div class="card w-100">
+                  <div class="row py-2 pb-3">
+                    <div class="col-1 pt-1 mx-3"> <button class="btn border-blue-500 px-3 py-1"><i
+                          class="fa fa-plus"></i>
+                      </button>
+                    </div>
+                    <div class="col pl-0 ">
+                      <div class="card-title pt-2 pb-4 justify-content-between">
+                        <div class="flex  mb-3 justify-content-between">
+                          <label for="default-radio-1" class=" card-title pt-2 pb-3   ">Pay
+                            <%= amount_payable %> on
+                            delivery</label>
+                          <input id="default-radio-1" type="radio" value="" name="default-radio"
+                            onclick="cashOnDelivery(this)"
+                            class="w-4 h-4 mr-3 pr-2 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500   focus:ring-2  dark:border-gray-600">
+
+                        </div>
+                        <button type="button"
+                          class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Place
+                          Order</button>
+
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+                <div class="card-title pt-2 pb-0"> <i class="fa fa-plus"></i>
+                  100% safe payments</div>
+                <span class="pr-2">Genuine Products | Easy Returns</span>
+              </div>
+              <!-- <div id="total" class="col text-right">fsdfsdfsf</div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script>
+  const cashOnDelivery = async (element) => {
+    id = element.value;
+    console.log("id", id);
+  }
+</script>

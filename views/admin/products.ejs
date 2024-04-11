@@ -11,7 +11,7 @@
                     </ol>
                 </nav>
             </div><!-- End Page Title -->
-            <div class="col-lg-11">
+            <div class="col-lg-13">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
@@ -29,8 +29,10 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Product</th>
+                                    <th scope="col">Name</th>
                                     <th scope="col">ProductID</th>
-                                    <th scope="col">Price</th>
+                                    <th scope="col">MRP</th>
+                                    <th scope="col">Selling price</th>
                                     <th scope="col">Stock</th>
                                     <th scope="col">status</th>
                                     <th scope="col">Delete/Edit</th>
@@ -40,10 +42,19 @@
                                 <% product.forEach(element=> { %>
                                     <tr>
                                         <th scope="row">
-                                            <%= element.product_name %>
+                                            <img src="/files/<%= element.img1 %>" 
+                                                class="img-fluid rounded-start w-14 h-14" alt="...">
+                                            
+                                        </th>
+                                        <th scope="row">
+                                            <%= element.product_name.split(' ').slice(0, 3).join(' ') %>
                                         </th>
                                         <td>
                                             <%= element._id.toString() %>
+                                        </td>
+
+                                        <td>
+                                            <%= element.actual_price %>
                                         </td>
                                         <td>
                                             <%= element.selling_price %>
@@ -56,12 +67,12 @@
                                         </td>
                                         <td>
                                             <a href="/admin/delete-product/<%= element._id %>" class="ms-3"
-                                                onclick="return confirm('Are you sure,You want to delete <%= element.cat_name %>')"><i
-                                                    class="ri-delete-bin-6-line"></i></a>
-                                            &nbsp;&nbsp;&nbsp;
-                                            <a href="/admin/edit-product/<%= element._id %>"><i
-                                                    class="ri-edit-2-line"></i></a>
-                                        </td>
+                                                onclick="return confirm(' Are you sure,You want to delete
+                                                <%=element.cat_name %>')"><i class="ri-delete-bin-6-line"></i></a>
+                                                &nbsp;&nbsp;&nbsp;
+                                                <a href="/admin/edit-product/<%= element._id %>"><i
+                                                        class="ri-edit-2-line"></i></a>
+                                                </td>
                                     </tr>
                                     <% }) %>
                             </tbody>

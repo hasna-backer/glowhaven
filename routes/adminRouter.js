@@ -16,7 +16,7 @@ router.post('/login', adminController.doLogin)
 router.get('/logout', adminController.logout)
 
 
-// Customer Management
+// Customer Management 
 router.get('/customer', customerController.viewCustomer)
 router.get('/block-customer/:id', customerController.blockCustomer)
 

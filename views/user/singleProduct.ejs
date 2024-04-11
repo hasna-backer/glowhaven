@@ -1,3 +1,56 @@
+<style>
+    /* Dropdown Button */
+    /* Dropdown Button */
+    .dropbtn {
+        display: inline-block;
+        color: black;
+        text-decoration: none;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+
+    /* Dropdown button on hover & focus */
+    .dropbtn:hover,
+    .dropbtn:focus {
+        color: #3e8e41;
+    }
+
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+    }
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    /* Add a small arrow to the dropdown button */
+    .dropbtn::after {
+        content: " ▼";
+    }
+
+    /* Change the background color of the dropdown button when the dropdown content is shown */
+    .dropdown:hover .dropbtn {
+        color: #3e8e41;
+    }
+</style>
+<%- include('../partials/header.ejs') %>
+
 <!-- ***** Product Area Starts ***** -->
 <section class="section" id="product">
     <div class="container">
@@ -9,34 +62,81 @@
                     <% console.log("products",products); %>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="right-content">
+            <div class="col-lg-6 ">
+                <div class="right-content p-4">
                     <h4>
                         <%= products.product_name %>
                     </h4>
-                    <span class="price">
-                        <i class="bi bi-currency-rupee"></i>
-                        <%= products.selling_price %>
-                    </span>
-                    <ul class="stars">
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                    </ul>
-                    <span>
-                        <%= products.ingredients %>
-                    </span>
-                    <div class="quote">
-                        <i class="fa fa-quote-left"></i>
-                        <p>
-                            <%= products.description %>.
 
-                        </p>
+                    <span class="price">MRP:
+                        <del>
+                            ₹<%= products.actual_price %>
+                        </del>
+                        &nbsp;
+                        ₹<%= products.selling_price %>
+                    </span>
+
+
+                    <span class="price">
+
+                        <ul class="stars" style="position: static !important;">
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                        </ul>
+                        sdsadasdasd
+                    </span>
+                    <span>
+                        <%= products.description %>.
+                    </span>
+
+
+                    <input type="text" id="id" value="<%= products._id %>" hidden disable>
+
+
+
+
+
+
+
+                    <!-- Accordion without outline borders -->
+                    <div id="accordion-flush" data-accordion="collapse"
+                        data-inactive-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                        data-active-classes="text-gray-500 dark:text-gray-400">
+                        <h2 id="accordion-flush-heading-1">
+                            <button type="button"
+                                class="flex items-center justify-between w-full pt-4 pb-0 font-medium rtl:text-right text-gray-900 dark:text-gray-400 gap-3"
+                                data-accordion-target="#accordion-flush-body-1" aria-expanded="false"
+                                aria-controls="accordion-flush-body-1">
+                                <div class="left-content">
+                                    <h6>Ingredients</h6>
+                                </div>
+                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M9 5 5 1 1 5" />
+                                </svg>
+                            </button>
+                        </h2>
+                        <div id="accordion-flush-body-1" class="hidden" aria-labelledby="accordion-flush-heading-1">
+                            <div class="py-0 border-b border-gray-200 dark:border-gray-700">
+                                <p class=" text-gray-500 dark:text-gray-400">
+                                    <%= products.ingredients %>
+                                </p>
+                            </div>
+                        </div>
+
                     </div>
+                    <!-- End Accordion without outline borders -->
+
+
+
+
+
                     <div class="quantity-content">
-                        <div class="left-content">
+                        <!-- <div class="left-content">
                             <h6>No. of Orders</h6>
                         </div>
                         <div class="right-content">
@@ -45,16 +145,46 @@
                                     max="" name="quantity" value="1" title="Qty" class="input-text qty text" size="4"
                                     pattern="" inputmode=""><input type="button" value="+" class="plus">
                             </div>
+                        </div> -->
+
+                        <div class="total">
+                            <h4>Total: $210.00</h4>
+                            <div class="main-border-button"><button id="addtocart" onclick="addToCart()">Add To
+                                    Bag</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="total">
-                        <h4>Total: $210.00</h4>
-                        <div class="main-border-button"><a href="#">Add To Cart</a></div>
                     </div>
                 </div>
             </div>
-        </div>
 
-    </div>
+        </div>
 </section>
 <!-- ***** Product Area Ends ***** -->
+
+<script>
+
+    const added = () => {
+        const button = document.getElementById('addtocart');
+        button.innerText = "Added to Bag"
+        button.style.color = "#008b8b"
+        setTimeout(() => {
+            button.innerText = "Add to Bag"
+            button.style.color = ""
+
+        }, 3000)
+    }
+
+
+    const addToCart = async () => {
+        const id = document.getElementById('id').value;
+        added()
+        try {
+            const res = await axios.post('/add-to-cart', { id, quantity: 1 })
+            if (res.status === 200) {
+
+            }
+        } catch (error) {
+
+        }
+    }
+</script>

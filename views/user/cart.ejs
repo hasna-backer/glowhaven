@@ -1,0 +1,251 @@
+<style>
+    ::placeholder {
+        color: red;
+        opacity: 1;
+        /* Firefox */
+    }
+</style>
+
+<%- include('../partials/header.ejs') %>
+
+
+
+    <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4 "
+        id="product">
+        <div class="container ">
+            <div class="row justify-content-center ">
+                <div class="col-lg-7 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                    
+                                <% if (cartItems.length ==0) { %>
+                                    <div class="card align-items-center" >
+                        <div class="card-body m-10 text-center"">
+                                    <form action="/product">
+
+                    <img src="/user-assets/images/noitems.png" alt="">
+               
+                   <h5 class="card-title pb-0 pt-2 mb-0  ">There are no items in this cart</h5>
+                
+            <p class="card-text pt-0 mt-0 mb-4" >Let’s add some items to the cart to shop</p>
+                
+
+            <button type="submit" class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-purple-500 dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                Continue Shopping</span>
+                </button>
+                <!-- <button type="submit">Continue Shopping</button> -->
+            </form>
+        </div>    
+        </div>                
+                                
+
+                                <% } else { %>
+                                                            
+            <div class="card mb-8">
+                        <div class="card-body">
+                            <% cartItems.forEach(product=> { %>
+
+                                <!-- Card with an image on left -->
+                                <div class="card m-3">
+                                    <div class="row g-0">
+                                        <div class="col-md-3">
+                                            <img src="/files/<%= product.prod_detail.img1 %>"
+                                                class="img-fluid rounded-start" alt="...">
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="card-body">
+                                                <h5 class="card-title pb-0 pt-2">
+                                                    <%= product.prod_detail.product_name.split(' ').slice(0,
+                                                                6).join(' ')  %>
+                                                </h5>
+                                                <p class="card-text">
+                                                    <%= product.prod_detail.description.split(' ').slice(0,
+                                                                15).join(' ') %>
+                                                        </p>
+                                                        <div class="d-flex ">
+                                                            <p class="card-text" id="<%= product.prod_detail._id %>"> <b>₹ <%= product.price %></b> <del>₹<%= product.mrp %> </del> </p>
+                                                            <span class="badge border-success border-1 text-success"">14% off</span>
+                                                                                                </div>
+                                                                                                <div class=" d-flex
+                                                                justify-content-between align-items-center">
+                                                                <p class="mb-0">Qty:&nbsp; 
+                                                                    <select name="qty" id="qty" onchange="quantity(this)" class="border-none" data-product-id="<%= product.prod_detail._id %>"> 
+                                                                        <% for(let i=1; i <=5; i++) { %>
+                                                                             <option value="<%= i %>" 
+                                                                            
+                                                                            <% if (product.cart.quantity==i) { %>
+                                                                             selected
+                                                                            <% } %> > <%= i %>
+                                                            </option>
+                                                            <% } %>
+                                                                </select>
+                                                </p>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm" data-product-id="<%= product.prod_detail._id %>" onclick="remove(this)">Remove</button>
+                                                    <button type="button" class="btn btn-sm  ">Move to
+                                                        Wishlist</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div><!-- End Card with an image on left -->
+                        <% }); %>
+
+                           <form class="row g-3 needs-validation" novalidate>
+                                <div class="col-12">
+                                <label for="input-group-1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"></label>
+                                <div class="relative mb-6">
+                                    <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                                        <i class="fa fa-gift" aria-hidden="true"></i>
+                                    </div>
+                                    <input type="text" id="input-group-1"
+                                        class="bg-purple-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5   "
+                                        placeholder="Apply Promo Code">
+                                </div>
+                             </div>
+                                <div   div class="col-12">
+                                    <div class="card-body">
+                                        <div class="tab-content">
+ 
+                                            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                                <h5 class="card-title pb-0">
+                                                    Price Details
+                                                </h5>
+                                                <div class="row justify-between">
+                                                    <div class="col label " >Total MRP</div>
+                                                    <div id="mrp" class="col text-right">
+                                                    ₹<%= totalMrp %>                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col label ">Savings on MRP</div>
+                                                <div class="col text-right" id="savings">
+                                                    - ₹<%= totalMrp - totalPrice %>                                                 
+                                                        </div>
+                                            </div>
+                                            <!-- <div class="row">
+                                                <div class="col label ">Sub Total</div>
+                                                <div id="total" class="col text-right">
+                                                   <b>₹<%= totalPrice %>  </b>                                                  
+                                                   </div>
+                                                </div> -->
+                                <div class="row">
+                                    <div class="col label ">Shipping Charges</div>
+                                    <div id="shipping" class="col text-right">
+                                        <% if (shipping===0) { %>
+                                         Free
+                                         <% } else { %>
+                                          ₹ 60
+                                        <% } %> </div>
+                                </div>
+                                <div class="row pb-2">
+                                    <div class="col label ">Coupon Discount</div>
+                                    <div class="col text-right">
+                                        yrtyrtyrty </div>
+                                </div>
+                                <div class="row border-top pt-2">
+                                    <div class="col label ">Order Total</div>
+                                    <div id="total" class="col text-right">
+                                       <b>₹<%= totalPrice + shipping %>  </b>   </div>
+                                </div>
+                                
+ 
+                                            </div>
+                                        </div>
+                                
+                                    </div>
+                                
+                                </div>
+
+
+                               
+                                <div class="col-12">
+                                    <button class="btn  w-100 text-gray-900 p-2.5 relative inline-flex items-center justify-center overflow-hidden  text-gray-900 rounded-lg group bg-gradient-to-br from-purple-50 to-pink-300 group-hover:from-purple-50 group-hover:to-pink-50 hover:text-pink-500 dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">
+                                        <a href="/checkout">Proceed To Pay</a></button>
+                                </div>
+                                <div class="col-12">
+                                    
+                                </div>
+                            </form>
+
+                            <% } %>
+                              
+
+                            
+
+                         
+                    </div>
+                </div>
+
+                
+
+            </div>
+        </div>
+        </div>
+
+    </section>
+
+    </div>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+
+        <script>
+            /**
+             * @param {HTMLSelectElement} element
+             */
+
+
+const remove=async (element) =>{
+ id=element.getAttribute('data-product-id')
+ console.log("id",id);
+ try {
+    const res= await axios.delete('/remove-item',{data:{id} ,headers: {
+            'Content-Type': 'application/json'
+        }})
+        console.log("res",res);
+        if (res.status===200){
+        window.location.href=window.location.href
+        }
+ } catch (error) {
+    console.log("error",error);
+ }
+}
+
+
+
+
+
+
+
+            //quantity updations function
+            const quantity = async (element) => {
+                console.log("element", element.value);
+                const id = element.getAttribute('data-product-id'); // Accessing the data attribute const
+                const qty = element.value;
+                const price=document.getElementById(id);
+                const total=document.getElementById('total')
+                const mrp=document.getElementById('mrp')
+                const savings=document.getElementById('savings')
+                const shipping=document.getElementById('shipping')
+             
+                console.log("qty", qty); 
+                try {
+                    const res = await axios.post('/update-quantity', { productId: id, newQuantity: qty })
+                    const updatePrice=res.data;
+                    price.innerHTML=`<b>₹  ${updatePrice.price} </b> <del>₹${updatePrice.mrp} </del> `
+                     total.innerHTML=`<b>₹ ${updatePrice.totalPrice + updatePrice.shipping } </b>`
+                     mrp.innerHTML=`₹ ${updatePrice.totalMrp}`
+                     savings.innerHTML=`${updatePrice.totalMrp-updatePrice.totalPrice}`
+                    if(updatePrice.shipping===0){
+                        shipping.innerHTML= "Free"
+                    }else{
+                        shipping.innerHTML="₹60"
+                    }
+                    console.log("price",price);
+                 }
+                     catch (error) { }
+                } 
+                </script>

@@ -40,7 +40,6 @@ const productShema = new Schema({
         type: String,
         required: true,
     },
-
     actual_price: {
         type: String,
         required: true
@@ -49,6 +48,7 @@ const productShema = new Schema({
         type: String,
         required: true
     },
+
     delete: {
         type: Boolean,
         required: true,
