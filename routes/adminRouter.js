@@ -7,6 +7,7 @@ const adminController = require('../controllers/adminController')
 const customerController = require('../controllers/customerController');
 const categoryController = require('../controllers/categoryController');
 const productController = require('../controllers/productController');
+const orderController = require('../controllers/orderController')
 
 //Admin Actions
 // router.get('/', authAdmin, adminController.dashboard)
@@ -36,5 +37,9 @@ router.get('/edit-product/:id', productController.renderEditProduct);
 router.post('/edit-product/:id', upload.fields([{ name: "img1" }, { name: "img2" }, { name: "img3" }]), productController.EditProduct);
 router.get('/delete-product/:id', productController.deleteProduct);
 
+//Order management
+router.get('/orders', orderController.listOrderAdminSde)
+router.get('/order-details/:id', orderController.orderDetailAdminSide)
+router.post('/change-status', orderController.changeStatus)
 
 module.exports = router;   

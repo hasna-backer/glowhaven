@@ -11,6 +11,7 @@ const order_schema = new Schema({
         {
             product_id: {
                 type: ObjectId,
+                ref: 'Products',
                 required: true
             },
             quantity: {
@@ -40,7 +41,8 @@ const order_schema = new Schema({
         }
     ],
     address: {
-        type: mongoose.Schema.Types.Mixed,
+        // type: mongoose.Schema.Types.Mixed,
+        type: String,
         required: true
     },
     payment_method: {

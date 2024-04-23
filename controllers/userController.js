@@ -9,6 +9,7 @@ const Address = require('../models/addressModel');
 const validate = require('../validations/signupValidation');
 const { response } = require('express');
 const { Express } = require('express');
+const productModel = require('../models/productModel');
 
 let homepage = async function (req, res, next) {
     const products = await Product.find({});
@@ -190,8 +191,22 @@ let editProfile = async (req, res) => {
 
 
 let renderViewProducts = async (req, res) => {
-    const products = await Product.find({});
-    res.render('user/product', { products, user: req.session.user });
+    const { search } = req.query
+    try {
+        if (!search) {
+            const products = await Product.find({});
+            return res.render('user/product', { products, user: req.session.user });
+        }
+        const products = await Product.find({
+            product_name: { $regex: new RegExp(search, 'i') }
+        });
+        console.log("products", products);
+        return res.render('user/product', { products, user: req.session.user });
+
+    } catch (error) {
+        console.log(error);
+    }
+
 };
 
 let renderSingleProducts = async (req, res) => {
@@ -199,6 +214,24 @@ let renderSingleProducts = async (req, res) => {
     res.render('user/singleProduct', { products, user: req.session.user })
 };
 
+//search products
+const searchProducts = async (req, res) => {
+    console.log("res.query", req.body);
+    const searchQuery = req.body.searchInput;
+
+    try {
+        const products = await Product.find({
+            product_name: { $regex: new RegExp(searchQuery, 'i') }
+        });
+
+        console.log("products", products);
+        res.json(products);
+    } catch (error) {
+        console.error("Error searching for products:", error);
+        // Send an error response if something went wrong
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
 
 //logout
 const logout = (req, res) => {
@@ -219,4 +252,5 @@ module.exports = {
     renderSingleProducts,
     viewProfile,
     editProfile,
+    searchProducts
 }

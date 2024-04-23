@@ -1,0 +1,258 @@
+<style>
+    select {
+        /* for Firefox */
+        -moz-appearance: none;
+        /* for Chrome */
+        -webkit-appearance: none;
+    }
+
+    /* For IE10 */
+    select::-ms-expand {
+        display: none;
+    }
+</style>
+
+<%- include('../partials/adminHeader.ejs') %>
+<%- include('../partials/adminSidebar.ejs') %>
+
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Orders</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/admin/orders">Orders</a></li>
+                <li class="breadcrumb-item active">Order Details</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    <div class="col-lg-13">
+        <div class="card">
+            <div class=" card-header d-flex justify-content-between align-items-center bg-blue-500 ">
+                <div>
+                    <div class="flex flex-row">
+                        <h5 class="card-title">Ordered On :</h5>
+                        <h1 class="card-title"><%= orderItem.createdAt.toDateString() %></h1>
+                    </div>
+                    <h5 class="card-title pt-0">order ID:<%= orderItem._id %></h5>
+                </div>
+                <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-blue-700 bg-white hover:bg-blue-800 
+                     font-medium rounded-lg text-sm px-3 py-2.5 text-center inline-flex items-center
+                    dark:bg-blue-600 " type="button">Change Status <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 4 4 4-4" />
+                    </svg>
+                </button>
+
+                <!-- Dropdown menu -->
+                <div id="dropdown"
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                        <li>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign
+                                out</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center pt-2"
+                    style="display: grid;grid-template-columns: 1fr 1fr 1fr;">
+                    <div class="row ">
+                        <div class=" col-2">
+                            <div class="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                                <svg class="absolute w-12 h-12 text-gray-400 -left-1" fill="currentColor"
+                                    viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <span>Customer info</span>
+                            <h1><%= customer.name %></h1>
+                            <h1><%= customer.email %></h1>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class=" col-2">
+                            <div class=" relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                                <svg class="absolute w-12 h-12 text-gray-400 -left-1" fill="currentColor"
+                                    viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M5.707 13.707a1 1 0 01-1.414-1.414L10 6.586l4.293 4.293a1 1 0 01-1.414 1.414zM16 7a1 1 0 011-1H9a1 1 0 010 2h7v4a1 1 0 01-1 1H2a1 1 0 01-1-1V7a1 1 0 011-1z"
+                                        clip-rule="evenodd">
+                                    </path>
+                                </svg>
+
+                            </div>
+                        </div>
+                        <div class="col">
+                            <span>Order info</span>
+                            <h1>Payment Type:<%= customer.payment_method %></h1>
+                            <h1><%= customer.email %></h1>
+                        </div>
+                    </div>
+                    <div class="row " style="width: 25%;">
+                        <div class=" col-2 ">
+                            <div class=" relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                                <svg class=" absolute w-12 h-12 text-gray-400 -left-1" fill="currentColor"
+                                    viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                        clip-rule="evenodd">
+                                    </path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <span>Deliver To</span>
+                            <h1>Address :<%= customer.address %></h1>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+
+                    <!-- Table with hoverable rows -->
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+
+                                <th scope="col">Products</th>
+                                <th scope="col">Unit Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Payment Method</th>
+                                <th scope="col">Change Status</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% orderItem.items.forEach((element,index)=> { %>
+                            <tr>
+
+                                <td style="width: 30%;">
+                                    <div class="row ">
+
+                                        <div class="col-3">
+                                            <img src="/files/<%= element.img1%>" class="img-fluid rounded" alt="...">
+                                        </div>
+                                        <div class="col">
+                                            <%= element.product_name%>
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <%= element.price %>
+                                </td>
+
+                                <td>
+                                    <%= element.quantity %>
+                                </td>
+                                <td>
+
+                                    <%= total[index] %>
+
+
+                                </td>
+                                <td class="text-center">
+                                    <%= orderItem.payment_method %>
+
+                                </td>
+                                <td style="overflow: visible !important; width: 20%;">
+                                    <div class="dropdown">
+                                        <!-- <button class="btn btn-secondary dropdown-toggle bg-blue-500" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                            Status </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="#">pending</a>
+                                            <a class="dropdown-item" href="#">Confirmed</a>
+                                            <a class="dropdown-item" href="#">Shipped</a>
+                                            <a class="dropdown-item" href="#">Delivered</a>
+                                        </div>
+                                    </div> -->
+                                        <select name="dropdown" id="dropdown"
+                                            data-product-id="<%= element.product_id %>"
+                                            data-order-id="<%= orderItem._id %>" onchange="changeStatus(this)"
+                                            class="btn btn-secondary bg-blue-500 aria-haspopup=" true"
+                                            aria-expanded="false">
+
+
+                                            <option value="Confirmed" <% if (element.status==="Confirmed") { %>
+                                                selected<% } %>>Confirmed</option>
+                                            <option value="Shipped" <% if (element.status==="Shipped") { %>
+                                                selected<% } %>>Shipped</option>
+                                            <option value="Delivered" <% if (element.status==="Delivered") { %>
+                                                selected<% } %>>Delivered</option>
+                                        </select>
+
+
+                                </td>
+                </div>
+                <% }) %>
+                </tr>
+
+
+                </tbody>
+                </table>
+                <!-- End Table with hoverable rows -->
+                <div>
+                    <div class="row ">
+                        <h1 class="col-8 text-right">subtotal</h1>
+                        <h1 class="col text-center"><%= orderItem.total_amount %></h1>
+                    </div>
+                    <div class="row">
+                        <h1 class="col-8 text-right">Grand Total</h1>
+                        <h1 class="col text-center"><%= orderItem.total_amount %></h1>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+</main>
+<script>
+    const changeStatus = async (element) => {
+        console.log(element.value);
+        const productId = element.getAttribute('data-product-id')
+        const orderId = element.getAttribute('data-order-id')
+        const status = element.value
+        // console.log("productid", productId);
+        try {
+            const res = await axios.post('/admin/change-status', {
+                productId,
+                orderId,
+                status
+            })
+
+            if (res.status === 200) {
+                window.location.reload()
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+</script>

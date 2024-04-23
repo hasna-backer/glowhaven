@@ -1,0 +1,136 @@
+<style>
+    .wrap {
+        width: 60px;
+        height: 60px;
+        position: relative;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    img {
+        position: absolute;
+        z-index: 1;
+    }
+
+    img:nth-of-type(2) {
+        left: -30px;
+        z-index: 0;
+        transform: rotate(-15deg)scale(.8);
+    }
+
+    img:nth-of-type(3) {
+        right: -30px;
+        z-index: 0;
+        transform: rotate(15deg) scale(.8);
+    }
+
+    td {
+        background: transparent;
+    }
+</style>
+
+
+<%- include('../partials/adminHeader.ejs') %>
+<%- include('../partials/adminSidebar.ejs') %>
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Orders</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Orders</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    <div class="col-lg-13">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <h5 class="card-title">Orders</h5>
+                    <a href="/admin/add-product" class="btn btn-primary "
+                        style="background-color: #0d6efd !important ;"><i class="bi bi-plus-lg"></i> New
+                        Product</a>
+                </div>
+
+
+
+                <!-- Table with hoverable rows -->
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Order ID</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Products</th>
+                            <th scope="col">Order Date</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Payment</th>
+                            <th scope="col">Manage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% orderItems.forEach(element=> { %>
+                        <tr class="<% if (element.status === 'Cancelled') { %> bg-red-200 <% } %>">
+
+                            <td scope="row" style="background: transparent;">
+                                <%= element._id.toString().slice(-6) %>
+                            </td>
+                            <td scope="row" style="background: transparent;">
+                                <%= element.name %>
+                            </td>
+                            <td style="background: transparent;">
+
+                                <div class="wrap">
+                                    <% element.items.img1.forEach((el,i)=> { %>
+                                    <img src="/files/<%= el %>" />
+
+
+                                    <% }) %>
+                                </div>
+
+                            </td>
+                            <td style="background: transparent;">
+                                <%= element.createdAt.toDateString() %> %>
+                            </td>
+                            <td style="width: 15px;background: transparent;">
+                                <%= element.address %>
+                            </td>
+                            <td style="background: transparent;">
+                                <%= element.status %>
+                            </td>
+                            <td style="background: transparent;">
+                                <%= element.payment_method %>
+                            </td>
+                            <td style="background: transparent;">
+                                <a href="/admin/order-details/<%= element._id %>" class="ms-3">
+                                    <i class="fa fa-eye" aria-hidden="true"></i> </a>
+
+
+
+                            </td>
+            </div>
+            <% }) %>
+            </tr>
+
+
+            </tbody>
+            </table>
+            <!-- End Table with hoverable rows -->
+
+        </div>
+    </div>
+    </div>
+    </div>
+    </section>
+
+</main>
+
+
+<script>
+    const itemDetails = (element) => {
+        console.log(element);
+    }
+</script>

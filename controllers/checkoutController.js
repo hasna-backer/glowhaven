@@ -1,5 +1,7 @@
 const Address = require('../models/addressModel');
 const User = require('../models/userModel');
+const Order = require('../models/orderModel');
+const Product = require('../models/productModel');
 const { getTotal } = require('../utils/helper')
 
 let renderCheckout = async (req, res) => {
@@ -73,8 +75,18 @@ const renderPayment = async (req, res) => {
     }
 }
 
-const doPayment = async (req, res) => {
 
+
+module.exports = {
+    newAddress,
+    renderCheckout,
+    submitAddress,
+    chooseAddress,
+    removeAddress,
+    renderPayment
 }
 
-module.exports = { newAddress, renderCheckout, submitAddress, chooseAddress, removeAddress, renderPayment, doPayment } 
+
+
+
+

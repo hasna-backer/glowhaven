@@ -65,18 +65,17 @@
                     <div class="col pl-0 ">
                       <div class="card-title pt-2 pb-4 justify-content-between">
                         <div class="flex  mb-3 justify-content-between">
-                          <label for="default-radio-1" class=" card-title pt-2 pb-3   ">Pay
-                            <%= amount_payable %> on
-                            delivery</label>
-                          <input id="default-radio-1" type="radio" value="" name="default-radio"
-                            onclick="cashOnDelivery(this)"
-                            class="w-4 h-4 mr-3 pr-2 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500   focus:ring-2  dark:border-gray-600">
+                          <form action="/orders" method="post">
+                            <label for="default-radio-1" class=" card-title pt-2 pb-3">Pay
+                              <%= amount_payable %> on
+                              delivery</label>
+
 
                         </div>
-                        <button type="button"
+                        <button type="submit" value="cod" name="paymentType"
                           class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Place
                           Order</button>
-
+                        </form>
                       </div>
 
                     </div>

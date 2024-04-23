@@ -48,7 +48,10 @@
             <li class="submenu">
               <a href="javascript:;"> <%= user.name %> </a>
               <ul>
-                <li><a href="/profile">Profile</a></li>
+                <li><a href="/orders">My Orders</a></li>
+                <li><a href="/profile">My Profile</a></li>
+                <li><a href="/profile">My Wallet</a></li>
+                <li><a href="/profile">My Wishlist</a></li>
                 <li><a href="/logout">Logout</a></li>
               </ul>
             </li>
@@ -59,11 +62,24 @@
               <a href="/login">Sign Up</a>
             </li>
             <% } %>
+
             <li class="scroll-to-section">
               <a href="/view-cart"><i class="fa fa-shopping-cart"></i></a>
             </li>
             <li class="scroll-to-section">
               <a href="/view-cart"><i class="fa fa-heart"></i></a>
+            </li>
+            <li class="scroll-to-section">
+
+
+              <form class="form-inline" action="/search" method="post" id="searchForm">
+                <div class="input-group">
+                  <input class="form-control mr-sm-2 " type="search" placeholder="Search" aria-label="Search"
+                    name="query" style="border-radius: 4px;" id="searchInput" onchange="search()">
+                </div>
+              </form>
+
+
             </li>
           </ul>
           <a class="menu-trigger">
@@ -76,3 +92,17 @@
   </div>
 </header>
 <!-- ***** Header Area End ***** -->
+
+<script>
+  document.getElementById('searchInput').addEventListener('keypress', async function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent the default form submission
+      const searchInput = document.getElementById('searchInput').value
+      console.log(searchInput);
+      console.log("windo", window.location);
+      window.location.href =
+        `${window.location.origin}/product?search=${searchInput}`
+      // document.getElementById('searchForm').submit(); // Submit the form
+    }
+  });
+</script>

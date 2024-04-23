@@ -21,7 +21,8 @@ let addProduct = async (req, res) => {
         const img3 = req.files.img3[0].filename
 
 
-
+        // if (req.body.product_name)
+        // const dup = await Product.find({})
         console.log("req.body", req.body);
         const product = await Product.create({
             ...req.body, img1, img2, img3

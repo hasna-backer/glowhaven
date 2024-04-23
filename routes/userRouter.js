@@ -3,13 +3,14 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const cartController = require('../controllers/cartController');
 const checkoutController = require('../controllers/checkoutController');
+const orderController = require('../controllers/orderController')
+
 const { authUser } = require('../middlewares/authMiddleware')
 
 // User actions  
 router.get('/', authUser, userController.homepage);
 router.get('/signup', userController.renderSignup);
 router.post('/signup', userController.doSignup);
-
 router.get('/verify-user', userController.renderOtp);
 router.post('/verify-user', userController.verifyUser);
 router.post('/resend-otp', userController.resendOtp);
@@ -20,6 +21,7 @@ router.get('/logout', userController.logout);
 // Products based routes
 router.get('/product', userController.renderViewProducts);
 router.get('/product-details/:id', userController.renderSingleProducts);
+router.post('/search', userController.searchProducts);
 
 //User profile
 router.get('/profile', authUser, userController.viewProfile);
@@ -38,10 +40,13 @@ router.get('/add-address', checkoutController.newAddress)
 router.post('/add-adress', checkoutController.submitAddress)
 router.delete('/remove-address/:id', checkoutController.removeAddress)
 router.post('/choose-address', checkoutController.chooseAddress)
-router
-    .route("/checkout/payment")
-    .get(checkoutController.renderPayment)
-    .put(checkoutController.doPayment);
+router.get("/checkout/payment", checkoutController.renderPayment)
+
+// Orders
+router.get('/orders', orderController.renderOrder);
+router.get('/order-detail/:id', orderController.renderOrderDetails);
+router.post('/orders', orderController.createOrder);
+router.post('/cancel-order', orderController.cancelOrder);
 
 
 module.exports = router;     

@@ -16,7 +16,7 @@ let viewCart = async (req, res) => {
 
         // Combine cart items with product details
         const combinedCartItems = user.cart.map(cartItem => {
-            // Find the matching product for the current cart item
+            // Find the matching product for the current cart item 
             const product = products.find(p => p._id.toString() === cartItem.product_id.toString());
             // Return a new object that combines the cart item and product details
 
