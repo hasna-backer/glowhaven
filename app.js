@@ -61,6 +61,7 @@ app.set('view engine', 'ejs');
 //requiring routes
 const userRoutes = require('./routes/userRouter');
 const adminRoutes = require('./routes/adminRouter');
+const { openBrowser } = require('./utils/automate');
 
 app.use("/", userRoutes)
 app.use("/admin", adminRoutes)
