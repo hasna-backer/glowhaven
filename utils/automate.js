@@ -7,8 +7,8 @@ const openBrowser = async () => {
     const browser = await puppeteer.launch({
         headless: false,
         defaultViewport: {
-            width: 1920,
-            height: 1080
+            width: 1440,
+            height: 900
         },
     });
 
@@ -17,10 +17,10 @@ const openBrowser = async () => {
     await page.goto(`http://localhost:4011`);
 
     const userNameInput = await page.waitForSelector('#your_name');
-    await userNameInput.type('basilaslamnp@gmail.com');
+    await userNameInput.type('hasnaashik3@gmail.com');
 
     const passwordInput = await page.waitForSelector('#your_pass');
-    await passwordInput.type('Basil@123');
+    await passwordInput.type('12345678');
 
     const loginBtn = await page.waitForSelector('#signin');
     await loginBtn.click();

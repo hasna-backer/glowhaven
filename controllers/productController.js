@@ -45,6 +45,7 @@ let renderEditProduct = async (req, res) => {
         const error = req.flash('erro')[0];
         let category = await Category.find({ delete: { $ne: true } })
         const product = await Product.findById(req.params.id);
+        console.log("product", product)
         res.render('admin/editProduct', { error, product, category });
     } catch (error) {
 
