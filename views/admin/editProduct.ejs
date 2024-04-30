@@ -193,7 +193,7 @@
                 <!-- Table with hoverable rows -->
                 <!-- Vertical Form -->
                 <form class="row g-3" method="post" action="/admin/edit-product/<%= product._id %>"
-                    enctype="multipart/form-data">
+                    enctype="multipart/form-data" id="productForm">
                     <% if (error && error.length> 0) { %>
                     <div id="alertMessage" class="alert alert-danger">
                         <%= error %>
@@ -203,26 +203,33 @@
                         <label for="inputNanme4" class="form-label">Product title</label>
                         <input type="text" class="form-control" id="title" name="product_name"
                             value="<%= product.product_name %>">
+                        <div id="error" style="color:red"></div>
                     </div>
                     <div class="col-12">
                         <label for="inputEmail4" class="form-label">Description</label>
                         <input type="text" class="form-control" id="description" name="description"
                             value="<%= product.description %>">
+                        <div id="error" style="color:red"></div>
                     </div>
                     <div class="col-4">
                         <label for="inputEmail4" class="form-label">Actual Price</label>
-                        <input type="text" class="form-control" id="description" name="actual_price"
+                        <input type="text" class="form-control" id="actual_price" name="actual_price"
                             value="<%= product.actual_price %>">
+                        <div id="error" style="color:red"></div>
                     </div>
                     <div class="col-4">
                         <label for="inputEmail4" class="form-label">Sale Price</label>
-                        <input type="text" class="form-control" id="description" name="selling_price"
+                        <input type="text" class="form-control" id="selling_price" name="selling_price"
                             value="<%= product.selling_price %>">
+                        <div id="error" style="color:red"></div>
                     </div>
+
+
                     <div class="col-4">
                         <label for="inputEmail4" class="form-label">stock</label>
-                        <input type="text" class="form-control" id="description" name="stock"
-                            value="<%= product.stock %>">
+                        <input type="text" class="form-control" id="stock" name="stock" value="<%= product.stock %>">
+                        <div id="error" style="color:red"></div>
+
                     </div>
                     <label class="fw-bold my-2" for="exampleFormControlInput1">Status</label>
                     <select class="form-select" name="status" aria-label="Default select example">
@@ -249,8 +256,10 @@
                     </div>
                     <div class="col-12">
                         <label for="inputAddress" class="form-label">Key ingredients</label>
-                        <textarea type="text" class="form-control" id="inputAddress" name="ingredients"
+                        <textarea type="text" class="form-control" id="ingredients" name="ingredients"
                             placeholder="Glycolic Acid, Aloe Barbadensis Leaf Water"><%= product.ingredients %></textarea>
+                        <div id="error" style="color:red"></div>
+
                     </div>
                     <!-- <div class="text-center">
                                 <button type="submit" class="btn btn-primary"
@@ -276,11 +285,15 @@
 
                 <div class="wrapper">
                     <div class="box">
-                        <div class="js--image-preview" style="background-image: url('/files/<%= product.img1 %>');">
+                        <div class="js--image-preview" style="background-image: url('/files/<%= product.img1 %>');"
+                            id="imgprev1">
                         </div>
                         <div class="upload-options">
                             <label>
-                                <input type="file" class="image-upload" accept="image/*" name="img1" />
+                                <input type="file" class="image-upload" accept="image/*" name="img1" id="img1" />
+                                <div id="error" style="color: #ff0404;padding: 100px;padding-top: 133px;">
+                                </div>
+
                             </label>
                         </div>
                     </div>
@@ -290,7 +303,10 @@
                         </div>
                         <div class="upload-options">
                             <label>
-                                <input type="file" class="image-upload" accept="image/*" name="img2" />
+                                <input type="file" class="image-upload" accept="image/*" name="img2" id="img2" />
+                                <div id="error" style="color: #ff0404;padding: 100px;padding-top: 133px;">
+                                </div>
+
                             </label>
                         </div>
                     </div>
@@ -300,7 +316,10 @@
                         </div>
                         <div class="upload-options">
                             <label>
-                                <input type="file" class="image-upload" accept="image/*" name="img3" />
+                                <input type="file" class="image-upload" accept="image/*" name="img3" id="img3" />
+                                <div id="error" style="color: #ff0404;padding: 100px;padding-top: 133px;">
+                                </div>
+
                             </label>
                         </div>
                     </div>
@@ -337,30 +356,166 @@
 
 
 <script>
-    // script.js
-    const form = document.getElementById("form");
+    //validations
+    document.getElementById('productForm').addEventListener('submit', function (event) {
+        console.log("validations");
+        event.preventDefault();
+        const form = event.target
+        const title = document.getElementById('title')
+        const description = document.getElementById('description')
+        const actual_price = document.getElementById('actual_price')
+        const selling_price = document.getElementById('selling_price')
+        const stock = document.getElementById('stock')
+        const ingredients = document.getElementById('ingredients')
+        const img1 = document.getElementById('img1')
+        const img2 = document.getElementById('img2')
+        const img3 = document.getElementById('img3')
+        // const name = document.getElementById('address_cust_name')
+        // const phone = document.getElementById('phone')
+        // const alternatePhone = document.getElementById('alternate_phone')
 
-    form.addEventListener("submit", submitForm);
+        const setError = (element, message) => {
+            const inputControl = element.parentElement;
+            const errorDisplay = inputControl.querySelector('#error')
+            console.log("error", errorDisplay);
+            errorDisplay.innerText = message
+            element.focus();
 
-    function submitForm(e) {
-        e.preventDefault();
-        const name = document.getElementById("name");
-        const files = document.getElementById("files");
-        const formData = new FormData();
-        formData.append("name", name.value);
-        for (let i = 0; i < files.files.length; i++) {
-            formData.append("files", files.files[i]);
         }
-        fetch("http://localhost:5000/upload_files", {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            })
-            .then((res) => console.log(res))
-            .catch((err) => ("Error occured", err));
-    }
+
+        const setSuccuss = (element) => {
+            const inputControl = element.parentElement;
+            const errorDisplay = inputControl.querySelector('#error')
+            errorDisplay.innerText = ''
+        }
+
+
+        // Prevent form submission
+        var letters = /^[A-Za-z\s]*$/;
+        // Validate pincode
+        const titleVal = title.value;
+        if (!titleVal) {
+            setError(title, 'Please enter a title.')
+            return
+        } else if (!titleVal.match(letters)) {
+            setError(title, 'Only Alpabets!')
+            return
+        } else {
+            setSuccuss(title);
+        }
+
+        // Validate city
+        const descriptionVal = document.getElementById('description').value;
+        if (!descriptionVal) {
+            setError(description, 'Please enter description ')
+            return;
+        } else {
+            setSuccuss(description);
+        }
+
+        // Validate State
+        const actual_priceVal = document.getElementById('actual_price').value;
+        if (!actual_priceVal) {
+            setError(actual_price, 'Please enter a Value ')
+            return;
+        } else if (actual_priceVal < 10) {
+            setError(actual_price, 'Please enter a real number ')
+            return;
+        } else {
+            setSuccuss(actual_price);
+        }
+
+        const selling_priceVal = document.getElementById('selling_price').value;
+        if (!selling_priceVal) {
+            setError(selling_price, 'Please enter a Value ')
+            return;
+        } else if (selling_priceVal < 10) {
+            setError(selling_price, 'Please enter a real number ')
+            return;
+        } else {
+            setSuccuss(selling_price);
+        }
+
+        console.log("submitfvxcv");
+
+        const stockVal = document.getElementById('stock').value;
+        if (!stockVal) {
+            setError(stock, 'Please enter a Value ')
+            return;
+        } else if (stockVal < 5) {
+            setError(stock, 'Please enter a real number ')
+            return;
+        } else {
+            setSuccuss(stock);
+        }
+        console.log("submit");
+
+
+        // Validate houseName
+        const ingredientsVal = ingredients.value;
+        if (!ingredientsVal) {
+            setError(ingredients, 'Please enter ingredients ')
+            return;
+        } else {
+            setSuccuss(ingredients);
+        }
+        // console.log("before image");
+        // const img1Val = document.getElementById("img1").files[0]
+        // console.log(img1Val);
+        // if (!img1Val) {
+        //     setError(img1, 'Please insert image ')
+        //     return;
+        // } else {
+        //     setSuccuss(img1);
+        // }
+        // const img2Val = document.getElementById("img2").files[0]
+        // console.log(img2Val);
+        // if (!img2Val) {
+        //     setError(img2, 'Please insert image ')
+        //     return;
+        // } else {
+        //     setSuccuss(img2);
+        // }
+        // const img3Val = document.getElementById("img3").files[0]
+        // console.log(img3Val);
+        // if (!img3Val) {
+        //     setError(img3, 'Please insert image ')
+        //     return;
+        // } else {
+        //     setSuccuss(img3);
+        // }
+
+
+
+        console.log("gfufgug", form.action);
+        form.submit();
+
+    });
+
+    // script.js
+    // const form = document.getElementById("productForm");
+
+    // form.addEventListener("submit", submitForm);
+
+    // function submitForm(e) {
+    //     e.preventDefault();
+    //     const name = document.getElementById("name");
+    //     const files = document.getElementById("files");
+    //     const formData = new FormData();
+    //     formData.append("name", name.value);
+    //     for (let i = 0; i < files.files.length; i++) {
+    //         formData.append("files", files.files[i]);
+    //     }
+    //     fetch("http://localhost:5000/upload_files", {
+    //             method: 'POST',
+    //             body: formData,
+    //             headers: {
+    //                 "Content-Type": "multipart/form-data"
+    //             }
+    //         })
+    //         .then((res) => console.log(res))
+    //         .catch((err) => ("Error occured", err));
+    // }
 
 
 

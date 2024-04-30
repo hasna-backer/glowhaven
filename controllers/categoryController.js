@@ -2,7 +2,8 @@ const Category = require('../models/categoryModel');
 
 let viewCategory = async (req, res) => {
     let category = await Category.find({ delete: { $ne: true } })
-    res.render('admin/category', { category: category });
+    const err = req.flash('error')[0]
+    res.render('admin/category', { category: category, error: err });
 }
 
 let renderAddCategory = async (req, res) => {
@@ -15,6 +16,7 @@ let addCategory = async (req, res) => {
     try {
         // const { cat_name, cat_status, description } = req.body
         let category = await Category.create(req.body)
+        req.flash('error', "Category already Exist!")
         res.redirect('/admin/category');
     } catch (error) {
         console.log((error.message || error));
@@ -42,6 +44,7 @@ let EditCategory = async (req, res) => {
         const { cat_name, cat_status, description } = req.body;
         const filter = { _id: req.params.id }
         let category = await Category.updateOne(filter, req.body)
+        req.flash('error', "Category edited succussfully!")
         res.redirect('/admin/category');
 
     } catch (error) {
@@ -53,10 +56,12 @@ let EditCategory = async (req, res) => {
 }
 
 let deleteCategory = async (req, res) => {
-    console.log('deleteCategory');
     const filter = { _id: req.params.id }
+    console.log('deleteCategory', filter);
     const delet = await Category.updateOne(filter, { $set: { delete: true } });
+    req.flash('error', "Category Deleted succussfully!")
     res.redirect('/admin/category');
 }
+
 
 module.exports = { viewCategory, renderAddCategory, addCategory, renderEditCategory, EditCategory, deleteCategory }  

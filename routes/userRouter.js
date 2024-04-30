@@ -38,7 +38,7 @@ router.delete('/remove-item', cartController.removeItem)
 // checkout
 router.get('/checkout', checkoutController.renderCheckout)
 router.get('/add-address', checkoutController.newAddress)
-router.post('/add-adress', checkoutController.submitAddress)
+router.post('/add-address', checkoutController.submitAddress)
 router.delete('/remove-address/:id', checkoutController.removeAddress)
 router.post('/choose-address', checkoutController.chooseAddress)
 router.get("/checkout/payment", checkoutController.renderPayment)
@@ -52,7 +52,7 @@ router.post('/cancel-order', orderController.cancelOrder);
 
 //wishlist
 router.get('/wishlist', wishlistController.renderWishlilst);
-router.get('/add-to-wishlist', wishlistController.addToWishlilst);
-router.get('/delete-wishlist', wishlistController.deleteWishlilst);
+router.post('/add-to-wishlist', wishlistController.addToWishlilst);
+router.delete('/delete-wishlist', wishlistController.deleteWishlilst);
 
 module.exports = router;     

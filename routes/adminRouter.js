@@ -8,6 +8,7 @@ const customerController = require('../controllers/customerController');
 const categoryController = require('../controllers/categoryController');
 const productController = require('../controllers/productController');
 const orderController = require('../controllers/orderController')
+const couponController = require('../controllers/couponController')
 
 //Admin Actions
 // router.get('/', authAdmin, adminController.dashboard)
@@ -42,4 +43,10 @@ router.get('/orders', orderController.listOrderAdminSde)
 router.get('/order-details/:id', orderController.orderDetailAdminSide)
 router.post('/change-status', orderController.changeStatus)
 
+//Coupon management
+router.get('/coupon', couponController.coupon)
+router.get('/add-coupon', couponController.renderAddCoupon)
+router.post('/add-coupon', couponController.addCoupon)
+router.delete('/delete-coupon', couponController.deleteCoupon)
+router.post('/edit-coupon', couponController.editCoupon)
 module.exports = router;   

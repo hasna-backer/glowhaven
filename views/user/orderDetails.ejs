@@ -38,12 +38,17 @@
                                         data-order-id="<%= cartItems[0]._id %>" onclick="cancelOrder(this)">
                                         <% if (order.status === "Cancelled") { %>
                                         CANCELLED
-
-                                        <% } else { %>
+                                        <% } else if (order.status==="Delivered") { %>
+                                        RETURN
+                                        <% } else  { %>
                                         CANCEL ORDER
                                         <% } %> </div>
 
                                 </div>
+
+
+
+
                                 <hr>
                                 <div class="card-body pt-3">
                                     <div class="flex flex-col !gap-2">
@@ -163,6 +168,7 @@
             })
 
             if (res.status === 200) {
+                window.location.reload()
                 status.innerHTML = "CANCELLED"
                 // window.location.href = '/orders'
             }

@@ -110,6 +110,11 @@ let addToCart = async (req, res) => {
     const { id, quantity } = req.body
     const { cart } = await User.findOne({ _id: userId })
     console.log("cart", cart);
+    const existingProduct = cart.find((el) => el.product_id.toString() === id)
+    console.log("existing prod", existingProduct);
+    if (existingProduct && existingProduct.quantity >= 5) {
+        return res.status(200).json({ message: "maximum product" })
+    }
     //checking for duplicate products
     if (cart.some(el => el.product_id.toString() === id)) {
         console.log("hiiiiiiiiiiiiii");
@@ -117,8 +122,12 @@ let addToCart = async (req, res) => {
             $inc: { "cart.$.quantity": quantity }
         }, { new: true })
         console.log("this product exists, quantity updated");
+        console.log(cart);
 
         return res.status(200).json({ message: "product added  succesful" })
+
+
+
     }
     const updatedCart = await User.findOneAndUpdate({ _id: userId }, {
         $addToSet: {

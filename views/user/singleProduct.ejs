@@ -52,10 +52,10 @@
 <%- include('../partials/header.ejs') %>
 
 <!-- ***** Product Area Starts ***** -->
-<section class="section" id="product">
+<section class="section col col-md-6 col-lg-6" id="product">
     <div class="container">
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col col-md-6 col-lg-6 ">
                 <div class="left-images">
                     <img src="/files/<%= products.img1 %>" alt="">
                     <img src="/files/<%= products.img2 %>" alt="">
@@ -162,7 +162,6 @@
 <!-- ***** Product Area Ends ***** -->
 
 <script>
-
     const added = () => {
         const button = document.getElementById('addtocart');
         button.innerText = "Added to Bag"
@@ -177,9 +176,14 @@
 
     const addToCart = async () => {
         const id = document.getElementById('id').value;
+        const id2 = document.getElementById('id')
+        console.log(id2);
         added()
         try {
-            const res = await axios.post('/add-to-cart', { id, quantity: 1 })
+            const res = await axios.post('/add-to-cart', {
+                id,
+                quantity: 1
+            })
             if (res.status === 200) {
 
             }

@@ -34,6 +34,7 @@ let newAddress = async (req, res) => {
 
 
 let submitAddress = async (req, res) => {
+    console.log("addressssss");
     const userId = req.session.user.user._id
 
     let address = await Address.create({ ...req.body, customer_id: userId })

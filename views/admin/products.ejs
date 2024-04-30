@@ -1,88 +1,113 @@
 <%- include('../partials/adminHeader.ejs') %>
-    <%- include('../partials/adminSidebar.ejs') %>
+<%- include('../partials/adminSidebar.ejs') %>
 
-        <main id="main" class="main">
-            <div class="pagetitle">
-                <h1>Product</h1>
-                <nav>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item active">Product</li>
-                    </ol>
-                </nav>
-            </div><!-- End Page Title -->
-            <div class="col-lg-13">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Product</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Product</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    <div class="col-lg-13">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
 
-                            <h5 class="card-title">Product</h5>
-                            <a href="/admin/add-product" class="btn btn-primary "
-                                style="background-color: #0d6efd !important ;"><i class="bi bi-plus-lg"></i> New
-                                Product</a>
-                        </div>
-
-
-
-                        <!-- Table with hoverable rows -->
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Product</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">ProductID</th>
-                                    <th scope="col">MRP</th>
-                                    <th scope="col">Selling price</th>
-                                    <th scope="col">Stock</th>
-                                    <th scope="col">status</th>
-                                    <th scope="col">Delete/Edit</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% product.forEach(element=> { %>
-                                    <tr>
-                                        <th scope="row">
-                                            <img src="/files/<%= element.img1 %>" 
-                                                class="img-fluid rounded-start w-14 h-14" alt="...">
-                                            
-                                        </th>
-                                        <th scope="row">
-                                            <%= element.product_name.split(' ').slice(0, 3).join(' ') %>
-                                        </th>
-                                        <td>
-                                            <%= element._id.toString() %>
-                                        </td>
-
-                                        <td>
-                                            <%= element.actual_price %>
-                                        </td>
-                                        <td>
-                                            <%= element.selling_price %>
-                                        </td>
-                                        <td>
-                                            <%= element.stock %>
-                                        </td>
-                                        <td>
-                                            <%= element.status ? "Active" :"Inactive" %>
-                                        </td>
-                                        <td>
-                                            <a href="/admin/delete-product/<%= element._id %>" class="ms-3"
-                                                onclick="return confirm(' Are you sure,You want to delete
-                                                <%=element.cat_name %>')"><i class="ri-delete-bin-6-line"></i></a>
-                                                &nbsp;&nbsp;&nbsp;
-                                                <a href="/admin/edit-product/<%= element._id %>"><i
-                                                        class="ri-edit-2-line"></i></a>
-                                                </td>
-                                    </tr>
-                                    <% }) %>
-                            </tbody>
-                        </table>
-                        <!-- End Table with hoverable rows -->
-
-                    </div>
+                    <h5 class="card-title">Product</h5>
+                    <a href="/admin/add-product" class="btn btn-primary "
+                        style="background-color: #0d6efd !important ;"><i class="bi bi-plus-lg"></i> New
+                        Product</a>
                 </div>
-            </div>
-            </div>
-            </section>
 
-        </main><!-- End #main -
+                <% if (error && error.length> 0) { %>
+                <div id="alertMessage" class="alert alert-danger">
+                    <%= error %>
+                </div>
+                <% } %>
+
+                <!-- Table with hoverable rows -->
+                <div class="h-[480px]">
+
+
+                    <table class="table table-hover ">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">ProductID</th>
+                                <th scope="col">MRP</th>
+                                <th scope="col">Selling price</th>
+                                <th scope="col">Stock</th>
+                                <th scope="col">status</th>
+                                <th scope="col">Delete/Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% product.forEach(element=> { %>
+                            <tr class="<% if (element.status === false) { %> bg-red-200 <% } %>">
+                                <th scope=" row" style="background: transparent;">
+                                    <img src="/files/<%= element.img1 %>" class="img-fluid rounded-start w-14 h-14"
+                                        alt="...">
+
+                                </th>
+                                <th scope="row" style="background: transparent;">
+                                    <%= element.product_name.split(' ').slice(0, 3).join(' ') %>
+                                </th>
+                                <td style="background: transparent;">
+                                    <%= element._id.toString() %>
+                                </td>
+
+                                <td style="background: transparent;">
+                                    <%= element.actual_price %>
+                                </td>
+                                <td style="background: transparent;">
+                                    <%= element.selling_price %>
+                                </td>
+                                <td style="background: transparent;">
+                                    <%= element.stock %>
+                                </td>
+                                <td style="background: transparent;">
+                                    <%= element.status ? "Active" :"Inactive" %>
+                                </td>
+                                <td style="background: transparent;">
+                                    <a href="/admin/delete-product/<%= element._id %>" class="ms-3"
+                                        onclick="return confirm(' Are you sure,You want to delete <%=element.product_name %>')"><i
+                                            class="ri-delete-bin-6-line"></i></a>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <a href="/admin/edit-product/<%= element._id %>"><i class="ri-edit-2-line"></i></a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End Table with hoverable rows -->
+
+            </div>
+        </div>
+
+    </div>
+
+    <nav aria-label="Page navigation " class="mx-auto display-flex w-fit">
+        <ul class="pagination">
+            <li class="page-item" <% if (currentPage === 1) { %> disabled<% } %>>
+                <a class="page-link <% if (currentPage==1) { %>pointer-events-none cursor-not-allowed<% } %>"
+                    href="/admin/product?page=<%= currentPage - 1 %>">Previous</a>
+            </li>
+            <% for (let i = 1; i <= totalPages; i++) { %>
+            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a class="page-link" href="/admin/product?page=<%= i %>"><%= i %></a>
+            </li>
+            <% } %>
+            <li class="page-item" <% if (currentPage === totalPages) { %> disabled<% } %>>
+                <a class="page-link <% if (currentPage===totalPages) { %>pointer-events-none cursor-not-allowed<% } %>"
+                    href="/admin/product?page=<%= currentPage + 1 %>">Next</a>
+            </li>
+        </ul>
+    </nav>
+    </section>
+
+</main>

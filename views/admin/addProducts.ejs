@@ -172,124 +172,148 @@
 
 
 <%- include('../partials/adminHeader.ejs') %>
-    <%- include('../partials/adminSidebar.ejs') %>
-        <main id="main" class="main">
-            <div class="pagetitle">
-                <!-- <h1>Product</h1> -->
-                <nav>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/admin">Home</a></li>
-                        <li class="breadcrumb-item active">Product</li>
-                    </ol>
-                </nav>
-            </div><!-- End Page Title -->
+<%- include('../partials/adminSidebar.ejs') %>
+<main id="main" class="main">
+    <div class="pagetitle">
+        <!-- <h1>Product</h1> -->
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                <li class="breadcrumb-item active">Product</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
 
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Product</h5>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Product</h5>
 
-                        <!-- Table with hoverable rows -->
-                        <!-- Vertical Form -->
-                        <form class="row g-3" method="post" action="/admin/add-product" enctype="multipart/form-data">
-                            <div class="col-12">
-                                <label for="inputNanme4" class="form-label">Product title</label>
-                                <input type="text" class="form-control" id="title" name="product_name">
-                            </div>
-                            <div class="col-12">
-                                <label for="inputEmail4" class="form-label">Description</label>
-                                <input type="text" class="form-control" id="description" name="description">
-                            </div>
-                            <div class="col-4">
-                                <label for="inputEmail4" class="form-label">Actual Price</label>
-                                <input type="text" class="form-control" id="description" name="actual_price">
-                            </div>
-                            <div class="col-4">
-                                <label for="inputEmail4" class="form-label">Sale Price</label>
-                                <input type="text" class="form-control" id="description" name="selling_price">
-                            </div>
-                            <div class="col-4">
-                                <label for="inputEmail4" class="form-label">stock</label>
-                                <input type="text" class="form-control" id="description" name="stock">
-                            </div>
-                            <div class="col-6">
-                                <label class="inputNanme4" for="exampleFormControlInput1">Suited to</label>
-                                <select class="form-select" name="type" aria-label="Default select example">
-                                    <option value="All Skin Types">All Skin Types</option>
-                                    <option value="Oily Skin">Oily Skin</option>
-                                </select>
-                            </div>
-                            <div class="col-6">
-                                <label class="inputNanme4" for="exampleFormControlInput1">Category</label>
-                                <select class="form-select" name="category_id" aria-label="Default select example">
+                <!-- Table with hoverable rows -->
+                <!-- Vertical Form -->
+                <form class="row g-3" method="post" action="/admin/add-product" enctype="multipart/form-data"
+                    id="productForm">
+                    <% if (error && error.length> 0) { %>
+                    <div id="alertMessage" class="alert alert-danger">
+                        <%= error %>
+                    </div>
+                    <% } %>
+                    <div class="col-12">
+                        <label for="inputNanme4" class="form-label">Product title</label>
+                        <input type="text" class="form-control" id="title" name="product_name">
+                        <div id="error" style="color:red"></div>
 
-                                    <% category&&category.forEach(element=> { %>
-                                        <option value="<%= element._id.toString() %>">
-                                            <%= element.cat_name %>
-                                        </option>
-                                        <% }) %>
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label for="inputAddress" class="form-label">Key ingredients</label>
-                                <textarea type="text" class="form-control" id="inputAddress" name="ingredients"
-                                    placeholder="Glycolic Acid, Aloe Barbadensis Leaf Water"></textarea>
-                            </div>
-                            <!-- <div class="text-center">
+                    </div>
+                    <div class="col-12">
+                        <label for="inputEmail4" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" name="description">
+                        <div id="error" style="color:red"></div>
+
+                    </div>
+                    <div class="col-4">
+                        <label for="inputEmail4" class="form-label">Actual Price</label>
+                        <input type="text" class="form-control" id="actual_price" name="actual_price">
+                        <div id="error" style="color:red"></div>
+
+                    </div>
+                    <div class="col-4">
+                        <label for="inputEmail4" class="form-label">Sale Price</label>
+                        <input type="text" class="form-control" id="selling_price" name="selling_price">
+                        <div id="error" style="color:red"></div>
+
+                    </div>
+                    <div class="col-4">
+                        <label for="inputEmail4" class="form-label">stock</label>
+                        <input type="text" class="form-control" id="stock" name="stock">
+                        <div id="error" style="color:red"></div>
+
+                    </div>
+                    <div class="col-6">
+                        <label class="inputNanme4" for="exampleFormControlInput1">Suited to</label>
+                        <select class="form-select" name="type" aria-label="Default select example">
+                            <option value="All Skin Types">All Skin Types</option>
+                            <option value="Oily Skin">Oily Skin</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="inputNanme4" for="exampleFormControlInput1">Category</label>
+                        <select class="form-select" name="category_id" aria-label="Default select example">
+
+                            <% category&&category.forEach(element=> { %>
+                            <option value="<%= element._id.toString() %>">
+                                <%= element.cat_name %>
+                            </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label for="inputAddress" class="form-label">Key ingredients</label>
+                        <textarea type="text" class="form-control" id="ingredients" name="ingredients"
+                            placeholder="Glycolic Acid, Aloe Barbadensis Leaf Water"></textarea>
+                        <div id="error" style="color:red"></div>
+
+                    </div>
+                    <!-- <div class="text-center">
                                 <button type="submit" class="btn btn-primary"
                                     style="background-color: #0d6efd !important;">Submit</button>
                                 <button type="reset" class="btn btn-secondary"
                                     style="background-color: #6c757d !important;">Reset</button>
                             </div> -->
-                            <!-- Vertical Form -->
-                            <!-- End Table with hoverable rows -->
-
-                    </div>
-                </div>
+                    <!-- Vertical Form -->
+                    <!-- End Table with hoverable rows -->
 
 
+                    <!-- </div>
+
+                  </div> -->
 
 
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Media</h5>
 
-                        <!-- Table with hoverable rows -->
-                        <!-- Vertical Form -->
+                    <!-- <div class="card">
+                   <div class="card-body"> -->
+                    <h5 class="card-title">Media</h5>
 
-                        <div class="wrapper">
-                            <div class="box">
-                                <div class="js--image-preview"></div>
-                                <div class="upload-options">
-                                    <label>
-                                        <input type="file" class="image-upload" accept="image/*" name="img1" required />
-                                    </label>
-                                </div>
+                    <!-- Table with hoverable rows -->
+                    <!-- Vertical Form -->
+
+                    <div class="wrapper">
+                        <div class="box ">
+                            <div class="js--image-preview"></div>
+                            <div class="upload-options">
+                                <label>
+                                    <input type="file" class="image-upload" accept="image/*" name="img1" id="img1" />
+                                    <div id="error" style="color: #ff0404;padding: 100px;padding-top: 133px;"> </div>
+                                </label>
                             </div>
 
-                            <div class="box">
-                                <div class="js--image-preview"></div>
-                                <div class="upload-options">
-                                    <label>
-                                        <input type="file" class="image-upload" accept="image/*" name="img2" required />
-                                    </label>
-                                </div>
-                            </div>
 
-                            <div class="box">
-                                <div class="js--image-preview"></div>
-                                <div class="upload-options">
-                                    <label>
-                                        <input type="file" class="image-upload" accept="image/*" name="img3" required />
-                                    </label>
-                                </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="js--image-preview"></div>
+                            <div class="upload-options">
+                                <label>
+                                    <input type="file" class="image-upload" accept="image/*" name="img2" id="img2" />
+                                    <div id="error" style="color: #ff0404;padding: 100px;padding-top: 133px;"> </div>
+                                </label>
                             </div>
                         </div>
 
-                        <!-- Vertical Form -->
-                        <!-- End Table with hoverable rows -->
-
+                        <div class="box">
+                            <div class="js--image-preview"></div>
+                            <div class="upload-options">
+                                <label>
+                                    <input type="file" class="image-upload" accept="image/*" name="img3" id="img3" />
+                                    <div id="error" style="color: #ff0404;padding: 100px;padding-top: 133px;"> </div>
+                                </label>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Vertical Form -->
+                    <!-- End Table with hoverable rows -->
+
+                    <!-- </div> -->
 
 
 
@@ -299,108 +323,249 @@
                         <button type="reset" class="btn btn-secondary"
                             style="background-color: #6c757d !important;">Reset</button>
                     </div>
-                    </form>
-                </div>
-
-
-
+                </form>
             </div>
-            </div>
-            </section>
-
-        </main><!-- End #main -->
 
 
-        <script>
-            function initImageUpload(box) {
-                let uploadField = box.querySelector('.image-upload');
 
-                uploadField.addEventListener('change', getFile);
+        </div>
+    </div>
+    </section>
 
-                function getFile(e) {
-                    let file = e.currentTarget.files[0];
-                    checkType(file);
-                }
+</main><!-- End #main -->
 
-                function previewImage(file) {
-                    let thumb = box.querySelector('.js--image-preview'),
-                        reader = new FileReader();
 
-                    reader.onload = function () {
-                        thumb.style.backgroundImage = 'url(' + reader.result + ')';
-                    }
-                    reader.readAsDataURL(file);
-                    thumb.className += ' js--no-default';
-                }
+<script>
+    //validations
+    document.getElementById('productForm').addEventListener('submit', function (event) {
+        console.log("validations");
+        event.preventDefault();
+        const form = event.target
+        const title = document.getElementById('title')
+        const description = document.getElementById('description')
+        const actual_price = document.getElementById('actual_price')
+        const selling_price = document.getElementById('selling_price')
+        const stock = document.getElementById('stock')
+        const ingredients = document.getElementById('ingredients')
+        const img1 = document.getElementById('img1')
+        const img2 = document.getElementById('img2')
+        const img3 = document.getElementById('img3')
+        // const name = document.getElementById('address_cust_name')
+        // const phone = document.getElementById('phone')
+        // const alternatePhone = document.getElementById('alternate_phone')
 
-                function checkType(file) {
-                    let imageType = /image.*/;
-                    if (!file.type.match(imageType)) {
-                        throw 'Datei ist kein Bild';
-                    } else if (!file) {
-                        throw 'Kein Bild gewählt';
-                    } else {
-                        previewImage(file);
-                    }
-                }
+        const setError = (element, message) => {
+            const inputControl = element.parentElement;
+            const errorDisplay = inputControl.querySelector('#error')
+            console.log("error", errorDisplay);
+            errorDisplay.innerText = message
+            element.focus();
 
+        }
+
+        const setSuccuss = (element) => {
+            const inputControl = element.parentElement;
+            const errorDisplay = inputControl.querySelector('#error')
+            errorDisplay.innerText = ''
+        }
+
+
+        // Prevent form submission
+        var letters = /^[A-Za-z\s]*$/;
+        console.log("submit");
+        // Validate pincode
+        const titleVal = title.value;
+        if (!titleVal) {
+            setError(title, 'Please enter a title.')
+            return
+        } else if (!titleVal.match(letters)) {
+            setError(title, 'Only Alpabets!')
+            return
+        } else {
+            setSuccuss(title);
+        }
+
+        // Validate city
+        const descriptionVal = document.getElementById('description').value;
+        if (!descriptionVal) {
+            setError(description, 'Please enter description ')
+            return;
+        } else {
+            setSuccuss(description);
+        }
+
+        // Validate State
+        const actual_priceVal = document.getElementById('actual_price').value;
+        if (!actual_priceVal) {
+            setError(actual_price, 'Please enter a Value ')
+            return;
+        } else if (actual_priceVal < 10) {
+            setError(actual_price, 'Please enter a real number ')
+            return;
+        } else {
+            setSuccuss(actual_price);
+        }
+
+        const selling_priceVal = document.getElementById('selling_price').value;
+        if (!selling_priceVal) {
+            setError(selling_price, 'Please enter a Value ')
+            return;
+        } else if (selling_priceVal < 10) {
+            setError(selling_price, 'Please enter a real number ')
+            return;
+        } else {
+            setSuccuss(selling_price);
+        }
+
+
+        const stockVal = document.getElementById('stock').value;
+        if (!stockVal) {
+            setError(stock, 'Please enter a Value ')
+            return;
+        } else if (stockVal < 5) {
+            setError(stock, 'Please enter a real number ')
+            return;
+        } else {
+            setSuccuss(stock);
+        }
+
+        // Validate houseName
+        const ingredientsVal = ingredients.value;
+        if (!ingredientsVal) {
+            setError(ingredients, 'Please enter ingredients ')
+            return;
+        } else {
+            setSuccuss(ingredients);
+        }
+
+        const img1Val = document.getElementById("img1").files[0]
+        console.log(img1Val);
+        if (!img1Val) {
+            setError(img1, 'Please insert image ')
+            return;
+        } else {
+            setSuccuss(img1);
+        }
+        const img2Val = document.getElementById("img2").files[0]
+        console.log(img2Val);
+        if (!img2Val) {
+            setError(img2, 'Please insert image ')
+            return;
+        } else {
+            setSuccuss(img2);
+        }
+        const img3Val = document.getElementById("img3").files[0]
+        console.log(img3Val);
+        if (!img3Val) {
+            setError(img3, 'Please insert image ')
+            return;
+        } else {
+            setSuccuss(img3);
+        }
+
+
+
+        console.log("gfufgug", form.action);
+        form.submit();
+
+    });
+
+
+
+
+
+
+
+
+
+    function initImageUpload(box) {
+        let uploadField = box.querySelector('.image-upload');
+
+        uploadField.addEventListener('change', getFile);
+
+        function getFile(e) {
+            let file = e.currentTarget.files[0];
+            checkType(file);
+        }
+
+        function previewImage(file) {
+            let thumb = box.querySelector('.js--image-preview'),
+                reader = new FileReader();
+
+            reader.onload = function () {
+                thumb.style.backgroundImage = 'url(' + reader.result + ')';
             }
+            reader.readAsDataURL(file);
+            thumb.className += ' js--no-default';
+        }
 
-            // initialize box-scope
-            var boxes = document.querySelectorAll('.box');
-
-            for (let i = 0; i < boxes.length; i++) {
-                let box = boxes[i];
-                initDropEffect(box);
-                initImageUpload(box);
+        function checkType(file) {
+            let imageType = /image.*/;
+            if (!file.type.match(imageType)) {
+                throw 'Datei ist kein Bild';
+            } else if (!file) {
+                throw 'Kein Bild gewählt';
+            } else {
+                previewImage(file);
             }
+        }
+
+    }
+
+    // initialize box-scope
+    var boxes = document.querySelectorAll('.box');
+
+    for (let i = 0; i < boxes.length; i++) {
+        let box = boxes[i];
+        initDropEffect(box);
+        initImageUpload(box);
+    }
 
 
 
-            /// drop-effect
-            function initDropEffect(box) {
-                let area, drop, areaWidth, areaHeight, maxDistance, dropWidth, dropHeight, x, y;
+    /// drop-effect
+    function initDropEffect(box) {
+        let area, drop, areaWidth, areaHeight, maxDistance, dropWidth, dropHeight, x, y;
 
-                // get clickable area for drop effect
-                area = box.querySelector('.js--image-preview');
-                area.addEventListener('click', fireRipple);
+        // get clickable area for drop effect
+        area = box.querySelector('.js--image-preview');
+        area.addEventListener('click', fireRipple);
 
-                function fireRipple(e) {
-                    area = e.currentTarget
-                    // create drop
-                    if (!drop) {
-                        drop = document.createElement('span');
-                        drop.className = 'drop';
-                        this.appendChild(drop);
-                    }
-                    // reset animate class
-                    drop.className = 'drop';
-
-                    // calculate dimensions of area (longest side)
-                    areaWidth = getComputedStyle(this, null).getPropertyValue("width");
-                    areaHeight = getComputedStyle(this, null).getPropertyValue("height");
-                    maxDistance = Math.max(parseInt(areaWidth, 10), parseInt(areaHeight, 10));
-
-                    // set drop dimensions to fill area
-                    drop.style.width = maxDistance + 'px';
-                    drop.style.height = maxDistance + 'px';
-
-                    // calculate dimensions of drop
-                    dropWidth = getComputedStyle(this, null).getPropertyValue("width");
-                    dropHeight = getComputedStyle(this, null).getPropertyValue("height");
-
-                    // calculate relative coordinates of click
-                    // logic: click coordinates relative to page - parent's position relative to page - half of self height/width to make it controllable from the center
-                    x = e.pageX - this.offsetLeft - (parseInt(dropWidth, 10) / 2);
-                    y = e.pageY - this.offsetTop - (parseInt(dropHeight, 10) / 2) - 30;
-
-                    // position drop and animate
-                    drop.style.top = y + 'px';
-                    drop.style.left = x + 'px';
-                    drop.className += ' animate';
-                    e.stopPropagation();
-
-                }
+        function fireRipple(e) {
+            area = e.currentTarget
+            // create drop
+            if (!drop) {
+                drop = document.createElement('span');
+                drop.className = 'drop';
+                this.appendChild(drop);
             }
+            // reset animate class
+            drop.className = 'drop';
 
-        </script>
+            // calculate dimensions of area (longest side)
+            areaWidth = getComputedStyle(this, null).getPropertyValue("width");
+            areaHeight = getComputedStyle(this, null).getPropertyValue("height");
+            maxDistance = Math.max(parseInt(areaWidth, 10), parseInt(areaHeight, 10));
+
+            // set drop dimensions to fill area
+            drop.style.width = maxDistance + 'px';
+            drop.style.height = maxDistance + 'px';
+
+            // calculate dimensions of drop
+            dropWidth = getComputedStyle(this, null).getPropertyValue("width");
+            dropHeight = getComputedStyle(this, null).getPropertyValue("height");
+
+            // calculate relative coordinates of click
+            // logic: click coordinates relative to page - parent's position relative to page - half of self height/width to make it controllable from the center
+            x = e.pageX - this.offsetLeft - (parseInt(dropWidth, 10) / 2);
+            y = e.pageY - this.offsetTop - (parseInt(dropHeight, 10) / 2) - 30;
+
+            // position drop and animate
+            drop.style.top = y + 'px';
+            drop.style.left = x + 'px';
+            drop.className += ' animate';
+            e.stopPropagation();
+
+        }
+    }
+</script>

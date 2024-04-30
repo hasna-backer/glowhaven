@@ -10,51 +10,16 @@ const { getTotal } = require('../utils/helper')
 //admin
 const listOrderAdminSde = async (req, res) => {
     console.log("req.params", req.params);
+    const pageSize = 5;
+    const currentPage = parseInt(req.query.page) || 1;
+    const skip = (currentPage - 1) * pageSize;
+    const limit = pageSize;
+    const totalOrders = await Order.countDocuments();
 
-    // const orderItems = await Order.find({}).populate(["cart.product_id", "default_address"])
-
-    // const orderItems = await Order.aggregate([
-    //     {
-    //         $lookup: {
-    //             from: "users",
-    //             localField: "customer_id",
-    //             foreignField: "_id",
-    //             as: "customerDetails"
-    //         }
-    //     },
-    //     { $unwind: "$customerDetails" },
-    //     {
-    //         $lookup: {
-    //             from: "products",
-    //             localField: "items.product_id",
-    //             foreignField: "_id",
-    //             as: "itemDetails"
-    //         }
-    //     },
-    //     { $unwind: "$itemDetails" },
-    //     {
-    //         $project: {
-    //             _id: 1,
-    //             customer_id: 1,
-    //             address: 1,
-    //             payment_method: 1,
-    //             total_amount: 1,
-    //             status: 1,
-    //             createdAt: 1,
-    //             updatedAt: 1,
-    //             __v: 1,
-    //             itemDetails: {
-    //                 img1: "$itemDetails.img1"
-    //             },
-    //             customerDetails: {
-    //                 name: "$customerDetails.name",
-    //                 phone: "$customerDetails.phone"
-    //             }
-    //         }
-    //     }
-    // ]);
-    // const orderItems = await Order.find({}).populate("items.product_id").select("items.product_id.product_name")
     const orderItems = await Order.aggregate([
+        { $sort: { createdAt: -1 } },
+        { $skip: skip },
+        { $limit: limit },
         {
             $lookup: {
                 from: "users",
@@ -90,12 +55,14 @@ const listOrderAdminSde = async (req, res) => {
             }
         }
     ]);
-
     console.log("orderItems:", orderItems);
 
 
     // console.log(orderItems);
-    res.render('admin/order', { orderItems })
+    res.render('admin/order', {
+        orderItems, currentPage,
+        totalPages: Math.ceil(totalOrders / pageSize)
+    })
 }
 
 //Admin View Order details 
@@ -198,13 +165,13 @@ const orderDetailAdminSide = async (req, res) => {
 const changeStatus = async (req, res) => {
     const { productId, orderId, status } = req.body
     console.log("req.body:", productId, orderId, status);
-    const product = await Order.findOne({ _id: orderId, "items.product_id": productId })
+    const product = await Order.findOne({ _id: orderId, })
     console.log("RRRRR", product);
 
     // Update the status of the product within the order
     const updatedOrder = await Order.findOneAndUpdate(
-        { _id: orderId, "items.product_id": productId },
-        { $set: { "items.$.status": status } },
+        { _id: orderId },
+        { $set: { status: status } },
         { new: true }
     );
     console.log("RRRRgfdgR", updatedOrder);
@@ -293,6 +260,7 @@ const renderOrder = async (req, res) => {
 
     const cartItems = await Order.find({ customer_id: id }).populate('items.product_id').sort({ createdAt: -1 });
     console.log("order render:", cartItems.map(el => el.items));
+    console.log("cart items", cartItems);
     res.render('user/order', { cartItems })
 
 }
@@ -335,7 +303,7 @@ const cancelOrder = async (req, res) => {
         { new: true }
     );
     console.log("RRRRgfdgR", updatedOrder);
-    return res.status(200).json({ message: "sorder canccelled" })
+    return res.status(200).json({ message: "order canccelled" })
 }
 
 

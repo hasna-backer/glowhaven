@@ -63,11 +63,19 @@
             </li>
             <% } %>
 
+
             <li class="scroll-to-section">
-              <a href="/view-cart"><i class="fa fa-shopping-cart"></i></a>
+              <a type="button" href="/view-cart" class="relative ">
+                <i class="fa fa-shopping-cart"></i>
+                <span class="sr-only"><i class="fa fa-shopping-cart"></i></span>
+                <div
+                  class="absolute inline-flex items-center justify-center w-4 h-4 text-[9px] font-bold text-red-500 border-2 border-white rounded-full -top-[-0.1rem] -end-2 dark:border-gray-900">
+                  20</div>
+              </a>
+
             </li>
             <li class="scroll-to-section">
-              <a href="/view-cart"><i class="fa fa-heart"></i></a>
+              <a href="/wishlist"><i class="fa fa-heart"></i></a>
             </li>
             <li class="scroll-to-section">
 

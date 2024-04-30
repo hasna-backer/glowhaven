@@ -22,10 +22,10 @@ const order_schema = new Schema({
                 type: Number,
                 required: true
             },
-            status: {
-                type: String,
-                required: true
-            },
+            // status: {
+            //     type: String,
+            //     required: true
+            // },
             shipped_on: {
                 type: Date
             },

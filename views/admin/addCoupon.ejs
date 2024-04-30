@@ -1,0 +1,202 @@
+<%- include('../partials/adminHeader.ejs') %>
+<%- include('../partials/adminSidebar.ejs') %>
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Coupon</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                <li class="breadcrumb-item"><a href="/admin/category">Coupon</a></li>
+
+                <li class="breadcrumb-item active">Create Coupon</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Coupon</h5>
+
+                <!-- Table with hoverable rows -->
+                <!-- Vertical Form -->
+                <form class="row g-3" method="POST" action="/admin/add-coupon"
+                    enctype="application/x-www-form-urlencoded" id="couponForm">
+                    <% if (error && error.length> 0) { %>
+                    <div id="alertMessage" class="alert alert-danger">
+                        <%= error %>
+                    </div>
+                    <% } %>
+                    <div class="col-12">
+                        <label for="inputNanme4" class="form-label">Coupon Code</label>
+                        <input type="text" class="form-control" id="coupon_code" name="coupon_code">
+                        <div id="error" style="color:red"></div>
+
+                    </div>
+                    <div class="col-12">
+                        <label for="inputEmail4" class="form-label">Discount</label>
+                        <input type="number" class="form-control" id="discount" name="discount">
+                        <div id="error" style="color:red"></div>
+
+                    </div>
+                    <div class="col-6">
+                        <label for="inputEmail4" class="form-label">starting date</label>
+                        <input type="date" class="form-control" id="start_date" name="start_date">
+                        <div id="error" style="color:red"></div>
+
+                    </div>
+                    <div class="col-6">
+                        <label for="inputEmail4" class="form-label">exp. date</label>
+                        <input type="date" class="form-control" id="exp_date" name="exp_date">
+                        <div id="error" style="color:red"></div>
+
+                    </div>
+                    <div class="col-6">
+                        <label for="inputEmail4" class="form-label">Maximum count</label>
+                        <input type="number" class="form-control" id="max_count" name="max_count">
+                        <div id="error" style="color:red"></div>
+
+                    </div>
+                    <div class="col-6">
+                        <label for="inputEmail4" class="form-label">Minimum Amount</label>
+                        <input type="number" class="form-control" id="min_amount" name="min_amount">
+                        <div id="error" style="color:red"></div>
+
+                    </div>
+
+
+                    <div class="col-12">
+                        <label for="inputAddress" class="form-label">Description</label>
+                        <textarea type="text" class="form-control" id="description" name="description"
+                            placeholder="Glycolic Acid, Aloe Barbadensis Leaf Water"></textarea>
+                        <div id="error" style="color:red"></div>
+
+                    </div>
+
+
+
+
+
+                    <div class="text-center py-5">
+                        <button type="submit" class="btn btn-primary"
+                            style="background-color: #0d6efd !important;">Submit</button>
+                        <button type="reset" class="btn btn-secondary"
+                            style="background-color: #6c757d !important;">Reset</button>
+                    </div>
+                </form>
+            </div>
+
+
+
+        </div>
+    </div>
+    </section>
+
+</main><!-- End #main -->
+
+
+<script>
+    //validations
+    document.getElementById('couponForm').addEventListener('submit', function (event) {
+        console.log("validations");
+        event.preventDefault();
+        const form = event.target
+        const coupon_code = document.getElementById('coupon_code')
+        const discount = document.getElementById('discount')
+        const start_date = document.getElementById('start_date')
+        const exp_date = document.getElementById('exp_date')
+        const max_count = document.getElementById('max_count')
+        const min_amount = document.getElementById('min_amount')
+        const description = document.getElementById('description')
+
+
+        const setError = (element, message) => {
+            const inputControl = element.parentElement;
+            const errorDisplay = inputControl.querySelector('#error')
+            console.log("error", errorDisplay);
+            errorDisplay.innerText = message
+            element.focus();
+
+        }
+
+        const setSuccuss = (element) => {
+            const inputControl = element.parentElement;
+            const errorDisplay = inputControl.querySelector('#error')
+            errorDisplay.innerText = ''
+        }
+
+
+        // Prevent form submission
+        var letters = /^[A-Za-z\s]*$/;
+        console.log("submit");
+        // Validate coupon_code
+        const coupon_codeVal = coupon_code.value;
+        if (!coupon_codeVal) {
+            setError(coupon_code, 'Please enter a coupon code.')
+            return
+        } else {
+            setSuccuss(coupon_code);
+        }
+
+
+        // Validate discount
+        const discountVal = document.getElementById('discount').value;
+        if (!discountVal) {
+            setError(discount, 'Please enter a Value ')
+            return;
+        } else if (discountVal < 0) {
+            setError(discount, 'Please enter a real number ')
+            return;
+        } else {
+            setSuccuss(discount);
+        }
+
+        const start_dateVal = document.getElementById('start_date').value;
+        if (!start_dateVal) {
+            setError(start_date, 'Please enter a Date ')
+            return;
+        } else {
+            setSuccuss(start_date);
+        }
+
+
+        const exp_dateVal = document.getElementById('exp_date').value;
+        if (!exp_dateVal) {
+            setError(exp_date, 'Please enter a Date ')
+            return;
+        } else {
+            setSuccuss(exp_date);
+        }
+
+        // Validate houseName
+        const max_countVal = max_count.value;
+        if (!max_countVal) {
+            setError(max_count, 'Please enter max count ')
+            return;
+        } else {
+            setSuccuss(max_count);
+        }
+
+        const min_amountVal = min_amount.value;
+        if (!min_amountVal) {
+            setError(min_amount, 'Please enter min count ')
+            return;
+        } else {
+            setSuccuss(min_amount);
+        }
+
+        // Validate city
+        const descriptionVal = document.getElementById('description').value;
+        if (!descriptionVal) {
+            setError(description, 'Please enter description ')
+            return;
+        } else {
+            setSuccuss(description);
+        }
+
+
+        console.log("gfufgug", form.action);
+        form.submit();
+
+    });
+</script>

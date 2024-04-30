@@ -2,8 +2,27 @@ const Product = require('../models/productModel');
 const Category = require('../models/categoryModel');
 
 let viewProduct = async (req, res) => {
-    let product = await Product.find({})
-    res.render('admin/products', { product: product });
+
+    try {
+        const error = req.flash('error')[0];
+        console.log("error", error);
+        //pagination 
+        const pageSize = 6;
+        const currentPage = parseInt(req.query.page) || 1;
+        let product = await Product.find({ delete: { $ne: true } })
+            .skip((currentPage - 1) * pageSize)
+            .limit(pageSize);
+
+        const totalProducts = await Product.countDocuments();
+        console.log("totaprod", totalProducts);
+        res.render('admin/products', {
+            error,
+            product, currentPage,
+            totalPages: Math.ceil(totalProducts / pageSize)
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 let renderAddProduct = async (req, res) => {
@@ -27,7 +46,8 @@ let addProduct = async (req, res) => {
         const product = await Product.create({
             ...req.body, img1, img2, img3
         });
-        res.redirect('/admin/add-product');
+        req.flash('error', 'Product added successfully!');
+        res.redirect('/admin/product');
 
 
     } catch (error) {
@@ -42,7 +62,7 @@ let addProduct = async (req, res) => {
 let renderEditProduct = async (req, res) => {
     try {
         console.log("renderEditProduct")
-        const error = req.flash('erro')[0];
+        const error = req.flash('error')[0];
         let category = await Category.find({ delete: { $ne: true } })
         const product = await Product.findById(req.params.id);
         console.log("product", product)
@@ -91,9 +111,11 @@ let EditProduct = async (req, res) => {
 
 
 let deleteProduct = async (req, res) => {
-    console.log('deleteCategory');
     const filter = { _id: req.params.id }
+    console.log('dlt prod', filter);
     const delet = await Product.updateOne(filter, { $set: { delete: true } });
+    req.flash('error', "Product Deleted succussfully!")
+
     res.redirect('/admin/product');
 }
 

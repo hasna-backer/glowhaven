@@ -36,38 +36,18 @@
                     </div>
                     <h5 class="card-title pt-0">order ID:<%= orderItem._id %></h5>
                 </div>
-                <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-blue-700 bg-white hover:bg-blue-800 
-                     font-medium rounded-lg text-sm px-3 py-2.5 text-center inline-flex items-center
-                    dark:bg-blue-600 " type="button">Change Status <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m1 1 4 4 4-4" />
-                    </svg>
-                </button>
+                <select class="btn btn-secondary bg-white !text-blue-800 !hover:text-pink-400" name="dropdown"
+                    id="dropdown" data-product-id="<%= orderItem.product_id %>" data-order-id="<%= orderItem._id %>"
+                    onchange="changeStatus(this)" class="btn btn-secondary bg-blue-500 aria-haspopup" true"
+                    aria-expanded="false">
 
-                <!-- Dropdown menu -->
-                <div id="dropdown"
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign
-                                out</a>
-                        </li>
-                    </ul>
-                </div>
+
+                    <option value="Confirmed" <% if (orderItem.status==="Confirmed") { %> selected<% } %>>Confirmed
+                    </option>
+                    <option value="Shipped" <% if (orderItem.status==="Shipped") { %> selected<% } %>>Shipped</option>
+                    <option value="Delivered" <% if (orderItem.status==="Delivered") { %> selected<% } %>>Delivered
+                    </option>
+                </select>
 
             </div>
 
@@ -141,8 +121,8 @@
                                 <th scope="col">Unit Price</th>
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Total</th>
-                                <th scope="col">Payment Method</th>
-                                <th scope="col">Change Status</th>
+                                <th scope="col" class="text-center">Payment Method</th>
+                                <!-- <th scope="col">Change Status</th> -->
 
                             </tr>
                         </thead>
@@ -179,36 +159,8 @@
                                     <%= orderItem.payment_method %>
 
                                 </td>
-                                <td style="overflow: visible !important; width: 20%;">
-                                    <div class="dropdown">
-                                        <!-- <button class="btn btn-secondary dropdown-toggle bg-blue-500" type="button"
-                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">
-                                            Status </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">pending</a>
-                                            <a class="dropdown-item" href="#">Confirmed</a>
-                                            <a class="dropdown-item" href="#">Shipped</a>
-                                            <a class="dropdown-item" href="#">Delivered</a>
-                                        </div>
-                                    </div> -->
-                                        <select name="dropdown" id="dropdown"
-                                            data-product-id="<%= element.product_id %>"
-                                            data-order-id="<%= orderItem._id %>" onchange="changeStatus(this)"
-                                            class="btn btn-secondary bg-blue-500 aria-haspopup=" true"
-                                            aria-expanded="false">
 
-
-                                            <option value="Confirmed" <% if (element.status==="Confirmed") { %>
-                                                selected<% } %>>Confirmed</option>
-                                            <option value="Shipped" <% if (element.status==="Shipped") { %>
-                                                selected<% } %>>Shipped</option>
-                                            <option value="Delivered" <% if (element.status==="Delivered") { %>
-                                                selected<% } %>>Delivered</option>
-                                        </select>
-
-
-                                </td>
+                                <!--  -->
                 </div>
                 <% }) %>
                 </tr>
@@ -237,13 +189,12 @@
 <script>
     const changeStatus = async (element) => {
         console.log(element.value);
-        const productId = element.getAttribute('data-product-id')
+        // const productId = element.getAttribute('data-product-id')
         const orderId = element.getAttribute('data-order-id')
         const status = element.value
         // console.log("productid", productId);
         try {
             const res = await axios.post('/admin/change-status', {
-                productId,
                 orderId,
                 status
             })
