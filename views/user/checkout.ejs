@@ -214,17 +214,27 @@
                         <% }); %>
 
                         <form class="row g-3 needs-validation" novalidate>
-                            <!-- <div class="col-12">
-                                <label for="input-group-1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"></label>
+                            <div class="col-12">
+                                <label for="input-group-1"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"></label>
                                 <div class="relative mb-6">
-                                    <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                                    <div
+                                        class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
                                         <i class="fa fa-gift" aria-hidden="true"></i>
                                     </div>
-                                    <input type="text" id="input-group-1"
-                                        class="bg-purple-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5   "
-                                        placeholder="Apply Promo Code">
+                                    <a href="/coupon" class="flex bg-purple-50 border border-gray-300 rounded-lg
+                                        focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 hover:text-black
+                                        !no-underline"> <input type="text" id="input-group-1"
+                                            class="bg-purple-50  border-none  block w-full   "
+                                            placeholder="Apply Promo Code"
+                                            value="<% if (coupon) { %><%=coupon.coupon_code%><% } %>">
+                                        <button class="bg-white border border-2 border-gray-800
+                                            hover:text-pink-500  hover:bg-red-800
+                                            hover:border-none rounded-md px-3
+                                            text-black-800 py-1" id="removeBtn">Remove</button>
+                                    </a>
                                 </div>
-                             </div> -->
+                            </div>
                             <div div class="col-12">
                                 <div class="card-body">
                                     <div class="tab-content">
@@ -258,6 +268,7 @@
                                         <div class="row border-top pt-2">
                                             <div class="col label ">Order Total</div>
                                             <div id="total" class="col text-right">
+
                                                 <b>₹<%= totalPrice + shipping %> </b> </div>
                                         </div>
 
@@ -350,4 +361,33 @@
 
         }
     }
+    document.getElementById('removeBtn').addEventListener('click', async (e) => {
+        e.preventDefault()
+        try {
+            const res = await axios.delete(`/remove-coupon`)
+            if (res.status === 200) {
+                const input = document.getElementById('input-group-1')
+                console.log("fsf", input);
+                input.value = ""
+                input.innerText = "Apply Promo Code"
+                window.location.reload()
+            }
+        } catch (error) {
+
+        }
+    })
+    // const removeCoupon = async (element) => {
+    //     try {
+    //         const res = await axios.delete(`/remove-coupon`)
+    //         if (res.status === 200) {
+    //             const input = document.getElementById('input-group-1')
+    //             console.log("fsf", input);
+    //             input.innerText = "Apply Promo Code"
+    //             // window.location.reload()
+    //         }
+    //     } catch (error) {
+
+    //     }
+
+    // }
 </script>

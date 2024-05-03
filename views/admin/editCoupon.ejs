@@ -8,7 +8,7 @@
                 <li class="breadcrumb-item"><a href="/admin">Home</a></li>
                 <li class="breadcrumb-item"><a href="/admin/category">Coupon</a></li>
 
-                <li class="breadcrumb-item active">Create Coupon</li>
+                <li class="breadcrumb-item active">Edit Coupon</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -16,50 +16,57 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Coupon</h5>
+                <h5 class="card-title">Couponerteterteterterter</h5>
 
                 <!-- Table with hoverable rows -->
                 <!-- Vertical Form -->
-                <form class="row g-3" method="POST" action="/admin/add-coupon"
-                    enctype="application/x-www-form-urlencoded" id="couponForm">
-                    <% if (error && error.length> 0) { %>
-                    <div id="alertMessage" class="alert alert-danger">
-                        <%= error %>
+                <form class="row g-3" id="couponForm" data-coupon-id="<%= coupon._id %>">
+
+                    <div id="alertMessage" class="alert alert-danger hidden">
+
                     </div>
-                    <% } %>
+
                     <div class="col-12">
                         <label for="inputNanme4" class="form-label">Coupon Code</label>
-                        <input type="text" class="form-control" id="coupon_code" name="coupon_code">
+                        <input type="text" class="form-control" id="coupon_code" name="coupon_code"
+                            value="<%= coupon.coupon_code %>">
                         <div id="error" style="color:red"></div>
 
                     </div>
                     <div class="col-12">
                         <label for="inputEmail4" class="form-label">Discount</label>
-                        <input type="number" class="form-control" id="discount" name="discount">
+                        <input type="number" class="form-control" id="discount" name="discount"
+                            value="<%= coupon.discount %>">
                         <div id="error" style="color:red"></div>
 
                     </div>
                     <div class="col-6">
                         <label for="inputEmail4" class="form-label">starting date</label>
-                        <input type="date" class="form-control" id="start_date" name="start_date">
+                        <input type="date" class="form-control" id="start_date" name="start_date"
+                            value="<%= new Date(coupon.start_date ).toISOString().split("T")[0]%>">
+
                         <div id="error" style="color:red"></div>
 
                     </div>
                     <div class="col-6">
                         <label for="inputEmail4" class="form-label">exp. date</label>
-                        <input type="date" class="form-control" id="exp_date" name="exp_date">
+                        <input type="date" class="form-control" id="exp_date" name="exp_date"
+                            value="<%= new Date(coupon.exp_date ).toISOString().split("T")[0]%>">
                         <div id="error" style="color:red"></div>
+
 
                     </div>
                     <div class="col-6">
                         <label for="inputEmail4" class="form-label">Maximum Discount</label>
-                        <input type="number" class="form-control" id="maximumDiscount" name="maximumDiscount">
+                        <input type="number" class="form-control" id="maximumDiscount" name="maximumDiscount"
+                            value="<%= coupon.maximumDiscount %>">
                         <div id="error" style="color:red"></div>
 
                     </div>
                     <div class="col-6">
                         <label for="inputEmail4" class="form-label">Minimum Purchase Amount</label>
-                        <input type="number" class="form-control" id="minPurchaseAmount" name="minPurchaseAmount">
+                        <input type="number" class="form-control" id="minPurchaseAmount" name="minPurchaseAmount"
+                            value="<%= coupon.minPurchaseAmount %>">
                         <div id="error" style="color:red"></div>
 
                     </div>
@@ -68,7 +75,7 @@
                     <div class="col-12">
                         <label for="inputAddress" class="form-label">Description</label>
                         <textarea type="text" class="form-control" id="description" name="description"
-                            placeholder="Glycolic Acid, Aloe Barbadensis Leaf Water"></textarea>
+                            placeholder="Glycolic Acid, Aloe Barbadensis Leaf Water"><%= coupon.description %></textarea>
                         <div id="error" style="color:red"></div>
 
                     </div>
@@ -78,9 +85,9 @@
 
 
                     <div class="text-center py-5">
-                        <button type="submit" class="btn btn-primary"
-                            style="background-color: #0d6efd !important;">Submit</button>
-                        <button type="reset" class="btn btn-secondary"
+                        <button type="submit" class="btn btn-primary" style="background-color: #0d6efd !important;"
+                            data-coupon-id="<%= coupon._id %> ">Submit</button>
+                        <button type=" reset" class="btn btn-secondary"
                             style="background-color: #6c757d !important;">Reset</button>
                     </div>
                 </form>
@@ -96,7 +103,7 @@
 
 
 <script>
-    //validations
+    // validations
     document.getElementById('couponForm').addEventListener('submit', function (event) {
         console.log("validations");
         event.preventDefault();
@@ -193,10 +200,53 @@
         } else {
             setSuccuss(description);
         }
-
-
-        console.log("gfufgug", form.action);
-        form.submit();
+        editCoupon(form);
+        // form.submit();
 
     });
+
+    const editCoupon = async (form) => {
+        console.log("hiii");
+        console.log(form);
+        const formData = new FormData(form);
+        const coupon_code = formData.get('coupon_code');
+        const discount = formData.get('discount');
+        const start_date = formData.get('start_date');
+        const exp_date = formData.get('exp_date');
+        const maximumDiscount = formData.get('maximumDiscount');
+        const minPurchaseAmount = formData.get('minPurchaseAmount');
+        const description = formData.get('description');
+
+        // console.log(couponCode, discount);
+        const couponId = form.dataset.couponId;
+        try {
+            const res = await axios.patch('/admin/edit-coupon', {
+                couponId,
+                coupon_code,
+                discount,
+                start_date,
+                exp_date,
+                maximumDiscount,
+                minPurchaseAmount,
+                description
+            })
+
+            if (res.status === 200) {
+                console.log("redirect");
+                window.redirect('/admin/coupon')
+            }
+        } catch (error) {
+            console.log("error:::::", error);
+            if (error.response.data.message === 'duplicate coupon code') {
+                const error = document.getElementById('alertMessage')
+                if (error.classList.contains("hidden")) {
+                    error.classList.remove("hidden")
+                    error.innerText = "Coupon code already exist!!!"
+                }
+
+            }
+
+
+        }
+    }
 </script>

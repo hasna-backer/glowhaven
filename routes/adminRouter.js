@@ -48,5 +48,6 @@ router.get('/coupon', couponController.coupon)
 router.get('/add-coupon', couponController.renderAddCoupon)
 router.post('/add-coupon', couponController.addCoupon)
 router.delete('/delete-coupon', couponController.deleteCoupon)
-router.post('/edit-coupon', couponController.editCoupon)
+router.get('/edit-coupon/:id', couponController.renderEditCoupon)
+router.patch('/edit-coupon', couponController.editCoupon)
 module.exports = router;   

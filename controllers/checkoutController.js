@@ -2,7 +2,9 @@ const Address = require('../models/addressModel');
 const User = require('../models/userModel');
 const Order = require('../models/orderModel');
 const Product = require('../models/productModel');
-const { getTotal } = require('../utils/helper')
+const Coupon = require('../models/couponModel');
+const { getTotal } = require('../utils/helper');
+const { coupon } = require('./couponController');
 
 let renderCheckout = async (req, res) => {
     const user = await User.findOne({ email: req.session.user.user.email }).populate(["cart.product_id", "default_address"]);
@@ -12,10 +14,22 @@ let renderCheckout = async (req, res) => {
     if (!user.default_address) {
         user.default_address = addresses[0]
     }
+    const afterdiscount = req.session.totalAmount
+    console.log("after:", afterdiscount);
     if (addresses.length > 0) {
+        if (!req.session.coupon) {
+            let { totalPrice, shipping } = getTotal(user)
+            console.log("tttttt", totalPrice);
+            res.render('user/checkout', { user, cartItems: user.cart, totalPrice, addresses, shipping, coupon: {} })
 
-        const { totalPrice, shipping } = getTotal(user)
-        res.render('user/checkout', { user, cartItems: user.cart, totalPrice, addresses, shipping })
+        }
+        else {
+            let { shipping } = getTotal(user)
+            let totalPrice = req.session.coupon.total_payable
+            const coupon = await Coupon.findOne({ _id: req.session.coupon.couponId })
+            console.log("logsss:", totalPrice, coupon, shipping);
+            res.render('user/checkout', { user, cartItems: user.cart, totalPrice, addresses, shipping, coupon })
+        }
     }
     else {
 

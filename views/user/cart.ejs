@@ -12,7 +12,7 @@
 
 <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4 "
     id="product">
-    <div class="container ">
+    <div class="container mb-8 ">
         <div class="row justify-content-center ">
             <div class="col-lg-7 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
@@ -41,7 +41,7 @@
 
                 <% } else { %>
 
-                <div class="card mb-8">
+                <div class="card ">
                     <div class="card-body">
                         <% cartItems.forEach(product=> { %>
 
@@ -95,19 +95,7 @@
                         <% }); %>
 
                         <form class="row g-3 needs-validation" novalidate>
-                            <div class="col-12">
-                                <label for="input-group-1"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"></label>
-                                <div class="relative mb-6">
-                                    <div
-                                        class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                                        <i class="fa fa-gift" aria-hidden="true"></i>
-                                    </div>
-                                    <input type="text" id="input-group-1"
-                                        class="bg-purple-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5   "
-                                        placeholder="Apply Promo Code">
-                                </div>
-                            </div>
+
                             <div div class="col-12">
                                 <div class="card-body">
                                     <div class="tab-content">

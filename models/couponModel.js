@@ -8,10 +8,12 @@ const couponSchema = new Schema(
         coupon_code: {
             type: String,
             required: true,
+            unique: true,
         },
         discount: {
             type: Number,
             required: true,
+            min: 0, // Ensures the value is non-negative
         },
         start_date: {
             type: Date,
@@ -21,9 +23,16 @@ const couponSchema = new Schema(
             type: Date,
             required: true,
         },
-        min_amount: {
+        minPurchaseAmount: {
             type: Number,
-            required: true
+            required: true,
+            default: 1000,
+            min: 0, // Ensures the value is non-negative
+        },
+        maximumDiscount: {
+            type: Number,
+            required: true,
+            min: 0, // Ensures the value is non-negative
         },
         max_count: {
             type: Number,
@@ -40,6 +49,10 @@ const couponSchema = new Schema(
             type: Boolean,
             required: true,
             default: false,
+        },
+        is_Active: {
+            type: Boolean,
+            default: true
         },
         user_list: [
             {

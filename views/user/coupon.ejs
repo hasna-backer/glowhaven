@@ -1,0 +1,140 @@
+<section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4 "
+    id="product">
+    <div class="container mb-8">
+        <div class="row justify-content-center ">
+            <div class="col-lg-12 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                <div class="card  w-[700px]">
+                    <div class="card-body">
+
+
+
+
+                        <div class="p-3 md:p-5">
+                            <form class="space-y-4" id="form">
+                                <% coupon.forEach(data=> { %>
+
+                                <!-- Card with an image on left -->
+                                <div class="card">
+                                    <div class="row p-3">
+                                        <div class="col-1">
+
+
+                                            <input id="addressInput" type="radio" name="address" value="<%= data._id %>"
+                                                onchange="select_coupon(this)" name="flexRadioDefault" required />
+
+                                        </div>
+                                        <div class="col p-0 m-0">
+                                            <div class="address-container d-flex align-items-center p-0">
+                                                <div class="card-title  p-0 ">
+                                                    <%= data.coupon_code %></div>
+
+                                            </div>
+
+
+                                            <div class="address-container d-flex align-items-left">
+                                                <div class="col label pl-0">
+                                                    <p class="text-left">
+                                                        <%= data.description %>
+                                                        <span class="fw-bold">
+                                                            <p class="error" style="color:red"></p>
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+
+                                        <!-- <hr /> -->
+                                    </div>
+                                </div>
+                                <!-- End Card with an image on left -->
+                                <% }); %>
+                            </form>
+                        </div>
+
+
+
+                        <div class="col-12">
+                            <button
+                                class="btn  w-100 text-gray-900 p-2.5 relative inline-flex items-center justify-center overflow-hidden  text-gray-900 rounded-lg group bg-gradient-to-br from-purple-50 to-pink-300 group-hover:from-purple-50 group-hover:to-pink-50 hover:text-pink-500 dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">
+                                <a href="/checkout">Apply</a></button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+</div>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+
+<script>
+    /**
+     * @param {HTMLSelectElement} element
+     */
+
+
+    const select_coupon = async (element) => {
+        clearError()
+        console.log("element", element.parentElement.parentElement.querySelector(
+            ":nth-child(2)>:nth-child(2)>div>p.error"))
+        const id = element.value
+        const error = element.parentElement.parentElement.querySelector(
+            ":nth-child(2)>:nth-child(2)>div>p.error")
+        try {
+            const res = await axios.post('/apply-coupon', {
+                id
+            })
+            console.log(res.data);
+            if (res.data.message === "not applicable") {
+                error.textContent = "This coupon is not applicable "
+            } else if (res.data.message === "not firstOrder") {
+                error.textContent = " This Code Is Only For New Customers.You Have Already Placed An order "
+            } else if (res.data.message === "already used") {
+                error.textContent = "You Have Already Used This Coupon Once "
+            } else if (res.data.message === "applicable") {
+                error.textContent = "This coupon is applicable "
+                Swal.fire({
+                    title: "Coupon Applied",
+                    text: "You Save Lot!!!",
+                    icon: "success"
+                }).then((result) => {
+                    console.log("result", result);
+                    if (result.isConfirmed) {
+                        window.redirect('/checkout')
+                    }
+                });
+                // window.redirect('/checkout')
+            }
+        } catch (error) {
+            console.log("error", error);
+        }
+    }
+
+    function clearError() {
+        const errors = document.querySelectorAll("p.error")
+        errors.forEach(e => e.textContent = "")
+    }
+</script>

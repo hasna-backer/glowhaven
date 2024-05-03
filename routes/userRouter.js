@@ -5,6 +5,7 @@ const cartController = require('../controllers/cartController');
 const checkoutController = require('../controllers/checkoutController');
 const orderController = require('../controllers/orderController')
 const wishlistController = require('../controllers/wishlistController')
+const couponController = require('../controllers/couponController')
 
 const { authUser } = require('../middlewares/authMiddleware')
 
@@ -54,5 +55,10 @@ router.post('/cancel-order', orderController.cancelOrder);
 router.get('/wishlist', wishlistController.renderWishlilst);
 router.post('/add-to-wishlist', wishlistController.addToWishlilst);
 router.delete('/delete-wishlist', wishlistController.deleteWishlilst);
+
+//Coupons
+router.get('/coupon', couponController.renderCoupon)
+router.post('/apply-coupon', couponController.applyCoupon)
+router.delete('/remove-coupon', couponController.removeCoupon)
 
 module.exports = router;     

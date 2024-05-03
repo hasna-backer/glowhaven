@@ -32,6 +32,8 @@
                             <th class="th-sm">Coupon Code</th>
                             <th class="th-sm">Description</th>
                             <th class="th-sm">Discount</th>
+                            <th class="th-sm">min Purchase Amount</th>
+                            <th class="th-sm">maximum Discount</th>
                             <th class="th-sm">Start Date</th>
                             <th class="th-sm">End Date</th>
                             <th class="th-sm">Used Count</th>
@@ -49,6 +51,12 @@
                             </td>
                             <td>
                                 <%= element.discount %>
+                            </td>
+                            <td>
+                                <%= element.minPurchaseAmount %>
+                            </td>
+                            <td>
+                                <%= element.maximumDiscount %>
                             </td>
                             <td>
                                 <%= element.start_date.toLocaleDateString()  %>
