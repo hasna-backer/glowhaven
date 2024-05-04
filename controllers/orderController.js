@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const Order = require('../models/orderModel');
 const Product = require('../models/productModel');
+const Coupon = require('../models/couponModel');
 const mongoose = require('mongoose');
 
 
@@ -178,14 +179,14 @@ const changeStatus = async (req, res) => {
     return res.status(200).json({ message: "status changed" })
 
 }
+
 const createOrder = async (req, res) => {
     const user = await User.findOne({ email: req.session.user.user.email }).populate(["cart.product_id", "default_address"]);
     const { totalPrice, shipping } = getTotal(user)
     const amount_payable = totalPrice + shipping
+    let totalAmountToPay
     console.log("req", req.body.paymentType, amount_payable);
-    // const { totalPrice, shipping } = req.body
-    // console.log("req.body", req.body);
-    // const amount_payable = totalPrice + shipping
+
     const paymentType = req.body.paymentType
     let status, order;
     if (paymentType === "cod") {
@@ -196,35 +197,55 @@ const createOrder = async (req, res) => {
     let items = [];
     const cartList = user.cart;
     console.log("cartList", cartList);
-    if (req.body.coupon = ' ') {
-        console.log("coupon doesnt exist")
-        for (let i = 0; i < cartList.length; i++) {
-            items.push({
-                product_id: cartList[i].product_id._id,
-                quantity: cartList[i].quantity,
-                price: cartList[i].product_id.selling_price * cartList[i].quantity,
-                status: status
-            })
-        }
-        const address = user.default_address
-        order = {
-            customer_id: user._id,
-            items: items,
-            address: `${address.house_name} (H), ${address.locality}, ${address.landmark},${address.city},${address.state}, pincode:${address.pincode}`,
-            status: status,
-            payment_method: paymentType,
-            total_amount: amount_payable
-        }
-        console.log("order", order);
-    } else {
-        console.log("cpn");
+    for (let i = 0; i < cartList.length; i++) {
+        items.push({
+            product_id: cartList[i].product_id._id,
+            quantity: cartList[i].quantity,
+            price: cartList[i].product_id.selling_price * cartList[i].quantity,
+            status: status
+        })
     }
+    const address = user.default_address
+    const selectedCoupon = await Coupon.findOne({ _id: req.session.coupon.couponId })
+
+    const coupon = {
+        coupon_id: req.session.coupon.couponId || "",
+        discount: req.session.coupon.discountAmount || 0,
+        code: selectedCoupon.coupon_code || ""
+    }
+    if (!req.session.coupon.couponId) {
+        totalAmountToPay = amount_payable
+    } else {
+        totalAmountToPay = req.session.coupon.total_payable
+    }
+    order = {
+        customer_id: user._id,
+        items: items,
+        address: `${address.house_name} (H), ${address.locality}, ${address.landmark},${address.city},${address.state}, pincode:${address.pincode}`,
+        status: status,
+        payment_method: paymentType,
+        total_amount: totalAmountToPay,
+        coupon: coupon
+
+
+    }
+    console.log("order", order);
+
 
     if (paymentType === "cod") {
         const createOrder = await Order.create(order)
         req.session.order = createOrder._id
         console.log("createOrder", createOrder);
+        await Coupon.updateOne(
+            { _id: req.session.coupon.couponId },
+            {
+                $addToSet: {
+                    user_list: user._id
+                }
+            }
+        );
         await User.updateOne({ _id: user._id }, { $unset: { cart: '' } })
+        req.session.coupon = {}
         for (let i = 0; i < items.length; i++) {
             await Product.updateOne({ _id: items[i].product_id }, { $inc: { stock: -(items[i].quantity) } })
         }

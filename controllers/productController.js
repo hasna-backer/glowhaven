@@ -15,9 +15,11 @@ let viewProduct = async (req, res) => {
 
         const totalProducts = await Product.countDocuments();
         console.log("totaprod", totalProducts);
+        // let discountAmount = ((discount / 100) * product.actual_price)
+        // let sellingPrice = product.actual_price - discountAmount
         res.render('admin/products', {
             error,
-            product, currentPage,
+            product, currentPage, sellingPrice,
             totalPages: Math.ceil(totalProducts / pageSize)
         });
     } catch (error) {

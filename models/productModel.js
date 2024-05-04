@@ -44,8 +44,8 @@ const productShema = new Schema({
         type: String,
         required: true
     },
-    selling_price: {
-        type: String,
+    discount: {
+        type: Number,
         required: true
     },
 

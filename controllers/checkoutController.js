@@ -81,12 +81,18 @@ const removeAddress = async (req, res) => {
 const renderPayment = async (req, res) => {
     const user = await User.findOne({ email: req.session.user.user.email }).populate(["cart.product_id", "default_address"]);
     const addresses = await Address.find({ customer_id: req.session.user.user._id })
+    let totalAmountToPay
 
     if (addresses.length > 0) {
 
         const { totalPrice, shipping } = getTotal(user)
         const amount_payable = totalPrice + shipping
-        res.render('user/payment', { amount_payable })
+        if (!req.session.coupon.couponId) {
+            totalAmountToPay = amount_payable
+        } else {
+            totalAmountToPay = req.session.coupon.total_payable
+        }
+        res.render('user/payment', { totalAmountToPay })
     }
 }
 

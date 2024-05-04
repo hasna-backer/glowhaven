@@ -51,14 +51,17 @@ router.post('/orders', orderController.createOrder);
 router.post('/cancel-order', orderController.cancelOrder);
 
 
-//wishlist
+//wishlist 
 router.get('/wishlist', wishlistController.renderWishlilst);
 router.post('/add-to-wishlist', wishlistController.addToWishlilst);
 router.delete('/delete-wishlist', wishlistController.deleteWishlilst);
 
-//Coupons
+//Coupons 
 router.get('/coupon', couponController.renderCoupon)
 router.post('/apply-coupon', couponController.applyCoupon)
 router.delete('/remove-coupon', couponController.removeCoupon)
+
+//Discounts
+
 
 module.exports = router;     

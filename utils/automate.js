@@ -6,6 +6,9 @@ dotenv.config();
 const openBrowser = async () => {
     const browser = await puppeteer.launch({
         headless: false,
+        "args": [
+            "--start-maximized"
+        ],
         defaultViewport: {
             width: 1440,
             height: 900
