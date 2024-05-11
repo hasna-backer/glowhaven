@@ -1,4 +1,116 @@
 <style>
+    /**
+   * Variables
+   */
+    /**
+   * Base Styles
+   * 1. Improve box model
+   * 2. Enable fluid images
+   */
+    *,
+    *:before,
+    *:after {
+        box-sizing: border-box;
+        /* 1 */
+    }
+
+
+
+    img {
+        max-width: 100%;
+        /* 2 */
+    }
+
+    /**
+   * Container Styles
+   */
+    .galleryContainer {
+        max-width: 40em;
+        margin: 0 auto;
+        padding: 1em;
+    }
+
+    /**
+   * Helper Styles
+   */
+    .ir {
+        text-indent: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    /**
+   * Gallery Styles
+   * 1. Enable fluid images
+   */
+    .gallery {
+        overflow: hidden;
+    }
+
+    .gallery__hero {
+        overflow: hidden;
+        position: relative;
+        padding: 2em;
+        margin: 0 0 0.3333333333em;
+        background: #fff;
+    }
+
+    .is-zoomed .gallery__hero {
+        cursor: move;
+    }
+
+    .is-zoomed .gallery__hero img {
+        max-width: none;
+        position: absolute;
+        z-index: 0;
+        top: -50%;
+        left: -50%;
+    }
+
+    .gallery__hero-enlarge {
+        position: absolute;
+        right: 0.5em;
+        bottom: 0.5em;
+        z-index: 1;
+        width: 30px;
+        height: 30px;
+        opacity: 0.5;
+        background-image:
+            url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iNS4wIC0xMC4wIDEwMC4wIDEzNS4wIiBmaWxsPSIjMzRCZjQ5Ij48cGF0aCBkPSJNOTMuNTkzIDg2LjgxNkw3Ny4wNDUgNzAuMjY4YzUuNDEzLTYuODczIDguNjQyLTE1LjUyNiA4LjY0Mi0yNC45MTRDODUuNjg3IDIzLjEwNCA2Ny41OTMgNSA0NS4zNDMgNVM1IDIzLjEwNCA1IDQ1LjM1NGMwIDIyLjI0IDE4LjA5NCA0MC4zNDMgNDAuMzQzIDQwLjM0MyA5LjQgMCAxOC4wNjItMy4yNCAyNC45MjQtOC42NTNsMTYuNTUgMTYuNTZjLjkzNy45MjcgMi4xNjIgMS4zOTYgMy4zODggMS4zOTYgMS4yMjUgMCAyLjQ1LS40NyAzLjM5LTEuMzk2IDEuODc0LTEuODc1IDEuODc0LTQuOTEyLS4wMDItNi43ODh6bS00OC4yNS0xMC43MWMtMTYuOTU0IDAtMzAuNzUzLTEzLjc5OC0zMC43NTMtMzAuNzUyIDAtMTYuOTY0IDEzLjgtMzAuNzY0IDMwLjc1My0zMC43NjQgMTYuOTY0IDAgMzAuNzUzIDEzLjggMzAuNzUzIDMwLjc2NCAwIDE2Ljk1NC0xMy43ODggMzAuNzUzLTMwLjc1MyAzMC43NTN6TTYzLjAzMiA0NS4zNTRjMCAyLjM0NC0xLjkwNyA0LjI2Mi00LjI2MiA0LjI2MmgtOS4xNjR2OS4xNjRjMCAyLjM0NC0xLjkwNyA0LjI2Mi00LjI2MiA0LjI2Mi0yLjM1NSAwLTQuMjYyLTEuOTE4LTQuMjYyLTQuMjYydi05LjE2NGgtOS4xNjRjLTIuMzU1IDAtNC4yNjItMS45MTgtNC4yNjItNC4yNjIgMC0yLjM1NSAxLjkwNy00LjI2MiA0LjI2Mi00LjI2Mmg5LjE2NHYtOS4xNzVjMC0yLjM0NCAxLjkwNy00LjI2MiA0LjI2Mi00LjI2MiAyLjM1NSAwIDQuMjYyIDEuOTE4IDQuMjYyIDQuMjYydjkuMTc1aDkuMTY0YzIuMzU1IDAgNC4yNjIgMS45MDcgNC4yNjIgNC4yNjJ6Ii8+PC9zdmc+);
+        background-repeat: no-repeat;
+        transition: opacity 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    }
+
+    .gallery__hero-enlarge:hover {
+        opacity: 1;
+    }
+
+    .is-zoomed .gallery__hero-enlarge {
+        background-image:
+            url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iNS4wIC0xMC4wIDEwMC4wIDEzNS4wIiBmaWxsPSIjMzRCZjQ5Ij48cGF0aCBkPSJNOTMuNTkzIDg2LjgxNkw3Ny4wNDUgNzAuMjY4YzUuNDEzLTYuODczIDguNjQyLTE1LjUyNiA4LjY0Mi0yNC45MTRDODUuNjg3IDIzLjEwNCA2Ny41OTMgNSA0NS4zNDMgNVM1IDIzLjEwNCA1IDQ1LjM1NGMwIDIyLjI0IDE4LjA5NCA0MC4zNDMgNDAuMzQzIDQwLjM0MyA5LjQgMCAxOC4wNjItMy4yNCAyNC45MjQtOC42NTNsMTYuNTUgMTYuNTZjLjkzNy45MjcgMi4xNjIgMS4zOTYgMy4zODggMS4zOTYgMS4yMjUgMCAyLjQ1LS40NyAzLjM5LTEuMzk2IDEuODc0LTEuODc1IDEuODc0LTQuOTEyLS4wMDItNi43ODh6TTE0LjU5IDQ1LjM1NGMwLTE2Ljk2NCAxMy44LTMwLjc2NCAzMC43NTMtMzAuNzY0IDE2Ljk2NCAwIDMwLjc1MyAxMy44IDMwLjc1MyAzMC43NjQgMCAxNi45NTQtMTMuNzkgMzAuNzUzLTMwLjc1MyAzMC43NTMtMTYuOTUzIDAtMzAuNzUzLTEzLjgtMzAuNzUzLTMwLjc1M3pNNTguNzcyIDQ5LjYxSDMxLjkyYy0yLjM1NSAwLTQuMjYzLTEuOTA3LTQuMjYzLTQuMjZzMS45MDgtNC4yNjMgNC4yNjItNC4yNjNINTguNzdjMi4zNTQgMCA0LjI2MiAxLjkwOCA0LjI2MiA0LjI2MnMtMS45MSA0LjI2LTQuMjYyIDQuMjZ6Ii8+PC9zdmc+);
+    }
+
+    .gallery__thumbs {
+        text-align: center;
+        background: #fff;
+    }
+
+    .gallery__thumbs a {
+        display: inline-block;
+        width: 20%;
+        padding: 0.5em;
+        opacity: 0.75;
+        transition: opacity 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    }
+
+    .gallery__thumbs a:hover {
+        opacity: 1;
+    }
+
+    .gallery__thumbs a.is-active {
+        opacity: 0.2;
+    }
+
     /* Dropdown Button */
     /* Dropdown Button */
     .dropbtn {
@@ -52,48 +164,95 @@
 <%- include('../partials/header.ejs') %>
 
 <!-- ***** Product Area Starts ***** -->
-<section class="section col col-md-6 col-lg-6" id="product">
+<section class="section col col-md-6 col-lg-12" id="product">
     <div class="container">
         <div class="row">
             <div class="col col-md-6 col-lg-6 ">
                 <div class="left-images">
-                    <img src="/files/<%= products.img1 %>" alt="">
-                    <img src="/files/<%= products.img2 %>" alt="">
-                    <% console.log("products",products); %>
+
+
+
+
+                    <div class="galleryContainer">
+
+                        <!-- Gallery -->
+                        <div id="js-gallery" class="gallery">
+
+                            <!--Gallery Hero-->
+                            <div class="gallery__hero">
+
+
+                                <img src="/files/<%= product.img1 %>" alt=""></div>
+                            <!--Gallery Hero-->
+
+                            <!--Gallery Thumbs-->
+                            <div class="gallery__thumbs">
+                                <a href="/files/<%= product.img2 %>" data-gallery="thumb" class="is-active">
+                                    <img style="height: 100px!important;" src="/files/<%= product.img2 %>" alt=""
+                                        data-gallery="thumb" class="is-active">
+                                </a>
+                                <a href="/files/<%= product.img3 %>" data-gallery="thumb">
+                                    <img style="height: 100px!important;" src="/files/<%= product.img3 %>" alt="">
+                                </a>
+                                <a href="/files/<%= product.img1 %>" data-gallery="thumb">
+                                    <img style="height: 100px!important;" src="/files/<%= product.img1 %>" alt="">
+                                </a>
+                            </div>
+                            <!--Gallery Thumbs-->
+
+                        </div>
+                        <!--.gallery-->
+                        <!-- Gallery -->
+
+
+                        <!--.container-->
+
+                    </div>
+
+
+
+
+
+                    <!-- <img src="/files/<%= product.img1 %>" alt="">
+                        <img src="/files/<%= product.img2 %>" alt=""> -->
+                    <% console.log("product",product); %>
                 </div>
             </div>
             <div class="col-lg-6 ">
                 <div class="right-content p-4">
                     <h4>
-                        <%= products.product_name %>
+                        <%= product.product_name %>
                     </h4>
+                    <div class="flex flex-row">
+                        <div>
 
+                            <ul class="stars" style="position: static !important;">
+                                <li><i class="fa fa-star"></i></li>
+                                <li><i class="fa fa-star"></i></li>
+                                <li><i class="fa fa-star"></i></li>
+                                <li><i class="fa fa-star"></i></li>
+                                <li><i class="fa fa-star"></i></li>
+                            </ul>
+                        </div> &nbsp;&nbsp;
+                        <div class="text-xs pt-1"> 216 ratings & 21 reviews </div>
+
+                    </div>
                     <span class="price">MRP:
                         <del>
-                            ₹<%= products.actual_price %>
+                            ₹<%= product.actual_price %>
                         </del>
                         &nbsp;
-                        ₹<%= products.selling_price %>
+                        <b class="text-black"> ₹<%= sellingPrice %> </b>
                     </span>
 
 
-                    <span class="price">
 
-                        <ul class="stars" style="position: static !important;">
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                            <li><i class="fa fa-star"></i></li>
-                        </ul>
-                        sdsadasdasd
-                    </span>
                     <span>
-                        <%= products.description %>.
+                        <%= product.description %>.
                     </span>
 
 
-                    <input type="text" id="id" value="<%= products._id %>" hidden disable>
+                    <input type="text" id="id" value="<%= product._id %>" hidden disable>
 
 
 
@@ -123,7 +282,7 @@
                         <div id="accordion-flush-body-1" class="hidden" aria-labelledby="accordion-flush-heading-1">
                             <div class="py-0 border-b border-gray-200 dark:border-gray-700">
                                 <p class=" text-gray-500 dark:text-gray-400">
-                                    <%= products.ingredients %>
+                                    <%= product.ingredients %>
                                 </p>
                             </div>
                         </div>
@@ -148,10 +307,23 @@
                         </div> -->
 
                         <div class="total">
-                            <h4>Total: $210.00</h4>
-                            <div class="main-border-button"><button id="addtocart" onclick="addToCart()">Add To
+                            <h4>Total: <b class="text-black"> ₹<%= sellingPrice %> </b></h4>
+
+                            <% if ( product.stock===0) { %>
+
+                            <div class="main-border-button"><button
+                                    class=" btn px-4 p-2.5 relative inline-flex items-center justify-center overflow-hidden  text-gray-900 rounded-lg group bg-gradient-to-br from-purple-50 to-pink-300 group-hover:from-purple-50 group-hover:to-pink-50 hover:text-pink-500 dark:text-black focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">
+                                    Not Available</button>
+                            </div>
+                            <% } else { %>
+                            <div class="main-border-button"><button
+                                    class="btn px-4 p-2.5 relative inline-flex items-center justify-center overflow-hidden  text-gray-900 rounded-lg group bg-gradient-to-br from-purple-50 to-pink-300 group-hover:from-purple-50 group-hover:to-pink-50 hover:text-pink-500 dark:text-black focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800"
+                                    id="addtocart" onclick="addToCart()">Add To
                                     Bag</button>
                             </div>
+                            <% } %>
+
+
                         </div>
                     </div>
                 </div>
@@ -160,7 +332,9 @@
         </div>
 </section>
 <!-- ***** Product Area Ends ***** -->
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.js"></script>
 <script>
     const added = () => {
         const button = document.getElementById('addtocart');
@@ -191,4 +365,78 @@
 
         }
     }
+
+
+
+
+    var App = (function () {
+
+        //=== Use Strict ===//
+        'use strict';
+
+        //=== Private Variables ===//
+        var gallery = $('#js-gallery');
+        $('.gallery__hero').zoom();
+
+
+        //=== Gallery Object ===//
+        var Gallery = {
+            zoom: function (imgContainer, img) {
+                var containerHeight = imgContainer.outerHeight(),
+                    src = img.attr('src');
+
+            },
+            switch: function (trigger, imgContainer) {
+                var src = trigger.attr('href'),
+                    thumbs = trigger.siblings(),
+                    img = trigger.parent().prev().children();
+
+                // Add active class to thumb
+                trigger.addClass('is-active');
+
+                // Remove active class from thumbs
+                thumbs.each(function () {
+                    if ($(this).hasClass('is-active')) {
+                        $(this).removeClass('is-active');
+                    }
+                });
+
+
+                // Switch image source
+                img.attr('src', src);
+            }
+        };
+
+        //=== Public Methods ===//
+        function init() {
+
+
+            // Listen for clicks on anchors within gallery
+            gallery.delegate('a', 'click', function (event) {
+                var trigger = $(this);
+                var triggerData = trigger.data("gallery");
+
+                if (triggerData === 'zoom') {
+                    var imgContainer = trigger.parent(),
+                        img = trigger.siblings();
+                    Gallery.zoom(imgContainer, img);
+                } else if (triggerData === 'thumb') {
+                    var imgContainer = trigger.parent().siblings();
+                    Gallery.switch(trigger, imgContainer);
+                } else {
+                    return;
+                }
+
+                event.preventDefault();
+            });
+        }
+
+        //=== Make Methods Public ===//
+        return {
+            init: init
+        };
+
+    })();
+
+    App.init();
 </script>

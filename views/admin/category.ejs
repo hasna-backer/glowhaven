@@ -31,6 +31,7 @@
                         <tr>
                             <th scope="col">Category Name</th>
                             <th scope="col">Discription</th>
+                            <th scope="col">Discount</th>
                             <th scope="col">Status</th>
                             <th scope="col">Created on</th>
                             <th scope="col">Delete/Edit</th>
@@ -46,15 +47,18 @@
                                 <%= element.description %>
                             </td>
                             <td>
+                                <%= element.discount %>
+                            </td>
+                            <td>
                                 <%= element.cat_status ? "Active" :"Inactive" %>
                             </td>
                             <td>
                                 <%= new Date(element.createdAt).toLocaleDateString() %>
                             </td>
                             <td>
-                                <a href="/admin/delete-category/<%= element._id %>" class="ms-3"
-                                    onclick="return confirm('Are you sure,You want to delete <%= element.cat_name %>')"><i
-                                        class="ri-delete-bin-6-line"></i></a>
+                                <a href="/admin/delete-category/<%= element._id %>"
+                                    data-category-id="<%= element._id %>" data-category-id="<%= element._id %>"
+                                    class="ms-3" onclick="confirm(this)"><i class="ri-delete-bin-6-line"></i></a>
                                 &nbsp;&nbsp;&nbsp;
                                 <a href="/admin/edit-category/<%= element._id %>"><i class="ri-edit-2-line"></i></a>
                             </td>
@@ -70,4 +74,29 @@
     </div>
     </section>
 
-</main><!-- End #main -
+</main>
+
+
+<script>
+    const confirm = (element) => {
+        event.preventDefault();
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            iconColor: '#da63f2',
+            showCancelButton: true,
+            confirmButtonColor: "#908991",
+            cancelButtonColor: "#da63f2",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                id = element.getAttribute('data-category-id')
+                console.log("fgdgfgf", id);
+                window.redirect(`/admin/delete-category/${id}`)
+                // window.location.href = event.target.href;
+
+            }
+        });
+    }
+</script>

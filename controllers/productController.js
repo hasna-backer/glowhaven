@@ -12,14 +12,33 @@ let viewProduct = async (req, res) => {
         let product = await Product.find({ delete: { $ne: true } })
             .skip((currentPage - 1) * pageSize)
             .limit(pageSize);
+        let categoryId = product.category_id
+        const category = await Category.findOne({ _id: categoryId })
 
+        let updatedProducts = await Promise.all(product.map(async e => {
+            let categoryId = e.category_id
+            const category = await Category.findOne({ _id: categoryId })
+            if (!category.discount) {
+                const product = e.toObject()
+                product.selling_price = Math.round(product.actual_price - ((product.discount / 100) * product.actual_price))
+                console.log("a", product.selling_price);
+                return product
+            } else {
+                const product = e.toObject()
+                product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price))
+                console.log("b", product);
+                return product
+            }
+        }))
+        console.log("updatedProducts", updatedProducts);
         const totalProducts = await Product.countDocuments();
         console.log("totaprod", totalProducts);
+        // console.log("discount", product.discount);
         // let discountAmount = ((discount / 100) * product.actual_price)
         // let sellingPrice = product.actual_price - discountAmount
         res.render('admin/products', {
             error,
-            product, currentPage, sellingPrice,
+            product: updatedProducts, currentPage,
             totalPages: Math.ceil(totalProducts / pageSize)
         });
     } catch (error) {

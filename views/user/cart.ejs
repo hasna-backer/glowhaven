@@ -65,7 +65,8 @@
                                         <div class="d-flex ">
                                             <p class="card-text" id="<%= product.prod_detail._id %>"> <b>₹
                                                     <%= product.price %></b> <del>₹<%= product.mrp %> </del> </p>
-                                            <span class="badge border-success border-1 text-success"">14% off</span>
+                                            <span class="badge border-success border-1
+                                                text-success""> <%= product.prod_detail.discount %>% off</span>
                                                                                                 </div>
                                                                                                 <div class=" d-flex
                                                 justify-content-between align-items-center">
@@ -112,16 +113,16 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col label ">Savings on MRP</div>
-                                                <div class="col text-right" id="savings">
+                                                <div class="col text-right text-green-600" id="savings">
                                                     - ₹<%= totalMrp - totalPrice %>
                                                 </div>
                                             </div>
-                                            <!-- <div class="row">
+                                            <div class="row">
                                                 <div class="col label ">Sub Total</div>
                                                 <div id="total" class="col text-right">
-                                                   <b>₹<%= totalPrice %>  </b>                                                  
-                                                   </div>
-                                                </div> -->
+                                                    <b>₹<%= totalPrice %> </b>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col label ">Shipping Charges</div>
                                                 <div id="shipping" class="col text-right">
@@ -133,8 +134,8 @@
                                             </div>
                                             <div class="row pb-2">
                                                 <div class="col label ">Coupon Discount</div>
-                                                <div class="col text-right">
-                                                    Coupon </div>
+                                                <div class="col text-right text-purple-500">
+                                                    <a href="/coupon">Apply Coupon</a> </div>
                                             </div>
                                             <div class="row border-top pt-2">
                                                 <div class="col label ">Order Total</div>
@@ -154,7 +155,7 @@
 
                             <div class="col-12">
                                 <button
-                                    class="btn  w-100 text-gray-900 p-2.5 relative inline-flex items-center justify-center overflow-hidden  text-gray-900 rounded-lg group bg-gradient-to-br from-purple-50 to-pink-300 group-hover:from-purple-50 group-hover:to-pink-50 hover:text-pink-500 dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">
+                                    class="btn  w-100 p-2.5 relative inline-flex items-center justify-center overflow-hidden  text-gray-900 rounded-lg group bg-gradient-to-br from-purple-50 to-pink-300 group-hover:from-purple-50 group-hover:to-pink-50 hover:text-pink-500 dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">
                                     <a href="/checkout">Proceed To Pay</a></button>
                             </div>
                             <div class="col-12">
@@ -192,24 +193,44 @@
 
 
     const remove = async (element) => {
-        id = element.getAttribute('data-product-id')
-        console.log("id", id);
-        try {
-            const res = await axios.delete('/remove-item', {
-                data: {
-                    id
-                },
-                headers: {
-                    'Content-Type': 'application/json'
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            iconColor: '#da63f2',
+            showCancelButton: true,
+            confirmButtonColor: "#908991",
+            cancelButtonColor: "#da63f2",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                id = element.getAttribute('data-product-id')
+                console.log("id", id);
+                try {
+                    const res = await axios.delete('/remove-item', {
+                        data: {
+                            id
+                        },
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    console.log("res", res);
+                    if (res.status === 200) {
+                        window.location.href = window.location.href
+                    }
+                } catch (error) {
+                    console.log("error", error);
                 }
-            })
-            console.log("res", res);
-            if (res.status === 200) {
-                window.location.href = window.location.href
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
+                });
             }
-        } catch (error) {
-            console.log("error", error);
-        }
+        });
+
+
     }
 
 

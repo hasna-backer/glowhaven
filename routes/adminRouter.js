@@ -50,4 +50,7 @@ router.post('/add-coupon', couponController.addCoupon)
 router.delete('/delete-coupon', couponController.deleteCoupon)
 router.get('/edit-coupon/:id', couponController.renderEditCoupon)
 router.patch('/edit-coupon', couponController.editCoupon)
+
+//Sales report
+router.get('/sales-report', adminController.salesReport);
 module.exports = router;   

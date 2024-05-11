@@ -40,6 +40,7 @@
                                 <th scope="col">ProductID</th>
                                 <th scope="col">MRP</th>
                                 <th scope="col">Selling price</th>
+                                <th scope="col">Discount</th>
                                 <th scope="col">Stock</th>
                                 <th scope="col">status</th>
                                 <th scope="col">Delete/Edit</th>
@@ -64,7 +65,11 @@
                                     <%= element.actual_price %>
                                 </td>
                                 <td style="background: transparent;">
-                                    <%= sellingPrice %>
+                                    <%= element.selling_price %>
+                                </td>
+                                <td style="background: transparent;">
+
+                                    <%= element.discount %>
                                 </td>
                                 <td style="background: transparent;">
                                     <%= element.stock %>
@@ -74,7 +79,7 @@
                                 </td>
                                 <td style="background: transparent;">
                                     <a href="/admin/delete-product/<%= element._id %>" class="ms-3"
-                                        onclick="return confirm(' Are you sure,You want to delete <%=element.product_name %>')"><i
+                                        data-product-id="<%= element._id %>" onclick="confirm(this)"><i
                                             class="ri-delete-bin-6-line"></i></a>
                                     &nbsp;&nbsp;&nbsp;
                                     <a href="/admin/edit-product/<%= element._id %>"><i class="ri-edit-2-line"></i></a>
@@ -111,3 +116,26 @@
     </section>
 
 </main>
+<script>
+    const confirm = (element) => {
+        event.preventDefault();
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            iconColor: '#da63f2',
+            showCancelButton: true,
+            confirmButtonColor: "#908991",
+            cancelButtonColor: "#da63f2",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                id = element.getAttribute('data-product-id')
+                console.log("fgdgfgf", id);
+                window.redirect(`/admin/delete-product/${id}`)
+                // window.location.href = event.target.href;
+
+            }
+        });
+    }
+</script>

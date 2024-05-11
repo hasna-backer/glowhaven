@@ -114,11 +114,13 @@
                 error.textContent = " This Code Is Only For New Customers.You Have Already Placed An order "
             } else if (res.data.message === "already used") {
                 error.textContent = "You Have Already Used This Coupon Once "
+            } else if (res.data.message === "Coupon expired") {
+                error.textContent = "YCoupon is Expired! "
             } else if (res.data.message === "applicable") {
                 error.textContent = "This coupon is applicable "
                 Swal.fire({
                     title: "Coupon Applied",
-                    text: "You Save Lot!!!",
+                    text: "You Save a Lot!!!",
                     icon: "success"
                 }).then((result) => {
                     console.log("result", result);

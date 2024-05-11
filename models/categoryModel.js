@@ -10,6 +10,10 @@ const categorySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    discount: {
+        type: Number,
+
+    },
     cat_status: {
         type: Boolean,
         required: true,

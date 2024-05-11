@@ -266,7 +266,7 @@ body {
 
 .section-heading span {
   font-size: 14px;
-  color: #a1a1a1;
+  color: #696767;
   font-style: italic;
   font-weight: 400;
 }
@@ -902,7 +902,7 @@ Men
 
 #men .item .down-content span {
   font-size: 18px;
-  color: #a1a1a1;
+  color: #696767;
   font-weight: 500;
   display: block;
 }
@@ -1061,7 +1061,7 @@ Women
 
 #women .item .down-content span {
   font-size: 18px;
-  color: #a1a1a1;
+  color: #696767;
   font-weight: 500;
   display: block;
 }
@@ -1220,7 +1220,7 @@ Kids
 
 #kids .item .down-content span {
   font-size: 18px;
-  color: #a1a1a1;
+  color: #696767;
   font-weight: 500;
   display: block;
 }
@@ -1735,7 +1735,7 @@ Products Page
 
 #products .item .down-content span {
   font-size: 18px;
-  color: #a1a1a1;
+  color: #696767;
   font-weight: 500;
   display: block;
 }
@@ -1853,7 +1853,7 @@ Single Product Page
 
 #product .right-content span.price {
   font-size: 18px;
-  color: #a1a1a1;
+  color: #696767;
   font-weight: 500;
   display: block;
   margin-top: 5px;
@@ -2196,7 +2196,7 @@ About Us Page
 
 .our-team .team-item .down-content span {
   font-size: 14px;
-  color: #a1a1a1;
+  color: #696767;
   font-weight: 500;
   display: block;
   font-style: italic;

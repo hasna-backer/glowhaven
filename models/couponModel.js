@@ -34,10 +34,10 @@ const couponSchema = new Schema(
             required: true,
             min: 0, // Ensures the value is non-negative
         },
-        max_count: {
-            type: Number,
-            required: true,
-        },
+        // max_count: {
+        //     type: Number,
+        //     required: true,
+        // },
         used_count: {
             type: Number,
             default: 0,

@@ -67,6 +67,7 @@ const editCoupon = async (req, res) => {
 const renderCoupon = async (req, res) => {
     const id = req.session.user.user._id
     const coupon = await Coupon.find({ user_list: { $ne: id } })
+
     console.log("coupons", coupon);
     res.render('user/coupon', { coupon })
 }
@@ -75,8 +76,10 @@ const renderCoupon = async (req, res) => {
 const applyCoupon = async (req, res) => {
     const user = await User.findOne({ email: req.session.user.user.email }).populate(["cart.product_id"]);
     const id = req.session.user.user._id
+    const currentDate = new Date().toISOString().split('T')[0];
+
     // console.log("req.body:", req.body);
-    const { totalPrice, shipping } = getTotal(user)
+    const { totalPrice, shipping } = await getTotal(user)
     const amount_payable = totalPrice + shipping
     console.log("ttl", amount_payable);
     const couponId = req.body.id
@@ -89,6 +92,10 @@ const applyCoupon = async (req, res) => {
 
     } else if (selectedCoupon.user_list.includes(id)) { //checking if it is already used 
         return res.status(200).json({ message: "already used" })
+
+    } else if (selectedCoupon.exp_date < currentDate) { //checking if it is expired
+        return res.status(200).json({ message: "Coupon expired" })
+
 
     }
     else if (selectedCoupon.description.includes('first order')) {
@@ -106,15 +113,7 @@ const applyCoupon = async (req, res) => {
             }
             console.log("discounte", discountAmount);
             const total_payable = amount_payable - discountAmount
-            // const cpn = await Coupon.updateOne(
-            //     { _id: couponId },
-            //     {
-            //         $addToSet: {
-            //             user_list: id
-            //         }
-            //     }
-            // );
-            // console.log("coponsss", cpn);
+
             req.session.coupon = { total_payable, couponId, discountAmount }
             return res.status(200).json({ message: "firstOrder", })
 

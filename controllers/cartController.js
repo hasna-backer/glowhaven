@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const Products = require('../models/productModel');
+const Category = require('../models/categoryModel');
 
 //view cart 
 let viewCart = async (req, res) => {
@@ -7,18 +8,42 @@ let viewCart = async (req, res) => {
     const user = await User.findOne({ email: req.session.user.user.email });
     // console.log("user_ones", user);
     // Check if the user exists and has a cart
+
+
+
+
     if (user && user.cart) {
         // Extract product IDs from the cart
         const productIds = user.cart.map(item => item.product_id);
         // Fetch product details for each product ID
-        const products = await Products.find({ _id: { $in: productIds } });
-        // console.log("products", products);
+        let products = await Products.find({ _id: { $in: productIds } });
+        //calculating selling price
+        let categoryId = products.category_id
+        const category = await Category.findOne({ _id: categoryId })
 
+        products = await Promise.all(products.map(async e => {
+            let categoryId = e.category_id
+            const category = await Category.findOne({ _id: categoryId })
+            if (!category.discount) {
+                const product = e.toObject()
+                product.selling_price = Math.round(product.actual_price - ((product.discount / 100) * product.actual_price))
+                console.log("a", product.selling_price);
+                return product
+            } else {
+                const product = e.toObject()
+                product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price))
+                console.log("b", product);
+                return product
+            }
+        }))
+        console.log("basillll", products);
         // Combine cart items with product details
         const combinedCartItems = user.cart.map(cartItem => {
             // Find the matching product for the current cart item 
             const product = products.find(p => p._id.toString() === cartItem.product_id.toString());
             // Return a new object that combines the cart item and product details
+
+
 
             const price = product.selling_price * cartItem.quantity;
             const mrp = product.actual_price * cartItem.quantity;
@@ -48,7 +73,11 @@ let viewCart = async (req, res) => {
         if (totalPrice < 1500) {
             shipping = 60
         }
-
+        console.log("xxxx", combinedCartItems);
+        req.session.totals = {
+            saveOnMrp: Math.round(totalMrp - totalPrice),
+            subtotal: totalPrice
+        }
         // Render the 'user/cart' view and pass the combined cart items
         res.render('user/cart', { cartItems: combinedCartItems, totalPrice, user, totalMrp, shipping });
 
@@ -67,22 +96,44 @@ let updateQuantity = async (req, res) => {
         if (cartItem) {
             //update quantity
             cartItem.quantity = newQuantity;
-            console.log("updated cart", cartItem);
+            // console.log("updated cart", cartItem);
             await user.save();
 
             //fetch product details of the updated item
-            const products = await Products.find({ _id: { $in: productId } })
-            // console.log("products,", products);
+            let products = await Products.findOne({ _id: { $in: productId } })
+            console.log("productscats,", products);
+
+            //calculating selling price
+            let categoryId = products.category_id
+            // console.log("cats,", categoryId);
+
+            const category = await Category.findOne({ _id: categoryId })
+
+
+            if (!category.discount) {
+                cartItem.product_id.selling_price = Math.round(cartItem.product_id.actual_price - ((cartItem.product_id.discount / 100) * cartItem.product_id.actual_price))
+
+            } else {
+                cartItem.product_id.selling_price = Math.round(cartItem.product_id.actual_price - ((category.discount / 100) * cartItem.product_id.actual_price))
+
+            }
+
+            // console.log("basillll", products);
+
+
 
             //calculate updated prices
             const price = cartItem.product_id.selling_price * cartItem.quantity;
+            // console.log("pppppppp:::", cartItem.product_id.selling_price, "pppp", cartItem.quantity);
             const mrp = cartItem.product_id.actual_price * newQuantity;
-            console.log("price,mrp", price, mrp);
+            // console.log("price,mrp", price, mrp);
 
             //total price calculation
             console.log("user.cart", user.cart);
             let totalPrice = 0;
             let totalMrp = 0;
+
+
             user.cart.forEach(item => {
                 const p = item.product_id.selling_price * item.quantity;
                 const m = item.product_id.actual_price * item.quantity;

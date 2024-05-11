@@ -1,3 +1,4 @@
+const { required } = require('joi');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
@@ -57,12 +58,17 @@ const order_schema = new Schema({
         coupon_id: {
             type: ObjectId,
             ref: 'Coupon',
+            required: false
         },
         discount: {
-            type: Number
+            type: Number,
+            required: false
+
         },
         code: {
-            type: String
+            type: String,
+            required: false
+
         }
     },
     status: {

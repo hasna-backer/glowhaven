@@ -48,6 +48,8 @@ router.get("/checkout/payment", checkoutController.renderPayment)
 router.get('/orders', orderController.renderOrder);
 router.get('/order-detail/:id', orderController.renderOrderDetails);
 router.post('/orders', orderController.createOrder);
+router.post('/verify-payment', orderController.verify);
+
 router.post('/cancel-order', orderController.cancelOrder);
 
 

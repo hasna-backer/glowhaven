@@ -127,26 +127,66 @@
      * @param {HTMLSelectElement} element
      */
 
+    // Swal.fire({
+    // title: "Are you sure?",
+    // icon: "warning",
+    // iconColor: '#da63f2',
+    // showCancelButton: true,
+    // confirmButtonColor: "#908991",
+    // cancelButtonColor: "#da63f2",
+    // confirmButtonText: "Yes",
+    // cancelButtonText: "No",
+    // }).then((result) => {
+    // if (result.isConfirmed) {
+    // Swal.fire({
+    // title: "Deleted!",
+    // text: "Your file has been deleted.",
+    // icon: "success"
+    // });
+    // }
+    // });
+
 
     const remove = async (element) => {
-        id = element.getAttribute('data-product-id')
-        console.log("id", id);
-        try {
-            const res = await axios.delete('/delete-wishlist', {
-                data: {
-                    id
-                },
-                headers: {
-                    'Content-Type': 'application/json'
+
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            iconColor: '#da63f2',
+            showCancelButton: true,
+            confirmButtonColor: "#908991",
+            cancelButtonColor: "#da63f2",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                id = element.getAttribute('data-product-id')
+                console.log("id", id);
+                try {
+                    const res = await axios.delete('/delete-wishlist', {
+                        data: {
+                            id
+                        },
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    console.log("res", res);
+                    if (res.status === 200) {
+                        window.location.href = window.location.href
+                    }
+                } catch (error) {
+                    console.log("error", error);
                 }
-            })
-            console.log("res", res);
-            if (res.status === 200) {
-                window.location.href = window.location.href
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
+                });
             }
-        } catch (error) {
-            console.log("error", error);
-        }
+        });
+
     }
 
 

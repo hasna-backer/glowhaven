@@ -8,27 +8,32 @@ const { coupon } = require('./couponController');
 
 let renderCheckout = async (req, res) => {
     const user = await User.findOne({ email: req.session.user.user.email }).populate(["cart.product_id", "default_address"]);
-    console.log("userrrr:", user.cart);
+    // console.log("userrrr:", user.cart);
     const addresses = await Address.find({ customer_id: req.session.user.user._id })
-    console.log("address", addresses);
+    // console.log("address", addresses);
     if (!user.default_address) {
         user.default_address = addresses[0]
     }
     const afterdiscount = req.session.totalAmount
-    console.log("after:", afterdiscount);
+    // console.log("after:", afterdiscount);
     if (addresses.length > 0) {
         if (!req.session.coupon) {
-            let { totalPrice, shipping } = getTotal(user)
+            let { totalPrice, shipping, totalMrp } = await getTotal(user)
+            const { saveOnMrp, subtotal } = req.session.totals
             console.log("tttttt", totalPrice);
-            res.render('user/checkout', { user, cartItems: user.cart, totalPrice, addresses, shipping, coupon: {} })
+            // const discount = "No Coupon Applied"
+            res.render('user/checkout', { user, cartItems: user.cart, totalPrice, totalMrp, saveOnMrp, subtotal, discount: "", addresses, shipping, coupon: {} })
 
         }
         else {
-            let { shipping } = getTotal(user)
-            let totalPrice = req.session.coupon.total_payable
+            let { shipping, totalMrp } = await getTotal(user)
+            let { total_payable, couponId, discountAmount } = req.session.coupon
+
+            console.log("t,c,disc:", total_payable, couponId, discountAmount);
             const coupon = await Coupon.findOne({ _id: req.session.coupon.couponId })
-            console.log("logsss:", totalPrice, coupon, shipping);
-            res.render('user/checkout', { user, cartItems: user.cart, totalPrice, addresses, shipping, coupon })
+            // console.log("logsss:", totalPrice, coupon, shipping);
+            const { saveOnMrp, subtotal } = req.session.totals
+            res.render('user/checkout', { user, cartItems: user.cart, totalPrice: Math.round(total_payable), discount: Math.round(discountAmount), totalMrp, saveOnMrp, addresses, shipping, coupon, subtotal })
         }
     }
     else {
@@ -85,13 +90,14 @@ const renderPayment = async (req, res) => {
 
     if (addresses.length > 0) {
 
-        const { totalPrice, shipping } = getTotal(user)
+        const { totalPrice, shipping } = await getTotal(user)
         const amount_payable = totalPrice + shipping
-        if (!req.session.coupon.couponId) {
+        if (!req.session.coupon) {
             totalAmountToPay = amount_payable
         } else {
-            totalAmountToPay = req.session.coupon.total_payable
+            totalAmountToPay = Math.round(req.session.coupon.total_payable)
         }
+
         res.render('user/payment', { totalAmountToPay })
     }
 }

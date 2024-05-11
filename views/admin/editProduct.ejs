@@ -219,7 +219,7 @@
                     </div>
                     <div class="col-4">
                         <label for="inputEmail4" class="form-label">Discount</label>
-                        <input type="text" class="form-control" id="selling_price" name="selling_price" max="100"
+                        <input type="text" class="form-control" id="discount" name="discount" max="100"
                             value="<%= product.discount %>">
                         <div id="error" style="color:red"></div>
                     </div>
@@ -364,7 +364,7 @@
         const title = document.getElementById('title')
         const description = document.getElementById('description')
         const actual_price = document.getElementById('actual_price')
-        const selling_price = document.getElementById('selling_price')
+        const discount = document.getElementById('discount')
         const stock = document.getElementById('stock')
         const ingredients = document.getElementById('ingredients')
         const img1 = document.getElementById('img1')
@@ -425,15 +425,15 @@
             setSuccuss(actual_price);
         }
 
-        const selling_priceVal = document.getElementById('selling_price').value;
-        if (!selling_priceVal) {
-            setError(selling_price, 'Please enter a Value ')
+        const discountVal = document.getElementById('discount').value;
+        if (!discountVal) {
+            setError(discount, 'Please enter a Value ')
             return;
-        } else if (selling_priceVal < 10) {
-            setError(selling_price, 'Please enter a real number ')
+        } else if (discountVal < 0) {
+            setError(discount, 'Please enter a real number ')
             return;
         } else {
-            setSuccuss(selling_price);
+            setSuccuss(discount);
         }
 
         console.log("submitfvxcv");
@@ -442,7 +442,7 @@
         if (!stockVal) {
             setError(stock, 'Please enter a Value ')
             return;
-        } else if (stockVal < 5) {
+        } else if (stockVal < 0) {
             setError(stock, 'Please enter a real number ')
             return;
         } else {

@@ -3,9 +3,15 @@ const Order = require('../models/orderModel');
 const Product = require('../models/productModel');
 const Coupon = require('../models/couponModel');
 const mongoose = require('mongoose');
-
+const Razorpay = require('razorpay')
+const Crypto = require("crypto");
 
 const { getTotal } = require('../utils/helper')
+// var instance = new Razorpay({
+//     key_id: 'rzp_test_vkBotcfH9qvzaB',
+//     key_secret: 'SqlRJ6xEPeQJOCVv3GyFikYb',
+// });
+
 
 
 //admin
@@ -180,12 +186,13 @@ const changeStatus = async (req, res) => {
 
 }
 
+//user placing order
 const createOrder = async (req, res) => {
     const user = await User.findOne({ email: req.session.user.user.email }).populate(["cart.product_id", "default_address"]);
-    const { totalPrice, shipping } = getTotal(user)
+    const { totalPrice, shipping } = await getTotal(user)
     const amount_payable = totalPrice + shipping
     let totalAmountToPay
-    console.log("req", req.body.paymentType, amount_payable);
+    // console.log("req", req.body.paymentType, amount_payable);
 
     const paymentType = req.body.paymentType
     let status, order;
@@ -196,7 +203,7 @@ const createOrder = async (req, res) => {
     }
     let items = [];
     const cartList = user.cart;
-    console.log("cartList", cartList);
+    // console.log("cartList", cartList);
     for (let i = 0; i < cartList.length; i++) {
         items.push({
             product_id: cartList[i].product_id._id,
@@ -206,18 +213,25 @@ const createOrder = async (req, res) => {
         })
     }
     const address = user.default_address
-    const selectedCoupon = await Coupon.findOne({ _id: req.session.coupon.couponId })
+    // console.log("req.session.coupon", req.session.coupon);
+    let selectedCoupon
+    if (req.session.coupon) {
+        selectedCoupon = await Coupon.findOne({ _id: req.session.coupon.couponId })
+    }
+
 
     const coupon = {
-        coupon_id: req.session.coupon.couponId || "",
-        discount: req.session.coupon.discountAmount || 0,
-        code: selectedCoupon.coupon_code || ""
+        coupon_id: req.session.coupon?.couponId || null,
+        discount: req.session.coupon?.discountAmount || 0,
+        code: selectedCoupon?.coupon_code || ""
     }
-    if (!req.session.coupon.couponId) {
+    if (!req.session.coupon?.couponId) {
         totalAmountToPay = amount_payable
     } else {
         totalAmountToPay = req.session.coupon.total_payable
     }
+
+
     order = {
         customer_id: user._id,
         items: items,
@@ -229,41 +243,135 @@ const createOrder = async (req, res) => {
 
 
     }
-    console.log("order", order);
+
+    // console.log("order", order);
 
 
     if (paymentType === "cod") {
         const createOrder = await Order.create(order)
+        console.log("hi its me hasna", createOrder);
+
         req.session.order = createOrder._id
         console.log("createOrder", createOrder);
         await Coupon.updateOne(
-            { _id: req.session.coupon.couponId },
+            { _id: req.session.coupon?.couponId },
             {
                 $addToSet: {
                     user_list: user._id
                 }
             }
         );
+
         await User.updateOne({ _id: user._id }, { $unset: { cart: '' } })
         req.session.coupon = {}
         for (let i = 0; i < items.length; i++) {
             await Product.updateOne({ _id: items[i].product_id }, { $inc: { stock: -(items[i].quantity) } })
         }
-        res.redirect('/orders')
+        return res.status(200).json({ message: "cod placed" })
 
+
+    } else if (paymentType === "razorpay") {
+        const createOrder = await Order.create(order)
+        console.log("hi its me hasna", createOrder);
+
+        req.session.order = createOrder._id
+        // console.log("createOrder", createOrder);
+
+        //updating coupon since user placed order using the coupon
+        await Coupon.updateOne(
+            { _id: req.session.coupon?.couponId },
+            {
+                $addToSet: {
+                    user_list: user._id
+                }
+            }
+        );
+
+
+
+        req.session.coupon = {} //clearing coupon from session
+        for (let i = 0; i < items.length; i++) { //managing stock
+            await Product.updateOne({ _id: items[i].product_id }, { $inc: { stock: -(items[i].quantity) } })
+        }
+        //managing razorpay payment
+        const orderId = createOrder._id
+        const totalAmount = createOrder.total_amount
+        const Razorpay = require('razorpay');
+        var instance = new Razorpay({ key_id: 'rzp_test_vkBotcfH9qvzaB', key_secret: 'SqlRJ6xEPeQJOCVv3GyFikYb' })
+
+        var options = {
+            amount: totalAmount * 100,  // amount in the smallest currency unit
+            currency: "INR",
+            receipt: orderId
+        };
+        instance.orders.create(options, function (err, order) {
+            console.log("order", order);
+            return res.status(200).json({ message: "razorpay placed", order })
+        });
+        // req.session.order = createOrder._id
+        // console.log("createOrder", createOrder);
+        // await Coupon.updateOne(
+        //     { _id: req.session.coupon?.couponId },
+        //     {
+        //         $addToSet: {
+        //             user_list: user._id 
+        //         }
+        //     }
+        // );
+
+
+        // await User.updateOne({ _id: user._id }, { $unset: { cart: '' } })
+        // req.session.coupon = {}
+        // for (let i = 0; i < items.length; i++) {
+        //     await Product.updateOne({ _id: items[i].product_id }, { $inc: { stock: -(items[i].quantity) } })
+        // }
+        // return res.status(200).json({ message: "razorpay order placed" })
     }
-
-
-    // const { totalPrice, shipping } = getTotal(user)
-    // const amount_payable = totalPrice + shipping
-    // console.log("req", req.body.paymentType, amount_payable);
 }
+
+const verify = async (req, res) => {
+    console.log("req.body", req.body);
+    console.log("payment", req.body.payment.razorpay_order_id);
+    const orderId = req.body.payment.razorpay_order_id
+    const paymentId = req.body.payment.razorpay_payment_id
+    try {
+        let hmac = Crypto.createHmac('sha256', 'SqlRJ6xEPeQJOCVv3GyFikYb');
+
+        hmac.update(orderId + '|' + paymentId);
+        hmac = hmac.digest('hex')
+        console.log(hmac);
+        if (hmac === req.body.payment.razorpay_signature) {
+            console.log("payment success")
+            const orderId = req.session.order;
+
+            await Order.updateOne({ _id: orderId }, { $set: { status: "paid" } })
+            const user = await User.findOne({ email: req.session.user.user.email })
+            await User.updateOne({ _id: user._id }, { $unset: { cart: '' } }) //emptying cart since user placed order
+
+            return res.status(200).json({ message: "payment success" })
+        }
+    } catch (error) {
+        console.log("errordisplay",);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 //view orders  
 const renderOrder = async (req, res) => {
     const user = await User.findOne({ email: req.session.user.user.email }).populate(["cart.product_id", "default_address"]);
     const order_id = req.session.order
-    console.log("order_id", order_id);
+    // console.log("order_id", order_id);
     const id = user._id
     // let cartItems = await Order.aggregate([  
     //     { $match: { customer_id: id } },
@@ -280,8 +388,9 @@ const renderOrder = async (req, res) => {
     // ])
 
     const cartItems = await Order.find({ customer_id: id }).populate('items.product_id').sort({ createdAt: -1 });
-    console.log("order render:", cartItems.map(el => el.items));
-    console.log("cart items", cartItems);
+    // console.log("order render:", cartItems.map(el => el.items));
+    // console.log("cart items", cartItems);
+    console.log("view order page rendering");
     res.render('user/order', { cartItems })
 
 }
@@ -328,4 +437,4 @@ const cancelOrder = async (req, res) => {
 }
 
 
-module.exports = { listOrderAdminSde, orderDetailAdminSide, renderOrder, renderOrderDetails, createOrder, changeStatus, cancelOrder }
+module.exports = { listOrderAdminSde, orderDetailAdminSide, renderOrder, renderOrderDetails, createOrder, changeStatus, cancelOrder, verify }

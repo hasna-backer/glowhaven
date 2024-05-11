@@ -6,18 +6,37 @@ const generateOtp = require('../utils/generateOtp');
 const User = require('../models/userModel');
 const Product = require('../models/productModel');
 const Address = require('../models/addressModel');
+const Category = require('../models/categoryModel');
 const validate = require('../validations/signupValidation');
 const { response } = require('express');
 const { Express } = require('express');
 const productModel = require('../models/productModel');
 
 let homepage = async function (req, res, next) {
-    const products = await Product.find({});
+    const product = await Product.find({ status: { $ne: false }, delete: { $ne: true } });
+    let categoryId = product.category_id
+    const category = await Category.findOne({ _id: categoryId })
+
+    let updatedProducts = await Promise.all(product.map(async e => {
+        let categoryId = e.category_id
+        const category = await Category.findOne({ _id: categoryId })
+        if (!category.discount) {
+            const product = e.toObject()
+            product.selling_price = Math.round(product.actual_price - ((product.discount / 100) * product.actual_price))
+            console.log("a", product.selling_price);
+            return product
+        } else {
+            const product = e.toObject()
+            product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price))
+            console.log("b", product);
+            return product
+        }
+    }))
     const userId = req.session.user.user._id;
     console.log("userId", userId)
     const user = await User.findOne({ _id: userId });
     // console.log("user", user)
-    res.render('user/home', { title: 'Express', user, products });
+    res.render('user/home', { title: 'Express', user, products: updatedProducts });
     console.log("user===", user)
 
 }
@@ -191,16 +210,43 @@ let editProfile = async (req, res) => {
 
 
 let renderViewProducts = async (req, res) => {
+    console.log("hi");
     const { search } = req.query
     try {
         if (!search) {
-            const products = await Product.find({});
-            return res.render('user/product', { products, user: req.session.user });
+            const products = await Product.find({ status: { $ne: false }, delete: { $ne: true } });
+            console.log("productssssss", products);
+            //stock mngt
+            if (products.stock === 0) {
+
+            }
+            //calculating discount
+            let categoryId = products.category_id
+            const category = await Category.findOne({ _id: categoryId })
+
+            let updatedProducts = await Promise.all(products.map(async e => {
+                let categoryId = e.category_id
+                const category = await Category.findOne({ _id: categoryId })
+                if (!category.discount) {
+                    const product = e.toObject()
+                    product.selling_price = Math.round(product.actual_price - ((product.discount / 100) * product.actual_price))
+                    console.log("a", product.selling_price);
+                    return product
+                } else {
+                    const product = e.toObject()
+                    product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price))
+                    console.log("b", product);
+                    return product
+                }
+            }))
+            console.log("cals", updatedProducts);
+            return res.render('user/product', { user: req.session.user, products: updatedProducts });
         }
         const products = await Product.find({
             product_name: { $regex: new RegExp(search, 'i') }
         });
         console.log("products", products);
+        console.log("Gfdgfgfsggfgdfgdgfgfgfgfgdfgdfgdfgdfgdfg");
         return res.render('user/product', { products, user: req.session.user });
 
     } catch (error) {
@@ -209,9 +255,24 @@ let renderViewProducts = async (req, res) => {
 
 };
 
-let renderSingleProducts = async (req, res) => {
-    const products = await Product.findById(req.params.id);
-    res.render('user/singleProduct', { products, user: req.session.user })
+const renderSingleProducts = async (req, res) => {
+    const product = await Product.findById(req.params.id).populate("category_id");
+    console.log("prod", product);
+    let categoryId = product.category_id
+    const category = await Category.findOne({ _id: categoryId })
+    console.log("catg", category);
+    if (!category.discount) {
+        const discountAmount = ((product.discount / 100) * product.actual_price)
+        let sellingPrice = Math.round(product.actual_price - discountAmount)
+        res.render('user/singleProduct', { product, user: req.session.user, sellingPrice })
+
+    }
+    else {
+        const discountAmount = ((category.discount / 100) * product.actual_price)
+        let sellingPrice = Math.round(product.actual_price - discountAmount)
+        res.render('user/singleProduct', { product, user: req.session.user, sellingPrice })
+    }
+
 };
 
 //search products

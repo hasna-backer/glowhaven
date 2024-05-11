@@ -1,0 +1,121 @@
+<%- include('../partials/adminHeader.ejs') %>
+<%- include('../partials/adminSidebar.ejs') %>
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Orders</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Report</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    <div class="col-lg-13">
+        <div class="card">
+            <div class="card-body">
+                <form action="admin/sales-report" method="post">
+                    <div class="d-flex  justify-end items-center space-x-3">
+
+
+                        <div class="form-group">
+                            <label for="startDate">From</label>
+                            <input type="date" name="startDate" id="startDate" class="form-control"
+                                placeholder="Start Date" value="startDate" />
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">To</label>
+                            <input type="date" id="endDate" name="endDate" class="form-control" placeholder="End Date"
+                                value="endDate" />
+                        </div>
+                        <div class="btn-toolbar pt-3 text-blue-700">
+                            <button type="submit" class="btn btn-primary text-blue-700">
+                                <i class="bi bi-search"></i>
+                                Get Report
+                            </button>
+                        </div>
+
+                        <div class="btn-toolbar pt-3">
+                            <button onclick="getExcel()" type="button" class="btn btn-outline-success"><i
+                                    class="bi bi-file-earmark-spreadsheet"></i>Excel</button>
+                            <button id="exportToButton" onclick="getPDF()" type="button"
+                                class="btn btn-outline-danger"><i class="bi bi-file-earmark-pdf"></i>PDF</button>
+                        </div>
+                        <!-- <a href="/admin/add-product" class="btn btn-primary "
+                        style="background-color: #0d6efd !important ;"><i class="bi bi-plus-lg"></i> New
+                        Product</a> -->
+                    </div>
+                </form>
+
+
+
+                <!-- Table with hoverable rows -->
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="text-center">
+                            <th class="sorting" scope="col">#</th>
+                            <th class="sorting" scope="col">Order Id</th>
+                            <th class="sorting" scope="col">Order Date</th>
+                            <th class="sorting" scope="col">User</th>
+                            <th class="sorting" scope="col">Products</th>
+                            <th class="sorting" scope="col">Shipping Address</th>
+                            <th class="sorting" scope="col">Payment Method</th>
+                            <th class="sorting" scope="col">Status</th>
+                            <th class="sorting" scope="col">Total Amount</th>
+                            <th class="sorting" scope="col">Coupon</th>
+                            <th class="sorting" scope="col">Coupon Discount</th>
+                            <th class="sorting" scope="col">Payable</th>
+                            <th class="sorting" scope="col">Category Discount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- < orderItems.forEach(element=> { %> -->
+                        <tr>
+
+                            <td scope="row">
+                            </td>
+                            <td scope="row">
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                            </td>
+                            <td>
+
+                            </td>
+                            <td style="width: 15px;background: transparent;">
+
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+
+                            </td>
+
+            </div>
+            <!-- < }) %> -->
+            </tr>
+
+
+            </tbody>
+            </table>
+            <!-- End Table with hoverable rows -->
+        </div>
+    </div>
+
+    </section>
+
+</main>
+
+
+<script>
+    const itemDetails = (element) => {
+        console.log(element);
+    }
+</script>

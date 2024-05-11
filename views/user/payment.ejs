@@ -4,6 +4,15 @@
     opacity: 1;
     /* Firefox */
   }
+
+  #details {
+    display: none;
+    padding-left: 5px;
+  }
+
+  input[type="radio"]:checked~#details {
+    display: block;
+  }
 </style>
 
 <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4"
@@ -13,20 +22,24 @@
       <div class="col-lg-7 col-md-6 d-flex flex-column align-items-center justify-content-center">
         <div class="card  w-100">
           <div class="card">
-
+            <h5 class="card-title"><a href="/checkout"><i class="fa fa-arrow-left pl-2" aria-hidden="true"></i></a>
+              &nbsp; Payment Options</h5>
 
             <div class="row ">
+              <!-- <form action="/orders" method="post"> -->
               <div class="address-container d-flex align-items-center flex flex-col">
-                <div id="total" class="col text-left p-4 bg-gray-100	">UPI/BHIM</div>
+                <div id="total" class="col text-left p-4 bg-gray-100	"> RAZORPAY</div>
                 <div class="card w-100">
-                  <div class="row py-2 pb-3">
-                    <div class="col-1 pt-1 mx-3"> <button class="btn border-blue-500 px-3 py-1"><i
-                          class="fa fa-plus"></i>
-                      </button>
+                  <div class="row py-2 pb-3" onclick="placeOrder('razorpay')">
+                    <div class="col-1 pt-1 ml-3">
+                      <img src="/user-assets/images/credit-card.png" width="50px" height="0px" alt="Snow">
+
+
                     </div>
-                    <div class="col pl-0 ">
-                      <div class="card-title pt-2 pb-0">ADD NEW UPI ID</div>
-                      <span>You need to have a registered upi id</span>
+                    <div class="col pl-0  ml-0">
+
+                      <div class="card-title pt-2 pb-0">Instant Payment</div>
+                      <span>Select from a list of options</span>
                     </div>
                   </div>
 
@@ -39,12 +52,16 @@
                 <div id="total" class="col text-left p-4 bg-slate-200	">WALLETS</div>
                 <div class="card w-100">
                   <div class="row py-2 pb-3">
-                    <div class="col-1 pt-1 mx-3"> <button class="btn border-blue-500 px-3 py-1"><i
-                          class="fa fa-plus"></i>
-                      </button>
+                    <div class="col-1 pt-2 ml-3">
+                      <img src="/user-assets/images/icons8-wallet-50.png" width="50px" height="0px" alt="Snow">
+
+
+
+
+
                     </div>
                     <div class="col pl-0 ">
-                      <div class="card-title pt-2 pb-0">LINK YOUR WALLET</div>
+                      <div class="card-title pt-2 pb-0">Link Your Wallet</div>
                       <span>You need to have a registered upi id</span>
                     </div>
                   </div>
@@ -57,29 +74,46 @@
               <div class="address-container d-flex align-items-center flex flex-col mb-0 pb-0">
                 <div id="total" class="col text-left p-4 bg-slate-200	">CASH ON DELIVERY</div>
                 <div class="card w-100">
-                  <div class="row py-2 pb-3">
-                    <div class="col-1 pt-1 mx-3"> <button class="btn border-blue-500 px-3 py-1"><i
-                          class="fa fa-plus"></i>
-                      </button>
-                    </div>
+                  <div class="row py-2 pb-3" onclick="showdetails()" id="showdetails">
+                    <div class="col-1 pt-3 ml-3">
+                      <img src="/user-assets/images/cash-on-delivery.png" width="50px" height="0px" alt="Snow"> </div>
                     <div class="col pl-0 ">
                       <div class="card-title pt-2 pb-4 justify-content-between">
-                        <div class="flex  mb-3 justify-content-between">
-                          <form action="/orders" method="post">
-                            <label for="default-radio-1" class=" card-title pt-2 pb-3">Pay
-                              <%= totalAmountToPay %> on
-                              delivery</label>
-
-
+                        <div class="flex  mb-0 ">
+                          <label for="optionCod" class=" card-title pt-2 pb-3">
+                            Pay <%= totalAmountToPay %> on
+                            delivery</label>
                         </div>
-                        <button type="submit" value="cod" name="paymentType"
-                          class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Place
-                          Order</button>
-                        </form>
-                      </div>
+                        <div id="details">
+                          <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                            <div class="row justify-between">
+                              <h1 class="col label text-base	 ">Order Total</h1>
+                              <h2 class="col text-right mr-3 text-base	"> ₹<%= totalAmountToPay %></h2>
+                            </div>
 
+                            <div class="row justify-between">
+                              <h6 class="col label text-base		">COD Charges</h6>
+                              <h3 class="col text-right mr-3 text-base	"> ₹0</h3>
+
+                            </div>
+                            <hr class="mt-6 mb-2 mr-3">
+                            <div class="row mb-2">
+                              <div class="col label ">Amount Payable</div>
+                              <div id="total" class="col text-right mr-3">
+
+                                <b>₹<%=totalAmountToPay %> </b> </div>
+                            </div>
+                            <button type="submit" value="cod" name="paymentType" onclick="placeOrder('cod')"
+                              class="  text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Place
+                              Order</button>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- </form> -->
                     </div>
                   </div>
+
+
 
                 </div>
                 <div class="card-title pt-2 pb-0"> <i class="fa fa-plus"></i>
@@ -95,10 +129,111 @@
   </div>
 </section>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
-  const cashOnDelivery = async (element) => {
-    id = element.value;
-    console.log("id", id);
+  const show = (elementId) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.style.display = "block";
+    }
+  };
+
+  const showdetails = async () => {
+    const div = document.getElementById("cod");
+    const detailsDiv = document.getElementById("details");
+    detailsDiv.style.display = "block"; // Show the details div
+    show('details')
+
+  }
+
+
+
+  const placeOrder = async (element) => {
+    const paymentType = element;
+    console.log("paymentType", element)
+    try {
+      const res = await axios.post('/orders', {
+        paymentType
+      })
+      if (res.data.message === "cod placed") {
+        window.redirect('/orders')
+      } else if (res.data.message === "razorpay placed") {
+        console.log("res.data", res.data.order.id);
+        const order = res.data.order
+        console.log("order", order);
+        var options = {
+
+          "key": "rzp_test_vkBotcfH9qvzaB", // Enter the Key ID generated from the Dashboard
+          // "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+          "currency": "INR",
+          "name": "Glow haven",
+          "description": "Test Transaction",
+          "image": "https://example.com/your_logo",
+          "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+          "handler": function (response) {
+            // alert(response.razorpay_payment_id);
+            // alert(response.razorpay_order_id);
+            // alert(response.razorpay_signature)
+
+            verifyPayment(response,
+              order) //after succussfull payment we have to verify if its success in the backend
+          },
+          "prefill": {
+            "name": "Gaurav Kumar",
+            "email": "gaurav.kumar@example.com",
+            "contact": "9000090000"
+          },
+          "notes": {
+            "address": "Razorpay Corporate Office"
+          },
+          "theme": {
+            "color": "#3399cc"
+          }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed', function (response) {
+          // alert(response.error.code);
+          // alert(response.error.description);
+          // alert(response.error.source);
+          // alert(response.error.step);
+          // alert(response.error.reason);
+          // alert(response.error.metadata.order_id);
+          // alert(response.error.metadata.payment_id);
+        });
+        rzp1.open();
+
+      }
+    } catch (error) {
+      console.log("paymentfailederror", error);
+    }
+  }
+
+
+
+  async function verifyPayment(payment, order) {
+    console.log("gfvjhyfghjgfjhg");
+    const res = await axios.post('/verify-payment', {
+      payment,
+      order
+    })
+    if (res.data.message === "payment success") {
+      Swal.fire({
+        title: "Order success",
+        text: "order placed successfully",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "view orders",
+        cancelButtonText: "continue shopping",
+      }).then((result) => {
+        console.log("result", result);
+        if (result.isConfirmed) {
+          window.redirect('/orders')
+        } else {
+          window.redirect('/')
+
+        }
+      });
+    }
   }
 </script>

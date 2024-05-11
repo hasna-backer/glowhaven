@@ -71,7 +71,7 @@
 
                             <td>
                                 <a href="/admin/delete-coupon/<%= element._id %>" class="ms-3"
-                                    onclick="return confirm('Are you sure,You want to delete <%= element.coupon_code %>')"><i
+                                    data-coupon-id="<%= element._id %>" onclick="confirm(this)"><i
                                         class="ri-delete-bin-6-line"></i></a>
                                 &nbsp;&nbsp;&nbsp;
                                 <a href="/admin/edit-coupon/<%= element._id %>"><i class="ri-edit-2-line"></i></a>
@@ -88,4 +88,27 @@
     </div>
     </section>
 
-</main><!-- End #main -
+</main>
+<script>
+    const confirm = (element) => {
+        event.preventDefault();
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            iconColor: '#da63f2',
+            showCancelButton: true,
+            confirmButtonColor: "#908991",
+            cancelButtonColor: "#da63f2",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                id = element.getAttribute('data-coupon-id')
+                console.log("fgdgfgf", id);
+                window.redirect(`/admin/delete-coupon/${id}`)
+                // window.location.href = event.target.href;
+
+            }
+        });
+    }
+</script>

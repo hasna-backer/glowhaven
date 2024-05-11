@@ -12,11 +12,11 @@
 
 <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4 "
     id="product">
-    <div class="container ">
+    <div class="container mb-8">
         <div class="row justify-content-center ">
             <div class="col-lg-7 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
-                <div class="card mb-8">
+                <div class="card ">
 
 
 
@@ -243,16 +243,37 @@
                                             <h5 class="card-title pb-0">
                                                 Price Details
                                             </h5>
-
-                                            <div class="row">
-                                                <div class="col label ">Order Total</div>
-                                                <div id="total" class="col text-right">
-                                                    <b>₹<%= totalPrice %> </b>
+                                            <div class="row justify-between">
+                                                <div class="col label ">Total MRP</div>
+                                                <div id="mrp" class="col text-right">
+                                                    ₹<%= totalMrp %>
                                                 </div>
                                             </div>
-                                            <div class="row pb-2">
+                                            <div class="row">
+                                                <div class="col label ">Savings on MRP</div>
+                                                <div class="col text-right text-green-600" id="savings">
+                                                    - ₹<%= saveOnMrp %>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col label ">Sub Total</div>
+                                                <div id="total" class="col text-right">
+                                                    <b>₹<%= subtotal %> </b>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col label ">Coupon Discount</div>
+                                                <div id="total" class="col text-right  text-green-600">
+                                                    <% if (!discount) { %>
+                                                    - ₹0 <% } else { %>
+                                                    - ₹<%= discount %>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+
+                                            <div class=" row pb-2">
                                                 <div class="col label ">Shipping Charges</div>
-                                                <div class="col text-right">
+                                                <div class="col text-right text-green-600">
                                                     <% if (shipping===0) { %>
                                                     Free
                                                     <% } else { %>
@@ -284,7 +305,7 @@
 
                     <div class="col-12">
                         <button
-                            class="btn  w-100 text-gray-900 p-2.5 relative inline-flex items-center justify-center overflow-hidden  text-gray-900 rounded-lg group bg-gradient-to-br from-purple-50 to-pink-300 group-hover:from-purple-50 group-hover:to-pink-50 hover:text-pink-500 dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800"
+                            class="btn mb-10 w-100 text-gray-900 p-2.5 relative inline-flex items-center justify-center overflow-hidden  text-gray-900 rounded-lg group bg-gradient-to-br from-purple-50 to-pink-300 group-hover:from-purple-50 group-hover:to-pink-50 hover:text-pink-500 dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800"
                             type="submit">
                             <a href="/checkout/payment"> Ship to this Address</a></button>
                     </div>

@@ -43,6 +43,7 @@ let EditCategory = async (req, res) => {
     try {
         const { cat_name, cat_status, description } = req.body;
         const filter = { _id: req.params.id }
+        console.log("req.body", req.body);
         let category = await Category.updateOne(filter, req.body)
         req.flash('error', "Category edited succussfully!")
         res.redirect('/admin/category');

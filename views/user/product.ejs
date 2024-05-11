@@ -36,9 +36,19 @@
                                 </li>
                             </ul>
                         </div>
-                        <img src="/files/<%= product.img1 %>" alt="">
 
-                        <!-- <img src="files/<%= product.img1 %>" alt=""> -->
+                        <img src="/files/<%= product.img1 %>" alt="" class="z-10  ">
+
+                        <% if ( product.stock===0) { %>
+                        <div class="absolute inset-0 flex  items-center justify-center text-red-600 ">
+                            <div class="bg-slate-100 bg-opacity-50 w-100 text-center font-semibold">This product is
+                                out of
+                                stock
+                            </div>
+                        </div>
+                        <% } %>
+
+                        <!-- <img src=" files/<%= product.img1 %>" alt=""> -->
                     </div>
                     <div class="down-content">
                         <h4>

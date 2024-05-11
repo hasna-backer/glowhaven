@@ -96,6 +96,15 @@
 
 
 <script>
+    // Get the current date in "YYYY-MM-DD" format
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    // Set the minimum date for the input element to the current date
+    document.getElementById('exp_date').setAttribute('min', currentDate);
+    document.getElementById('start_date').setAttribute('min', currentDate);
+</script>
+
+<script>
     //validations
     document.getElementById('couponForm').addEventListener('submit', function (event) {
         console.log("validations");
@@ -109,6 +118,10 @@
         const minPurchaseAmount = document.getElementById('minPurchaseAmount')
         const description = document.getElementById('description')
 
+        // Get the current date in "YYYY-MM-DD" format
+        const currentDate = new Date().toISOString().split('T')[0];
+        start_date.setAttribute('min', currentDate);
+        exp_date.setAttribute('min', currentDate);
 
         const setError = (element, message) => {
             const inputControl = element.parentElement;
@@ -163,6 +176,10 @@
         const exp_dateVal = document.getElementById('exp_date').value;
         if (!exp_dateVal) {
             setError(exp_date, 'Please enter a Date ')
+            return;
+        }
+        if (exp_dateVal > start_date) {
+            setError(exp_date, 'Please enter a proper Date ')
             return;
         } else {
             setSuccuss(exp_date);
