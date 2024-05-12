@@ -243,6 +243,7 @@
 
 
         // Prevent form submission
+        var letters = /^[A-Za-z\s]*$/;
         console.log("submit");
         // Validate pincode
         const pincodeVal = pincode.value;
@@ -268,6 +269,9 @@
         // Validate State
         const stateVal = document.getElementById('state').value;
         if (!stateVal) {
+            setError(state, 'Please enter a  state ')
+            return;
+        } else if (!letters.test(stateVal)) {
             setError(state, 'Please enter a valid state ')
             return;
         } else {
@@ -286,8 +290,12 @@
         // Validate landmark
         const landmarkVal = landmark.value;
         if (!landmarkVal) {
+            setError(landmark, 'Please enter a  landmark ')
+            return;
+        } else if (!letters.test(landmarkVal)) {
             setError(landmark, 'Please enter a valid landmark ')
             return;
+
         } else {
             setSuccuss(landmark);
         }
@@ -304,7 +312,10 @@
         // Validate name
         const nameVal = name.value;
         if (!nameVal) {
-            setError(name, 'Please enter a valid Name ')
+            setError(name, 'Please enter a Name ')
+            return;
+        } else if (!letters.test(nameVal)) {
+            setError(state, 'Please enter a valid Name ')
             return;
         } else {
             setSuccuss(name);

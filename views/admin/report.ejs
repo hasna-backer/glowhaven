@@ -13,19 +13,20 @@
     <div class="col-lg-13">
         <div class="card">
             <div class="card-body">
-                <form action="admin/sales-report" method="post">
+                <form action="/admin/sales-report" method="get">
                     <div class="d-flex  justify-end items-center space-x-3">
 
 
                         <div class="form-group">
                             <label for="startDate">From</label>
                             <input type="date" name="startDate" id="startDate" class="form-control"
-                                placeholder="Start Date" value="startDate" />
+                                placeholder="Start Date"
+                                value="<%= startDate.toISOString().toString().split('T')[0] %>" />
                         </div>
                         <div class="form-group">
                             <label for="endDate">To</label>
                             <input type="date" id="endDate" name="endDate" class="form-control" placeholder="End Date"
-                                value="endDate" />
+                                value="<%= endDate.toISOString().toString().split('T')[0] %>" />
                         </div>
                         <div class="btn-toolbar pt-3 text-blue-700">
                             <button type="submit" class="btn btn-primary text-blue-700">
@@ -63,44 +64,60 @@
                             <th class="sorting" scope="col">Total Amount</th>
                             <th class="sorting" scope="col">Coupon</th>
                             <th class="sorting" scope="col">Coupon Discount</th>
-                            <th class="sorting" scope="col">Payable</th>
+                            <!-- <th class="sorting" scope="col">Payable</th> -->
                             <th class="sorting" scope="col">Category Discount</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- < orderItems.forEach(element=> { %> -->
-                        <tr>
-
+                        <% i=1 %>
+                        <% details.forEach(data=> { %>
+                        <tr class="text-center">
                             <td scope="row">
+                                <%= i++ %>
                             </td>
                             <td scope="row">
+                                <%= data._id.toString().slice(-6) %>
                             </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
+                            <td style="width: 15%;">
+                                <%= data.createdAt.toISOString().split('T')[0] %>
                             </td>
-                            <td>
+                            <td> <%= data.name %> </td>
+                            <td> <%= data. product_name%> </td>
+                            <td> <%= data.address %> </td>
+                            <td> <%= data.payment_method %> </td>
+                            <td> <%= data.status %> </td>
+                            <td> <%= data.total_amount%> </td>
+                            <% if (data.coupon) { %>
+                            <td><%= data.coupon.code %></td>
+                            <% } else { %>
+                            <td>No coupon</td>
+                            <% } %>
+                            <% if (data.coupon) { %>
+                            <td><%= data.coupon.discount %></td>
+                            <% } else { %>
+                            <td>0</td>
+                            <% } %>
+
+                            <!-- </td>
+                            <td> -->
+
+
+                            <% if (data.category_discount) { %>
+                            <td><%= data.category_discount %></td>
+                            <% } else { %>
+                            <td>No discount</td>
+                            <% } %>
+
+
+
 
                             </td>
-                            <td style="width: 15px;background: transparent;">
 
-                            </td>
-                            <td>
+                        </tr>
 
-                            </td>
-                            <td>
 
-                            </td>
-                            <td>
-
-                            </td>
-
+                        <% }) %>
             </div>
-            <!-- < }) %> -->
-            </tr>
 
 
             </tbody>
@@ -115,7 +132,33 @@
 
 
 <script>
-    const itemDetails = (element) => {
-        console.log(element);
+    const getPDF = async () => {
+        const start = document.getElementById("startDate").value;
+        const end = document.getElementById("endDate").value;
+
+        try {
+            Swal.fire({
+                icon: 'info',
+                title: 'Generating PDF...',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+                timer: 1200,
+            }).then(() => {
+                let url = `/admin/sales-report/pdf-download?startDate=${start}&endDate=${end}`;
+                window.location.href = url;
+            })
+
+        } catch (error) {
+            console.error('Error fetching content or generating PDF:', error);
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error.message || 'Something went wrong!',
+            })
+        }
     }
 </script>

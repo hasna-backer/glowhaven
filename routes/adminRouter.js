@@ -53,4 +53,7 @@ router.patch('/edit-coupon', couponController.editCoupon)
 
 //Sales report
 router.get('/sales-report', adminController.salesReport);
-module.exports = router;   
+// router.get('/generate-pdf', adminController.generatePdf);
+router.get('/sales-report/pdf-download', adminController.getSalesReportPdf)
+
+module.exports = router;       

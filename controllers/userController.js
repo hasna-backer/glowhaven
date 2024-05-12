@@ -13,7 +13,7 @@ const { Express } = require('express');
 const productModel = require('../models/productModel');
 
 let homepage = async function (req, res, next) {
-    const product = await Product.find({ status: { $ne: false }, delete: { $ne: true } });
+    const product = await Product.find({ status: { $ne: false }, delete: { $ne: true }, stock: { $ne: 0 } });
     let categoryId = product.category_id
     const category = await Category.findOne({ _id: categoryId })
 
