@@ -14,7 +14,7 @@ const bodyParser = require('body-parser');
 
 
 const app = express();
-const port = 4011 || process.env.PORT;
+const port = process.env.PORT || 4011;
 
 // db connection 
 const connetDB = require('./config/db')
@@ -80,5 +80,5 @@ app.use("/admin", adminRoutes)
 
 
 app.listen(port, () => {
-    console.log(`server is running on http://localhost:${4011}`)
+    console.log(`server is running on http://localhost:${port}`)
 });  
