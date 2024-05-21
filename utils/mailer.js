@@ -14,7 +14,7 @@ const sendMail = (email, content, type) => {
   const mailOption = {
     from: process.env.GMAIL,
     to: email,
-    subject: type === "OTP" ? "RESET PASSWORD" : "Account Verification",
+    subject: type === "OTP" ? "Account Verification" : "RESET PASSWORD",
     html: getTemplate(content, type)
   }
   transporter.sendMail(mailOption, (err, info) => {
@@ -44,7 +44,7 @@ const getTemplate = (content, type) => {
         <a href="https://GlowHaven.com" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">GlowHaven</a>
       </div>
       <p style="font-size:1.1em">Hi,</p>
-      <p>Thank you for choosing Your Brand. Use the following OTP to complete your reset password. OTP is valid for 5 minutes</p>
+      <p>Thank you for choosing Your Brand. Use the following OTP to complete your user registration. OTP is valid for 5 minutes</p>
       <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${content}</h2>
       <p style="font-size:0.9em;">Regards,<br />GlowHaven</p>
       <hr style="border:none;border-top:1px solid #eee" />

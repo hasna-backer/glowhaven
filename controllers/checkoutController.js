@@ -17,7 +17,7 @@ let renderCheckout = async (req, res) => {
     const afterdiscount = req.session.totalAmount
     // console.log("after:", afterdiscount);
     if (addresses.length > 0) {
-        if (!req.session.coupon) {
+        if (!req.session.coupon?.couponId) {
             let { totalPrice, shipping, totalMrp } = await getTotal(user)
             const { saveOnMrp, subtotal } = req.session.totals
             console.log("tttttt", totalPrice);
@@ -92,13 +92,13 @@ const renderPayment = async (req, res) => {
 
         const { totalPrice, shipping } = await getTotal(user)
         const amount_payable = totalPrice + shipping
-        if (!req.session.coupon) {
+        if (!req.session.coupon?.couponId) {
             totalAmountToPay = amount_payable
         } else {
             totalAmountToPay = Math.round(req.session.coupon.total_payable)
         }
 
-        res.render('user/payment', { totalAmountToPay })
+        res.render('user/payment', { totalAmountToPay, user })
     }
 }
 

@@ -16,7 +16,7 @@ let addCategory = async (req, res) => {
     try {
         // const { cat_name, cat_status, description } = req.body
         let category = await Category.create(req.body)
-        req.flash('error', "Category already Exist!")
+        req.flash('error', "Category added succussfully!")
         res.redirect('/admin/category');
     } catch (error) {
         console.log((error.message || error));

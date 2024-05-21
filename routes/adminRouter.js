@@ -13,6 +13,8 @@ const couponController = require('../controllers/couponController')
 //Admin Actions
 // router.get('/', authAdmin, adminController.dashboard)
 router.get('/', adminController.dashboard)
+router.get('/chart', adminController.chart);
+
 router.get('/login', adminController.renderLogin)
 router.post('/login', adminController.doLogin)
 router.get('/logout', adminController.logout)
@@ -54,6 +56,7 @@ router.patch('/edit-coupon', couponController.editCoupon)
 //Sales report
 router.get('/sales-report', adminController.salesReport);
 // router.get('/generate-pdf', adminController.generatePdf);
+router.get('/download-excel', adminController.downloadExcel);
 router.get('/sales-report/pdf-download', adminController.getSalesReportPdf)
 
 module.exports = router;       

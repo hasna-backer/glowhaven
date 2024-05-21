@@ -410,7 +410,7 @@
         if (!selling_priceVal) {
             setError(selling_price, 'Please enter a Value ')
             return;
-        } else if (selling_priceVal < 10) {
+        } else if (selling_priceVal < 0) {
             setError(selling_price, 'Please enter a real number ')
             return;
         } else {

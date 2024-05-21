@@ -231,24 +231,41 @@
                         <div id="error" style="color:red"></div>
 
                     </div>
-                    <label class="fw-bold my-2" for="exampleFormControlInput1">Status</label>
+
+                    <!-- <label class="fw-bold my-2" for="exampleFormControlInput1">Status</label>
                     <select class="form-select" name="status" aria-label="Default select example">
                         <option value="true">List</option>
                         <option value="false">Unlist</option>
-                    </select>
+                    </select> -->
+
+
+
                     <div class="col-6">
+                        <label class="inputNanme4" for="exampleFormControlInput1">Status</label>
+                        <select class="form-select" name="status" aria-label="Default select example">
+                            <option value="true" <% if (product.status) { %> selected <% } %>>List</option>
+                            <option value="false" <% if (!product.status) { %> selected <% } %>>Unlist</option>
+                        </select>
+                    </div>
+
+
+
+                    <!-- <div class="col-6">
                         <label class="inputNanme4" for="exampleFormControlInput1">Suited to</label>
                         <select class="form-select" name="type" aria-label="Default select example">
                             <option value="All Skin Types">All Skin Types</option>
                             <option value="Oily Skin">Oily Skin</option>
                         </select>
-                    </div>
+                    </div> -->
+
+
                     <div class="col-6">
                         <label class="inputNanme4" for="exampleFormControlInput1">Category</label>
                         <select class="form-select" name="category_id" aria-label="Default select example">
 
                             <% category&&category.forEach(element=> { %>
-                            <option value="<%= element._id.toString() %>">
+                            <option value="<%= element._id.toString() %>"
+                                <% if (element._id.toString()===product.category_id.toString()) { %> selected <% } %>>
                                 <%= element.cat_name %>
                             </option>
                             <% }) %>

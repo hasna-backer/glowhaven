@@ -26,7 +26,7 @@ let viewProduct = async (req, res) => {
             } else {
                 const product = e.toObject()
                 product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price))
-                console.log("b", product);
+                // console.log("b", product);
                 return product
             }
         }))
@@ -86,7 +86,7 @@ let renderEditProduct = async (req, res) => {
         const error = req.flash('error')[0];
         let category = await Category.find({ delete: { $ne: true } })
         const product = await Product.findById(req.params.id);
-        console.log("product", product)
+        console.log("productmmmm", product)
         res.render('admin/editProduct', { error, product, category });
     } catch (error) {
 

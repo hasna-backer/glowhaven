@@ -239,8 +239,8 @@ const createOrder = async (req, res) => {
         status: status,
         payment_method: paymentType,
         total_amount: totalAmountToPay,
-        coupon: coupon
-
+        coupon: coupon,
+        createdAt: new Date()
 
     }
 
@@ -391,13 +391,46 @@ const renderOrder = async (req, res) => {
     // console.log("order render:", cartItems.map(el => el.items));
     // console.log("cart items", cartItems);
     console.log("view order page rendering");
-    res.render('user/order', { cartItems })
+    res.render('user/order', { cartItems ,user})
 
 }
 const renderOrderDetails = async (req, res) => {
-    // const user = await User.findOne({ email: req.session.user.user.email }).populate(["cart.product_id", "default_address"]);
+    const user = await User.findOne({ email: req.session.user.user.email }).populate(["cart.product_id", "default_address"]);
+    console.log("user", user);
+    const order_id = req.params.id
+    console.log("order_id", order_id);
+    // const id = user._id
+
+    // const cartItems = await Order.find({ _id: order_id }).populate('items.product_id')
+    // const customer = await Order.aggregate([
+    //     {
+    //         $match: { _id: order_id }
+    //     },
+        // {
+        //     $lookup: {
+        //         from: "users",
+        //         localField: "customer_id",
+        //         foreignField: "_id",
+        //         as: "customerDetails"
+        //     }
+        // },
+        // { $unwind: "$customerDetails" }
+
+    // ])
+    const cartItems = await Order.find({ _id: new mongoose.Types.ObjectId(order_id) }).populate('items.product_id')
+    console.log("cartItems ", cartItems);
+    // console.log("customer ", customer);
+    console.log("order render:", cartItems.map(el => el.items));
+    res.render('user/orderDetails', { cartItems,user })
+
+}
+
+const invoiceDownload = async (req, res) => {
+const user = await User.findOne({ email: req.session.user.user.email }).populate(["cart.product_id", "default_address"]);
     const order_id = req.params
     console.log("order_id", order_id);
+        const { shipping } = await getTotal(user)
+
     // const id = user._id
 
     // const cartItems = await Order.find({ _id: order_id }).populate('items.product_id')
@@ -420,9 +453,13 @@ const renderOrderDetails = async (req, res) => {
     console.log("cartItems deatg", cartItems);
     console.log("customer deatg", customer);
     console.log("order render:", cartItems.map(el => el.items));
-    res.render('user/orderDetails', { cartItems, customer: customer[0] })
+    res.render('user/invoice', { cartItems, customer: user.name ,shipping})
 
+
+
+  
 }
+
 
 const cancelOrder = async (req, res) => {
     console.log(req.body);
@@ -437,4 +474,4 @@ const cancelOrder = async (req, res) => {
 }
 
 
-module.exports = { listOrderAdminSde, orderDetailAdminSide, renderOrder, renderOrderDetails, createOrder, changeStatus, cancelOrder, verify }
+module.exports = { listOrderAdminSde, orderDetailAdminSide, renderOrder, renderOrderDetails, createOrder, changeStatus, cancelOrder, verify ,invoiceDownload}

@@ -1,0 +1,163 @@
+<div id="salesReport"
+    class="container d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 borders-bottom">
+    <h1 class="h2">SALES</h1>
+
+    <div class="d-flex align-items-center gap-2">
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <form class="d-flex" method="get">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="form-group">
+                        <label for="startDate">From</label>
+                        <input type="date" name="startDate" id="startDate" class="form-control" placeholder="Start Date"
+                            value="<%= startDate.toISOString().toString().split('T')[0] %>" />
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">To</label>
+                        <input type="date" id="endDate" name="endDate" class="form-control" placeholder="End Date"
+                            value="<%= endDate.toISOString().toString().split('T')[0] %>" />
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<main class="main my-5">
+    <div class="mx-5">
+
+        <div id="sales-report" class="table-responsive" id="no-more-tables">
+            <table class="table table-striped bg-white pt-3">
+                <thead class=" ">
+                    <tr class="">
+                        <th class="text-dark text-center" style="font-size: 15px" scope="col" class="sorting">
+                            orders ID
+                        </th>
+
+                        <th class="text-dark text-center" style="font-size: 15px" scope="col" class="sorting">
+                            orders DATE
+                        </th>
+                        <th class="text-dark text-center" style="font-size: 15px; min-width: 200px" scope="col"
+                            class="sorting">
+                            PRODUCTS
+                        </th>
+
+                        <th class="text-dark text-center" style="font-size: 15px" scope="col" class="sorting">
+                            STATUS
+                        </th>
+
+                        <th class="text-dark text-center" style="font-size: 15px" scope="col" class="sorting">
+                            PAY
+                        </th>
+
+                        <th class="text-dark text-center" style="font-size: 15px" scope="col" class="sorting">
+                            METHOD
+                        </th>
+
+                        <th class="text-dark text-center" style="font-size: 15px" scope="col" class="sorting">
+                            COUPON
+                        </th>
+
+                        <th class="text-dark text-center" style="font-size: 15px" scope="col" class="sorting">
+                            DISCOUNT
+                        </th>
+
+                        <th class="text-dark text-center" style="font-size: 15px" scope="col" class="sorting">
+                            CAT DIS
+                        </th>
+
+                        <!-- <th class="text-dark text-center" style="font-size: 15px" scope="col">
+                            FP
+                        </th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <% details.forEach(data=> { %>
+                    <tr class="text-center">
+
+                        <td scope="row">
+                            <%= data._id.toString().slice(-6) %>
+                        </td>
+                        <td style="width: 15%;">
+                            <%= data.createdAt.toISOString().split('T')[0] %>
+                        </td>
+                        <td> <%= data. product_name%> </td>
+                        <td> <%= data.status %> </td>
+                        <td> <%= data.total_amount %> </td>
+                        <td> <%= data.payment_method %> </td>
+                        <% if (data.coupon) { %>
+                        <td><%= data.coupon.code %></td>
+                        <% } else { %>
+                        <td>No coupon</td>
+                        <% } %>
+                        <% if (data.coupon) { %>
+                        <td><%= data.coupon.discount %></td>
+                        <% } else { %>
+                        <td>0</td>
+                        <% } %>
+
+                        <!-- </td>
+                            <td> -->
+
+
+                        <% if (data.category_discount) { %>
+                        <td><%= data.category_discount %></td>
+                        <% } else { %>
+                        <td>No discount</td>
+                        <% } %>
+
+
+
+
+                        </td>
+
+                    </tr>
+
+
+                    <% }) %>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</main>
+
+
+<script>
+    window.onload = function () {
+        // pdf download with orientation landscape and page size A3
+        // print();
+        // Dynamically add CSS for print media to set landscape orientation and A3 size
+        var css = '@page { size: A3 landscape; }',
+            head = document.head || document.getElementsByTagName('head')[0],
+            style = document.createElement('style');
+
+        style.type = 'text/css';
+        style.media = 'print';
+
+        if (style.styleSheet) {
+            style.styleSheet.cssText = css;
+        } else {
+            style.appendChild(document.createTextNode(css));
+        }
+
+        head.appendChild(style);
+        // console.log("head", head)
+
+        // const currentTitle = document.querySelector('title').innerText
+        head.querySelector('title').innerText = "Glow Haven sales report"
+        // Trigger the print dialog
+        window.print();
+        // document.querySelector('title').innerText = currentTitle
+
+        // Optionally, remove the style element after printing to avoid affecting other print operations
+        head.removeChild(style);
+
+        // Redirect to the previous page after printing
+        window.onafterprint = function () {
+            history.back();
+        }
+    };
+</script>

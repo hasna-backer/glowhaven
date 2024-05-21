@@ -71,6 +71,7 @@ const order_schema = new Schema({
 
         }
     },
+
     status: {
         type: String,
         required: true

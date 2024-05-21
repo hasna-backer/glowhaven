@@ -4,6 +4,8 @@ const Joi = require('joi');
 const sendmail = require('../utils/mailer');
 const generateOtp = require('../utils/generateOtp');
 const User = require('../models/userModel');
+const Order = require('../models/orderModel');
+
 const Product = require('../models/productModel');
 const Address = require('../models/addressModel');
 const Category = require('../models/categoryModel');
@@ -11,6 +13,12 @@ const validate = require('../validations/signupValidation');
 const { response } = require('express');
 const { Express } = require('express');
 const productModel = require('../models/productModel');
+/**
+ * @param {Express.Request} req
+ * @param {Express.Response} res
+ */
+
+
 
 let homepage = async function (req, res, next) {
     const product = await Product.find({ status: { $ne: false }, delete: { $ne: true }, stock: { $ne: 0 } });
@@ -23,12 +31,12 @@ let homepage = async function (req, res, next) {
         if (!category.discount) {
             const product = e.toObject()
             product.selling_price = Math.round(product.actual_price - ((product.discount / 100) * product.actual_price))
-            console.log("a", product.selling_price);
+            // console.log("a", product.selling_price);
             return product
         } else {
             const product = e.toObject()
             product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price))
-            console.log("b", product);
+            // console.log("b", product);
             return product
         }
     }))
@@ -300,6 +308,7 @@ const logout = (req, res) => {
     res.redirect('/login')
 }
 module.exports = {
+
     homepage,
     renderSignup,
     doSignup,

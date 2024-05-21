@@ -1,4 +1,6 @@
 const Category = require('../models/categoryModel');
+const Order = require('../models/orderModel');
+
 
 const getTotal = async (user) => {
     let totalPrice = 0;
@@ -38,6 +40,45 @@ const getTotal = async (user) => {
     return { totalPrice, shipping, totalMrp }
 }
 
+const getTopSellingProducts = async () => {
+
+    const product = await Order.aggregate([
+        { $match: { status: "Delivered" } },
+        { $unwind: "$items" },
+        { $group: { _id: "$items.product_id", count: { $sum: "$items.quantity" }, revenue: { $sum: "$items.price" } } },
+        { $sort: { count: -1 } },
+        { $limit: 10 },
+        {
+            $lookup: {
+                from: "products",
+                localField: "_id",
+                foreignField: "_id",
+                as: "productDetails"
+            }
+        },
+        { $unwind: "$productDetails" },
+        {
+            $project: {
+                _id: 1,
+                count: 1,
+                product_name: "$productDetails.product_name",
+                img1: "$productDetails.img1",
+                revenue: 1,
+
+            }
+        }
+    ]);
+
+    console.log("Products", product);
 
 
-module.exports = { getTotal }
+    const delivered = await Order.aggregate([
+        { $match: { status: "Delivered" } },
+        { $unwind: "$items" }
+    ])
+    console.log("delivered", delivered);
+    return { product }
+
+}
+
+module.exports = { getTotal, getTopSellingProducts }

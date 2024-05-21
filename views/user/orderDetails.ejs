@@ -1,3 +1,6 @@
+<%- include('../partials/header.ejs') %>
+
+
 <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4 "
     id="product">
     <div class="container mb-8 ">
@@ -8,7 +11,8 @@
                     <div class="card-body">
 
 
-                        <h5 class="card-title"><a href="/"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+                        <h5 class="card-title"><a onclick="history.back()"><i class="fa fa-arrow-left"
+                                    aria-hidden="true"></i></a>
                             Order Details</h5>
                         <!-- Advanced Form Elements -->
                         <form action='/' method="POST">
@@ -118,7 +122,11 @@
 
 
 
+                                    <div class="main-border-button mb-3 ml-3"><a
+                                            class="btn px-4 p-2 relative inline-flex items-center justify-center overflow-hidden  text-gray-900 rounded-lg group bg-gradient-to-br from-purple-50 to-pink-300 group-hover:from-purple-50 group-hover:to-pink-50 hover:text-pink-500 dark:text-black focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800"
+                                            href="/invoice-download/<%= order._id %>">Invoice </a>
 
+                                    </div>
                                     <hr>
                                 </div>
                                 <% }); %>

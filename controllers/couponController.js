@@ -66,10 +66,10 @@ const editCoupon = async (req, res) => {
 //user
 const renderCoupon = async (req, res) => {
     const id = req.session.user.user._id
-    const coupon = await Coupon.find({ user_list: { $ne: id } })
+    const coupon = await Coupon.find()
 
     console.log("coupons", coupon);
-    res.render('user/coupon', { coupon })
+    res.render('user/coupon', { coupon, user: req.session.user.user.email })
 }
 
 //user

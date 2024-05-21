@@ -2,17 +2,17 @@
 <%- include('../partials/adminSidebar.ejs') %>
 <main id="main" class="main">
     <div class="pagetitle">
-        <h1>Orders</h1>
+        <h1>Report</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="/admin">Home</a></li>
                 <li class="breadcrumb-item active">Report</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
     <div class="col-lg-13">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body overflow-scroll">
                 <form action="/admin/sales-report" method="get">
                     <div class="d-flex  justify-end items-center space-x-3">
 
@@ -35,7 +35,7 @@
                             </button>
                         </div>
 
-                        <div class="btn-toolbar pt-3">
+                        <div class="btn-toolbar pt-3 flex gap-1">
                             <button onclick="getExcel()" type="button" class="btn btn-outline-success"><i
                                     class="bi bi-file-earmark-spreadsheet"></i>Excel</button>
                             <button id="exportToButton" onclick="getPDF()" type="button"
@@ -88,10 +88,21 @@
                             <td> <%= data.status %> </td>
                             <td> <%= data.total_amount%> </td>
                             <% if (data.coupon) { %>
+                            <% if (data.coupon.code) { %>
+
                             <td><%= data.coupon.code %></td>
                             <% } else { %>
                             <td>No coupon</td>
                             <% } %>
+                            <% } else { %>
+                            <td>No coupon</td>
+                            <% } %>
+
+
+
+
+
+
                             <% if (data.coupon) { %>
                             <td><%= data.coupon.discount %></td>
                             <% } else { %>
@@ -132,6 +143,17 @@
 
 
 <script>
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
+    const getExcel = () => {
+        console.log(startDate, endDate);
+
+        let url = `/admin/download-excel?startDate=${startDate}&endDate=${endDate}`;
+        window.location.href = url;
+    }
+
+
+
     const getPDF = async () => {
         const start = document.getElementById("startDate").value;
         const end = document.getElementById("endDate").value;

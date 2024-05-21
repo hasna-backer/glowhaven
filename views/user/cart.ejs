@@ -139,7 +139,7 @@
                                             </div>
                                             <div class="row border-top pt-2">
                                                 <div class="col label ">Order Total</div>
-                                                <div id="total" class="col text-right">
+                                                <div id="grandTotal" class="col text-right">
                                                     <b>₹<%= totalPrice + shipping %> </b> </div>
                                             </div>
 
@@ -246,6 +246,7 @@
         const qty = element.value;
         const price = document.getElementById(id);
         const total = document.getElementById('total')
+        const grandTotal = document.getElementById('grandTotal')
         const mrp = document.getElementById('mrp')
         const savings = document.getElementById('savings')
         const shipping = document.getElementById('shipping')
@@ -257,8 +258,10 @@
                 newQuantity: qty
             })
             const updatePrice = res.data;
+            console.log("updatePrice", updatePrice);
             price.innerHTML = `<b>₹  ${updatePrice.price} </b> <del>₹${updatePrice.mrp} </del> `
-            total.innerHTML = `<b>₹ ${updatePrice.totalPrice + updatePrice.shipping } </b>`
+            total.innerHTML = `<b>₹ ${updatePrice.totalPrice } </b>`
+            grandTotal.innerHTML = `<b>₹ ${updatePrice.totalPrice + updatePrice.shipping } </b>`
             mrp.innerHTML = `₹ ${updatePrice.totalMrp}`
             savings.innerHTML = `${updatePrice.totalMrp-updatePrice.totalPrice}`
             if (updatePrice.shipping === 0) {
