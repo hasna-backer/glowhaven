@@ -31,7 +31,8 @@ const openBrowser = async () => {
 
 
 
-openBrowser();
 
-
+if (!process.env.PROD) {
+    openBrowser();
+}
 module.exports = { openBrowser };
