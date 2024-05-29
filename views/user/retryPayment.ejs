@@ -1,0 +1,131 @@
+<%- include('../partials/header.ejs') %>
+
+<!-- <figure><img src="/user-assets/images/retry.png" alt="sing up image"></figure> -->
+
+
+
+<section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4"
+    id="product">
+    <div class="container ">
+        <div class="row justify-content-center  bg-white ">
+            <div class="col-6 col-md-6 d-flex flex-column  justify-content-center ">
+
+                <h1 class="font-bold text-red-600 text-3xl px-6 mx-12">payment failed !</h1>
+                <h2 class="px-6 mx-12">Don't worry your money is safe! If money was debited from your account,it will be
+                    refunded automatically in 5-7 working days</h2>
+                <h2 class="px-6 mx-12 my-1 font-bold pt-2">Why did it fail</h2>
+                <h2 class="px-6 mx-12 my-1 ">1. The CVV or Expiry date might be wrong</h2>
+                <h2 class="px-6 mx-12 mb-2 ">2. Your bank network might be down</h2>
+
+                <button type="button" class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4
+                    focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm
+                    px-1 py-2.5 w-[200px] ml-[4.5rem] text-center mb-2" onclick="placeOrder('razorpay')">Retry</button>
+
+
+                <!-- <button class="content-center px-6 mx-12">Retry</button> -->
+
+            </div>
+
+            <div class="col-6 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                <div class="signin-image">
+                    <figure><img src="/user-assets/images/retry.png" alt="sing up image"></figure>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    const placeOrder = async (element) => {
+        const paymentType = element;
+        console.log("paymentType", element)
+        try {
+            const res = await axios.post('/orders', {
+                paymentType
+            })
+            if (res.data.message === "razorpay placed") {
+                console.log("res.data", res.data.order.id);
+                const order = res.data.order
+                console.log("order", order);
+                var options = {
+
+                    "key": "rzp_test_vkBotcfH9qvzaB", // Enter the Key ID generated from the Dashboard
+                    // "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000
+                    "currency": "INR",
+                    "name": "Glow haven",
+                    "description": "Test Transaction",
+                    "image": "https://example.com/your_logo",
+                    "order_id": order
+                        .id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                    "handler": function (response) {
+                        // alert(response.razorpay_payment_id);
+                        // alert(response.razorpay_order_id);
+                        // alert(response.razorpay_signature)
+
+                        verifyPayment(response,
+                            order) //after succussfull payment we have to verify if its success in the backend
+                    },
+                    "prefill": {
+                        "name": "Gaurav Kumar",
+                        "email": "gaurav.kumar@example.com",
+                        "contact": "9000090000"
+                    },
+                    "notes": {
+                        "address": "Razorpay Corporate Office"
+                    },
+                    "theme": {
+                        "color": "#3399cc"
+                    }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.on('payment.failed', function (response) {
+                    alert(response.error.code);
+                    window.redirect('/retry-payment')
+                    paymentFailed(response, order)
+                    // alert(response.error.description);
+                    // alert(response.error.source);
+                    // alert(response.error.step);
+                    // alert(response.error.reason);
+                    // alert(response.error.metadata.order_id);
+                    // alert(response.error.metadata.payment_id);
+                });
+                rzp1.open();
+
+            }
+        } catch (error) {
+            console.log("paymentfailederror", error);
+        }
+    }
+
+
+    async function verifyPayment(payment, order) {
+        console.log("gfvjhyfghjgfjhg");
+        const res = await axios.post('/verify-payment', {
+            payment,
+            order
+        })
+        if (res.data.message === "payment success") {
+            Swal.fire({
+                title: "Order success",
+                text: "order placed successfully",
+                icon: "success",
+                showCancelButton: true,
+                confirmButtonText: "view orders",
+                cancelButtonText: "continue shopping",
+            }).then((result) => {
+                console.log("result", result);
+                if (result.isConfirmed) {
+                    window.redirect('/orders')
+                } else {
+                    window.redirect('/')
+
+                }
+            });
+        }
+    }
+</script>

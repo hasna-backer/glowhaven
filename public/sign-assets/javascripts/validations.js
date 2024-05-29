@@ -1,5 +1,3 @@
-console.log("validation.js");
-
 // Getting form and input elements
 const form = document.getElementById('register-form');
 const username = document.getElementById('name');
@@ -12,9 +10,9 @@ const phno = document.getElementById('phone');
 form.addEventListener('submit', (e) => {
     e.preventDefault(); // Prevent form from submitting
     const result = validateInputs(); // Validate inputs
-    console.log("Validation result:", result);
+    // console.log("Validation result:", result);
     if (result) {
-        console.log("Validation passed");
+        // console.log("Validation passed");
         validationCompleted(); // Proceed to server submission if validation passes
     }
 });

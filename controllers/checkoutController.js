@@ -20,7 +20,7 @@ let renderCheckout = async (req, res) => {
         if (!req.session.coupon?.couponId) {
             let { totalPrice, shipping, totalMrp } = await getTotal(user)
             const { saveOnMrp, subtotal } = req.session.totals
-            console.log("tttttt", totalPrice);
+            // console.log("tttttt", totalPrice);
             // const discount = "No Coupon Applied"
             res.render('user/checkout', { user, cartItems: user.cart, totalPrice, totalMrp, saveOnMrp, subtotal, discount: "", addresses, shipping, coupon: {} })
 
@@ -29,7 +29,7 @@ let renderCheckout = async (req, res) => {
             let { shipping, totalMrp } = await getTotal(user)
             let { total_payable, couponId, discountAmount } = req.session.coupon
 
-            console.log("t,c,disc:", total_payable, couponId, discountAmount);
+            // console.log("t,c,disc:", total_payable, couponId, discountAmount);
             const coupon = await Coupon.findOne({ _id: req.session.coupon.couponId })
             // console.log("logsss:", totalPrice, coupon, shipping);
             const { saveOnMrp, subtotal } = req.session.totals
@@ -53,12 +53,11 @@ let newAddress = async (req, res) => {
 
 
 let submitAddress = async (req, res) => {
-    console.log("addressssss");
     const userId = req.session.user.user._id
 
     let address = await Address.create({ ...req.body, customer_id: userId })
-    console.log(address);
-    console.log("address", req.body);
+    // console.log(address);
+    // console.log("address", req.body);
     res.redirect('/checkout')
 
 }
@@ -66,16 +65,16 @@ let submitAddress = async (req, res) => {
 const chooseAddress = async (req, res) => {
     userId = req.session.user.user._id
     const { id } = req.body
-    console.log("choose addrss", id);
+    // console.log("choose addrss", id);
     const default_adress = await User.updateOne({ _id: userId }, { default_address: id })
-    console.log("default address", default_adress)
+    // console.log("default address", default_adress)
     return res.status(200).json({ message: "product added  succesful" })
 
 }
 
 const removeAddress = async (req, res) => {
     const user = await User.findOne({ _id: req.session.user.user._id }).populate("cart.product_id")
-    console.log("removeuser", user);
+    // console.log("removeuser", user);
     const { id } = req.params
     const deletedAddress = await Address.findOneAndDelete({ _id: id });
     return res.status(200).json({ message: "product deleted  succesful" })

@@ -165,24 +165,68 @@
 
 <script>
     const cancelOrder = async (element) => {
-        const orderId = element.getAttribute('data-order-id')
-        console.log(orderId);
-        const status = document.getElementById('status')
-        console.log(status);
+        // const orderId = element.getAttribute('data-order-id')
+        // console.log(orderId);
+        // const status = document.getElementById('status')
+        // console.log(status);
 
-        try {
-            const res = await axios.post('/cancel-order', {
-                orderId
-            })
+        // try {
+        //     const res = await axios.post('/cancel-order', {
+        //         orderId
+        //     })
 
-            if (res.status === 200) {
-                window.location.reload()
-                status.innerHTML = "CANCELLED"
-                // window.location.href = '/orders'
+        //     if (res.status === 200) {
+        //         window.location.reload()
+        //         status.innerHTML = "CANCELLED"
+        //         // window.location.href = '/orders'
+        //     }
+
+        // } catch (error) {
+
+        // }
+
+
+
+
+
+
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            iconColor: '#da63f2',
+            showCancelButton: true,
+            confirmButtonColor: "#908991",
+            cancelButtonColor: "#da63f2",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const orderId = element.getAttribute('data-order-id')
+                console.log(orderId);
+                const status = document.getElementById('status')
+                console.log(status);
+
+                try {
+                    const res = await axios.post('/cancel-order', {
+                        orderId
+                    })
+
+                    if (res.status === 200) {
+                        window.location.reload()
+                        status.innerHTML = "CANCELLED"
+                        // window.location.href = '/orders'
+                    }
+
+                } catch (error) {
+
+                }
             }
+        });
 
-        } catch (error) {
 
-        }
+
+
+
+
     }
 </script>

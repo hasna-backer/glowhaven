@@ -5,7 +5,7 @@ let viewProduct = async (req, res) => {
 
     try {
         const error = req.flash('error')[0];
-        console.log("error", error);
+        // console.log("error", error);
         //pagination 
         const pageSize = 6;
         const currentPage = parseInt(req.query.page) || 1;
@@ -21,7 +21,7 @@ let viewProduct = async (req, res) => {
             if (!category.discount) {
                 const product = e.toObject()
                 product.selling_price = Math.round(product.actual_price - ((product.discount / 100) * product.actual_price))
-                console.log("a", product.selling_price);
+                // console.log("a", product.selling_price);
                 return product
             } else {
                 const product = e.toObject()
@@ -30,9 +30,9 @@ let viewProduct = async (req, res) => {
                 return product
             }
         }))
-        console.log("updatedProducts", updatedProducts);
+        // console.log("updatedProducts", updatedProducts);
         const totalProducts = await Product.countDocuments();
-        console.log("totaprod", totalProducts);
+        // console.log("totaprod", totalProducts);
         // console.log("discount", product.discount);
         // let discountAmount = ((discount / 100) * product.actual_price)
         // let sellingPrice = product.actual_price - discountAmount
@@ -63,7 +63,7 @@ let addProduct = async (req, res) => {
 
         // if (req.body.product_name)
         // const dup = await Product.find({})
-        console.log("req.body", req.body);
+        // console.log("req.body", req.body);
         const product = await Product.create({
             ...req.body, img1, img2, img3
         });
@@ -82,11 +82,11 @@ let addProduct = async (req, res) => {
 
 let renderEditProduct = async (req, res) => {
     try {
-        console.log("renderEditProduct")
+        // console.log("renderEditProduct")
         const error = req.flash('error')[0];
         let category = await Category.find({ delete: { $ne: true } })
         const product = await Product.findById(req.params.id);
-        console.log("productmmmm", product)
+        // console.log("productmmmm", product)
         res.render('admin/editProduct', { error, product, category });
     } catch (error) {
 
@@ -112,11 +112,8 @@ let EditProduct = async (req, res) => {
 
 
 
-        console.log(req.body);
         const filter = { _id: req.params.id }
-        console.log("step1",)
         let product = await Product.updateOne(filter, update)
-        console.log("step2",)
         req.flash('error', "Product Edited succussfully!")
 
         res.redirect('/admin/product');
@@ -133,7 +130,6 @@ let EditProduct = async (req, res) => {
 
 let deleteProduct = async (req, res) => {
     const filter = { _id: req.params.id }
-    console.log('dlt prod', filter);
     const delet = await Product.updateOne(filter, { $set: { delete: true } });
     req.flash('error', "Product Deleted succussfully!")
 

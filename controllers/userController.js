@@ -41,11 +41,11 @@ let homepage = async function (req, res, next) {
         }
     }))
     const userId = req.session.user.user._id;
-    console.log("userId", userId)
+    // console.log("userId", userId)
     const user = await User.findOne({ _id: userId });
     // console.log("user", user)
     res.render('user/home', { title: 'Express', user, products: updatedProducts });
-    console.log("user===", user)
+    // console.log("user===", user)
 
 }
 
@@ -66,9 +66,9 @@ let renderSignup = async (req, res) => {
 
 let doSignup = async (req, res) => {
     const { name, email, pass, phone } = req.body
-    console.log(req.body);
+    // console.log(req.body);
     const isExist = await User.findOne({ email: email })
-    console.log('is exist : ', isExist)
+    // console.log('is exist : ', isExist)
     if (isExist == null) {
         let user = new User();
         user.email = email
@@ -77,7 +77,7 @@ let doSignup = async (req, res) => {
         user.phone = phone
         const newUser = await user.save();
         req.session.user = newUser;
-        console.log("new user:", newUser)
+        // console.log("new user:", newUser)
         if (newUser) {
             res.status(200).json({ message: 'signup succes!' })
         }
@@ -100,7 +100,7 @@ let renderOtp = async (req, res) => {
         const otp = await generateOtp.generateOTP();
         const { email } = req.session.user;
         await User.findOneAndUpdate({ email }, { otp })
-        console.log("email:", email);
+        // console.log("email:", email);
         sendmail.sendMail(email, String(otp), "OTP");
         req.session.destroy();
         res.render('user/otp', { error: err, email })
@@ -134,12 +134,10 @@ let verifyUser = async (req, res) => {
 
 let resendOtp = async (req, res) => {
     try {
-        console.log("its working", req.body);
         const err = req.flash('error')[0]
         const otp = await generateOtp.generateOTP();
         const { email } = req.body;
         await User.findOneAndUpdate({ email }, { otp })
-        console.log("email:", email);
         sendmail.sendMail(email, String(otp), "OTP");
         req.session.destroy();
         res.render('user/otp', { error: err, email })
@@ -152,7 +150,6 @@ let resendOtp = async (req, res) => {
 
 let renderLogin = async (req, res) => {
     if (req.session.user && req.session.user.isLoggedin) {
-        console.log("user", req.session.user, req.session.user.isLoggedin)
         return res.redirect('/')
     }
     const err = req.flash('error')[0]
@@ -172,10 +169,8 @@ let doLogin = async (req, res, next) => {
     try {
         const isPasswordMatch = await bcrypt.compare(pass, isExist.password);
         if (isPasswordMatch) {
-            console.log("dolgin isExist", isExist);
             const { _id, name, email, phone } = isExist;
             req.session.user = { user: { _id, name, email, phone }, isLoggedin: true };
-            console.log("sesssiion", req.session);
             return res.redirect('/');
         }
         req.flash('error', 'Wrong password');
@@ -188,10 +183,7 @@ let doLogin = async (req, res, next) => {
 let viewProfile = async (req, res) => {
     // const { user } = req.session.user
     const address = await Address.find({ customer_id: req.session.user.user._id })
-    console.log("address", address);
     const user = await User.findOne({ email: req.session.user.user.email })
-    console.log("profile", user);
-    // if (req.session.user)
     res.render('user/profile', { user, address })
 }
 
@@ -201,7 +193,6 @@ let viewProfile = async (req, res) => {
 // }
 
 let editProfile = async (req, res) => {
-    console.log("reqqqqq", req.body)
     try {
         const filter = { email: req.body.email }
         let user = await User.findOneAndUpdate(filter, req.body, { new: true }).select("-password")
@@ -218,12 +209,10 @@ let editProfile = async (req, res) => {
 
 
 let renderViewProducts = async (req, res) => {
-    console.log("hi");
     const { search } = req.query
     try {
         if (!search) {
             const products = await Product.find({ status: { $ne: false }, delete: { $ne: true } });
-            console.log("productssssss", products);
             //stock mngt
             if (products.stock === 0) {
 
@@ -238,23 +227,18 @@ let renderViewProducts = async (req, res) => {
                 if (!category.discount) {
                     const product = e.toObject()
                     product.selling_price = Math.round(product.actual_price - ((product.discount / 100) * product.actual_price))
-                    console.log("a", product.selling_price);
                     return product
                 } else {
                     const product = e.toObject()
                     product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price))
-                    console.log("b", product);
                     return product
                 }
             }))
-            console.log("cals", updatedProducts);
             return res.render('user/product', { user: req.session.user, products: updatedProducts });
         }
         const products = await Product.find({
             product_name: { $regex: new RegExp(search, 'i') }
         });
-        console.log("products", products);
-        console.log("Gfdgfgfsggfgdfgdgfgfgfgfgdfgdfgdfgdfgdfg");
         return res.render('user/product', { products, user: req.session.user });
 
     } catch (error) {
@@ -265,10 +249,8 @@ let renderViewProducts = async (req, res) => {
 
 const renderSingleProducts = async (req, res) => {
     const product = await Product.findById(req.params.id).populate("category_id");
-    console.log("prod", product);
     let categoryId = product.category_id
     const category = await Category.findOne({ _id: categoryId })
-    console.log("catg", category);
     if (!category.discount) {
         const discountAmount = ((product.discount / 100) * product.actual_price)
         let sellingPrice = Math.round(product.actual_price - discountAmount)
@@ -285,19 +267,15 @@ const renderSingleProducts = async (req, res) => {
 
 //search products
 const searchProducts = async (req, res) => {
-    console.log("res.query", req.body);
     const searchQuery = req.body.searchInput;
 
     try {
         const products = await Product.find({
             product_name: { $regex: new RegExp(searchQuery, 'i') }
         });
-
-        console.log("products", products);
         res.json(products);
     } catch (error) {
         console.error("Error searching for products:", error);
-        // Send an error response if something went wrong
         res.status(500).json({ error: "Internal server error" });
     }
 }

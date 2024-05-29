@@ -4,7 +4,7 @@
   <ul class="sidebar-nav" id="sidebar-nav">
 
     <li class="nav-item">
-      <a class="nav-link " href="/admin">
+      <a class="nav-link collapsed" href="/admin">
         <i class="bi bi-grid"></i>
         <span>Dashboard</span>
       </a>
@@ -168,3 +168,22 @@
   </ul>
 
 </aside><!-- End Sidebar-->
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get the current path
+    var path = window.location.pathname;
+
+    // Get all nav links
+    var navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
+
+    // Loop through nav links and add 'active' class to the matching path
+    navLinks.forEach(function (navLink) {
+      if (navLink.getAttribute('href') === path) {
+        navLink.classList.remove('collapsed');
+      }
+    });
+  });
+</script>

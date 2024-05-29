@@ -36,26 +36,26 @@ const deleteCoupon = async (req, res) => {
 const renderEditCoupon = async (req, res) => {
     try {
         const error = req.flash('error')[0];
-        console.log("req.params.id", req.params.id);
+        // console.log("req.params.id", req.params.id);
         const coupon = await Coupon.findById(req.params.id)
-        console.log(coupon);
+        // console.log(coupon);
         res.render('admin/editCoupon', { error, coupon })
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 //admin
 const editCoupon = async (req, res) => {
     try {
-        console.log("req", req.body);
+        // console.log("req", req.body);
         couponId = req.body.couponId
         const coupon = await Coupon.updateOne({ _id: couponId }, req.body)
         const cp = await Coupon.findOne({ _id: couponId })
-        console.log("cp:", cp);
+        // console.log("cp:", cp);
         req.flash('error', 'Coupon edited successfully!');
         return res.status(200).json({ message: "coupen edited successfully" })
     } catch (error) {
-        console.log("error:::::::", error.message);
+        // console.log("error:::::::", error.message);
         if (error.message.includes('duplicate key')) {
             return res.status(400).json({ message: "duplicate coupon code" })
         }
@@ -68,7 +68,7 @@ const renderCoupon = async (req, res) => {
     const id = req.session.user.user._id
     const coupon = await Coupon.find()
 
-    console.log("coupons", coupon);
+    // console.log("coupons", coupon);
     res.render('user/coupon', { coupon, user: req.session.user.user.email })
 }
 
@@ -81,13 +81,13 @@ const applyCoupon = async (req, res) => {
     // console.log("req.body:", req.body);
     const { totalPrice, shipping } = await getTotal(user)
     const amount_payable = totalPrice + shipping
-    console.log("ttl", amount_payable);
+    // console.log("ttl", amount_payable);
     const couponId = req.body.id
     const selectedCoupon = await Coupon.findOne({ _id: couponId })
-    console.log("selectedCoupopn", selectedCoupon);
+    // console.log("selectedCoupopn", selectedCoupon);
     //checking for min purchase amount
     if (amount_payable < selectedCoupon.minPurchaseAmount) {
-        console.log("not applicable");
+        // console.log("not applicable");
         return res.status(200).json({ message: "not applicable" })
 
     } else if (selectedCoupon.user_list.includes(id)) { //checking if it is already used 
@@ -100,7 +100,7 @@ const applyCoupon = async (req, res) => {
     }
     else if (selectedCoupon.description.includes('first order')) {
         const order = await Order.find({ customer_id: id, status: 'Delivered' })
-        console.log("order", order);
+        // console.log("order", order);
         if (order) {
             return res.status(200).json({ message: "not firstOrder" })
         } else {
@@ -111,7 +111,7 @@ const applyCoupon = async (req, res) => {
             if (discountAmount >= maximumDiscount) {
                 discountAmount = maximumDiscount
             }
-            console.log("discounte", discountAmount);
+            // console.log("discounte", discountAmount);
             const total_payable = amount_payable - discountAmount
 
             req.session.coupon = { total_payable, couponId, discountAmount }
@@ -125,10 +125,10 @@ const applyCoupon = async (req, res) => {
         if (discountAmount >= maximumDiscount) {
             discountAmount = maximumDiscount
         }
-        console.log("discounte", discountAmount);
+        // console.log("discounte", discountAmount);
         const total_payable = amount_payable - discountAmount
         req.session.coupon = { total_payable, couponId, discountAmount }
-        console.log("req.session:", req.session);
+        // console.log("req.session:", req.session);
         // const cpn = await Coupon.updateOne(
         //     { _id: couponId },
         //     {

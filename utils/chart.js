@@ -15,8 +15,8 @@ async function getOrderCountsBy3HourWindows(date) {
     let endOfDayUTC = new Date(date);
     endOfDayUTC.setUTCHours(18, 29, 59, 999); // Set time to 6:29 PM IST
 
-    console.log("startOfDayUTC", startOfDayUTC);
-    console.log("endOfDayUTC", endOfDayUTC);
+    // console.log("startOfDayUTC", startOfDayUTC);
+    // console.log("endOfDayUTC", endOfDayUTC);
 
     const orderCounts = await Order.aggregate([
         {

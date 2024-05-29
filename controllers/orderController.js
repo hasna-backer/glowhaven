@@ -16,7 +16,7 @@ const { getTotal } = require('../utils/helper')
 
 //admin
 const listOrderAdminSde = async (req, res) => {
-    console.log("req.params", req.params);
+    // console.log("req.params", req.params);
     const pageSize = 5;
     const currentPage = parseInt(req.query.page) || 1;
     const skip = (currentPage - 1) * pageSize;
@@ -62,7 +62,7 @@ const listOrderAdminSde = async (req, res) => {
             }
         }
     ]);
-    console.log("orderItems:", orderItems);
+    // console.log("orderItems:", orderItems);
 
 
     // console.log(orderItems);
@@ -75,7 +75,7 @@ const listOrderAdminSde = async (req, res) => {
 //Admin View Order details 
 const orderDetailAdminSide = async (req, res) => {
     const order_id = new mongoose.Types.ObjectId(req.params.id)
-    console.log("order_id", order_id);
+    // console.log("order_id", order_id);
 
     //getting customer details
     const customer = await Order.aggregate([
@@ -162,18 +162,18 @@ const orderDetailAdminSide = async (req, res) => {
             }
         }
     ]);
-    console.log("orderItem", orderItem[0]);
+    // console.log("orderItem", orderItem[0]);
     const total = orderItem[0].items.map(e => e.price * e.quantity)
-    console.log("totaaaal", total);
+    // console.log("totaaaal", total);
     res.render('admin/orderDetail', { orderItem: orderItem[0], customer: customer[0], total })
 }
 
 //change status
 const changeStatus = async (req, res) => {
     const { productId, orderId, status } = req.body
-    console.log("req.body:", productId, orderId, status);
+    // console.log("req.body:", productId, orderId, status);
     const product = await Order.findOne({ _id: orderId, })
-    console.log("RRRRR", product);
+    // console.log("RRRRR", product);
 
     // Update the status of the product within the order
     const updatedOrder = await Order.findOneAndUpdate(
@@ -181,7 +181,7 @@ const changeStatus = async (req, res) => {
         { $set: { status: status } },
         { new: true }
     );
-    console.log("RRRRgfdgR", updatedOrder);
+    // console.log("RRRRgfdgR", updatedOrder);
     return res.status(200).json({ message: "status changed" })
 
 }
@@ -249,10 +249,10 @@ const createOrder = async (req, res) => {
 
     if (paymentType === "cod") {
         const createOrder = await Order.create(order)
-        console.log("hi its me hasna", createOrder);
+        // console.log("hi its me hasna", createOrder);
 
         req.session.order = createOrder._id
-        console.log("createOrder", createOrder);
+        // console.log("createOrder", createOrder);
         await Coupon.updateOne(
             { _id: req.session.coupon?.couponId },
             {
@@ -272,7 +272,7 @@ const createOrder = async (req, res) => {
 
     } else if (paymentType === "razorpay") {
         const createOrder = await Order.create(order)
-        console.log("hi its me hasna", createOrder);
+        // console.log("hi its me hasna", createOrder);
 
         req.session.order = createOrder._id
         // console.log("createOrder", createOrder);
@@ -286,9 +286,6 @@ const createOrder = async (req, res) => {
                 }
             }
         );
-
-
-
         req.session.coupon = {} //clearing coupon from session
         for (let i = 0; i < items.length; i++) { //managing stock
             await Product.updateOne({ _id: items[i].product_id }, { $inc: { stock: -(items[i].quantity) } })
@@ -305,7 +302,7 @@ const createOrder = async (req, res) => {
             receipt: orderId
         };
         instance.orders.create(options, function (err, order) {
-            console.log("order", order);
+            // console.log("order", order);
             return res.status(200).json({ message: "razorpay placed", order })
         });
         // req.session.order = createOrder._id
@@ -330,8 +327,8 @@ const createOrder = async (req, res) => {
 }
 
 const verify = async (req, res) => {
-    console.log("req.body", req.body);
-    console.log("payment", req.body.payment.razorpay_order_id);
+    // console.log("req.body", req.body);
+    // console.log("payment", req.body.payment.razorpay_order_id);
     const orderId = req.body.payment.razorpay_order_id
     const paymentId = req.body.payment.razorpay_payment_id
     try {
@@ -339,9 +336,9 @@ const verify = async (req, res) => {
 
         hmac.update(orderId + '|' + paymentId);
         hmac = hmac.digest('hex')
-        console.log(hmac);
+        // console.log(hmac);
         if (hmac === req.body.payment.razorpay_signature) {
-            console.log("payment success")
+            // console.log("payment success")
             const orderId = req.session.order;
 
             await Order.updateOne({ _id: orderId }, { $set: { status: "paid" } })
@@ -351,19 +348,22 @@ const verify = async (req, res) => {
             return res.status(200).json({ message: "payment success" })
         }
     } catch (error) {
-        console.log("errordisplay",);
+        // console.log("errordisplay",);
     }
 }
 
+const retryPayment = async (req, res) => {
+    const user = await User.findOne({ email: req.session.user.user.email })
+ res.render('user/retryPayment',{user})   
+}
+
+   
 
 
 
 
 
-
-
-
-
+    
 
 
 
@@ -390,15 +390,15 @@ const renderOrder = async (req, res) => {
     const cartItems = await Order.find({ customer_id: id }).populate('items.product_id').sort({ createdAt: -1 });
     // console.log("order render:", cartItems.map(el => el.items));
     // console.log("cart items", cartItems);
-    console.log("view order page rendering");
+    // console.log("view order page rendering");
     res.render('user/order', { cartItems ,user})
 
 }
 const renderOrderDetails = async (req, res) => {
     const user = await User.findOne({ email: req.session.user.user.email }).populate(["cart.product_id", "default_address"]);
-    console.log("user", user);
+    // console.log("user", user);
     const order_id = req.params.id
-    console.log("order_id", order_id);
+    // console.log("order_id", order_id);
     // const id = user._id
 
     // const cartItems = await Order.find({ _id: order_id }).populate('items.product_id')
@@ -418,9 +418,9 @@ const renderOrderDetails = async (req, res) => {
 
     // ])
     const cartItems = await Order.find({ _id: new mongoose.Types.ObjectId(order_id) }).populate('items.product_id')
-    console.log("cartItems ", cartItems);
+    // console.log("cartItems ", cartItems);
     // console.log("customer ", customer);
-    console.log("order render:", cartItems.map(el => el.items));
+    // console.log("order render:", cartItems.map(el => el.items));
     res.render('user/orderDetails', { cartItems,user })
 
 }
@@ -428,7 +428,7 @@ const renderOrderDetails = async (req, res) => {
 const invoiceDownload = async (req, res) => {
 const user = await User.findOne({ email: req.session.user.user.email }).populate(["cart.product_id", "default_address"]);
     const order_id = req.params
-    console.log("order_id", order_id);
+    // console.log("order_id", order_id);
         const { shipping } = await getTotal(user)
 
     // const id = user._id
@@ -450,9 +450,9 @@ const user = await User.findOne({ email: req.session.user.user.email }).populate
 
     ])
     const cartItems = await Order.find({ _id: new mongoose.Types.ObjectId(order_id) }).populate('items.product_id')
-    console.log("cartItems deatg", cartItems);
-    console.log("customer deatg", customer);
-    console.log("order render:", cartItems.map(el => el.items));
+    // console.log("cartItems deatg", cartItems);
+    // console.log("customer deatg", customer);
+    // console.log("order render:", cartItems.map(el => el.items));
     res.render('user/invoice', { cartItems, customer: user.name ,shipping})
 
 
@@ -462,16 +462,27 @@ const user = await User.findOne({ email: req.session.user.user.email }).populate
 
 
 const cancelOrder = async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     const { orderId } = req.body;
     const updatedOrder = await Order.findOneAndUpdate(
         { _id: orderId },
         { $set: { "items.$[].status": "Cancelled", status: "Cancelled" } },
         { new: true }
     );
-    console.log("RRRRgfdgR", updatedOrder);
+    // console.log("RRRRgfdgR", updatedOrder);
     return res.status(200).json({ message: "order canccelled" })
 }
 
 
-module.exports = { listOrderAdminSde, orderDetailAdminSide, renderOrder, renderOrderDetails, createOrder, changeStatus, cancelOrder, verify ,invoiceDownload}
+module.exports = {
+    listOrderAdminSde,
+    orderDetailAdminSide,
+    renderOrder,
+    renderOrderDetails,
+    createOrder,
+    changeStatus,
+    cancelOrder,
+    verify,
+    invoiceDownload,
+    retryPayment
+}

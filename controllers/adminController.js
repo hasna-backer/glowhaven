@@ -23,7 +23,7 @@ let dashboard = async (req, res) => {
     // console.log("tdy", today);
     try {
         const salesCount = await Order.find({ createdAt: { $gte: startOfDay, $lte: endOfDay }, status: "Confirmed" }).countDocuments()
-        console.log("count", salesCount);
+        // console.log("count", salesCount);
         //to find revenue of this month
         const revenueMonth = await Order.aggregate([
             { $match: { createdAt: { $gte: startOfMonth, $lt: endOfMonth } } },
@@ -31,17 +31,17 @@ let dashboard = async (req, res) => {
         ])
         const revenue = revenueMonth.length > 0 ? Math.round(revenueMonth[0].revenue) : 0;
 
-        console.log("revenue of Month", revenue);
+        // console.log("revenue of Month", revenue);
         //count of customers
         const userCount = await User.countDocuments()
-        console.log("userCount", userCount);
+        // console.log("userCount", userCount);
 
         //top selling products
         const topSellilngProducts = await getTopSellingProducts()
-        console.log("topSellilngProducts", topSellilngProducts);
+        // console.log("topSellilngProducts", topSellilngProducts);
 
         topSellilngProducts.product.forEach(element => {
-            console.log("hhhhhhhh", element.product_name);
+            // console.log("hhhhhhhh", element.product_name);
         });
 
         // const topProducts = await Order.aggregate([
@@ -65,7 +65,7 @@ let dashboard = async (req, res) => {
         res.render('admin/dashboard', { salesCount, revenue, userCount, topSellilngProducts: topSellilngProducts.product });
 
     } catch (error) {
-        console.log("error", error.message);
+        // console.log("error", error.message);
     }
 }
 
@@ -74,7 +74,7 @@ let dashboard = async (req, res) => {
 let chart = async (req, res) => {
     try {
         const filter = req.query.filter
-        console.log("filter", filter);
+        // console.log("filter", filter);
         const date = new Date();
         let counts
         switch (filter) {
@@ -93,7 +93,7 @@ let chart = async (req, res) => {
 
         return res.send(counts);
     } catch (error) {
-        console.log(error.message);
+        // console.log(error.message);
         res.status(500).send({ error: 'An error occurred' });
     }
 };
@@ -112,9 +112,9 @@ const renderLogin = async (req, res) => {
 
 const doLogin = async (req, res) => {
     const { email, pass } = req.body;
-    console.log("email and pwd", req.body)
+    // console.log("email and pwd", req.body)
     const isExist = await Admin.findOne({ email: email })
-    console.log("findoneadmin", isExist)
+    // console.log("findoneadmin", isExist)
     if (isExist == null) {
         req.flash('error', 'email is not registered');
         res.redirect('/admin/login')
@@ -127,12 +127,12 @@ const doLogin = async (req, res) => {
             req.session.admin = { admin: isExist, isloggedin: true }
             // console.log("session::::", req.session.admin);
             res.redirect('/admin');
-            console.log("homepage")
+            // console.log("homepage")
         }
         else {
             req.flash('error', 'wrong password');
             res.redirect('/admin/login')
-            console.log("loginpage...wrong password")
+            // console.log("loginpage...wrong password")
 
         }
     }
@@ -140,13 +140,13 @@ const doLogin = async (req, res) => {
 
 //sales report
 const salesReport = async (req, res) => {
-    console.log("hiiii");
+    // console.log("hiiii");
     const today = new Date()
     const prevdate = today.setDate(today.getDate() - 30)
-    console.log("date", prevdate);
+    // console.log("date", prevdate);
     let startDate = req.query.startDate ? new Date(req.query.startDate) : new Date(prevdate);
     let endDate = req.query.endDate ? new Date(req.query.endDate) : new Date();
-    console.log("dates", startDate, endDate);
+    // console.log("dates", startDate, endDate);
 
     const orders = await Order.find().populate({ path: "customer_id", select: "name" })
     // console.log("order123", order[0].items);
@@ -206,9 +206,9 @@ const salesReport = async (req, res) => {
 
     ])
     details.forEach((order) => {
-        console.log("coupon", order.coupon);
+        // console.log("coupon", order.coupon);
     })
-    console.log("details", details);
+    // console.log("details", details);
     res.render('admin/report', { details, startDate, endDate })
 }
 
@@ -230,7 +230,7 @@ const downloadExcel = async (req, res) => {
 
         const today = new Date()
         const prevdate = today.setDate(today.getDate() - 30)
-        console.log("date", prevdate);
+        // console.log("date", prevdate);
         let startDate = req.query.startDate ? new Date(req.query.startDate) : new Date(prevdate);
         let endDate = req.query.endDate ? new Date(req.query.endDate) : new Date();
 
@@ -304,7 +304,7 @@ const downloadExcel = async (req, res) => {
         res.end();
 
     } catch (error) {
-        console.log(error.message);
+        // console.log(error.message);
     }
 }
 
@@ -320,7 +320,7 @@ const getSalesReportPdf = async (req, res) => {
 
         const today = new Date()
         const prevdate = today.setDate(today.getDate() - 30)
-        console.log("date", prevdate);
+        // console.log("date", prevdate);
         let startDate = req.query.startDate ? new Date(req.query.startDate) : new Date(prevdate);
         let endDate = req.query.endDate ? new Date(req.query.endDate) : new Date();
 
@@ -456,7 +456,7 @@ const getSalesReportPdf = async (req, res) => {
         //     ("0" + (endDate.getMonth() + 1)).slice(-2) +
         //     "-" +
         //     ("0" + endDate.getUTCDate()).slice(-2);
-
+   
 
 
         res.render("admin/pdf", {
@@ -471,7 +471,7 @@ const getSalesReportPdf = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error.message);
+        // console.log(error.message);
     }
 
 }

@@ -198,7 +198,9 @@
         };
         var rzp1 = new Razorpay(options);
         rzp1.on('payment.failed', function (response) {
-          // alert(response.error.code);
+          alert(response.error.code);
+          window.redirect('/retry-payment')
+          paymentFailed(response, order)
           // alert(response.error.description);
           // alert(response.error.source);
           // alert(response.error.step);
@@ -214,7 +216,9 @@
     }
   }
 
-
+  async function paymentFailed(response, order) {
+    console.log("payment failed", response, order)
+  }
 
   async function verifyPayment(payment, order) {
     console.log("gfvjhyfghjgfjhg");
