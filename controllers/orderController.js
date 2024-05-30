@@ -5,14 +5,7 @@ const Coupon = require('../models/couponModel');
 const mongoose = require('mongoose');
 const Razorpay = require('razorpay')
 const Crypto = require("crypto");
-
 const { getTotal } = require('../utils/helper')
-// var instance = new Razorpay({
-//     key_id: 'rzp_test_vkBotcfH9qvzaB',
-//     key_secret: 'SqlRJ6xEPeQJOCVv3GyFikYb',
-// });
-
-
 
 //admin
 const listOrderAdminSde = async (req, res) => {
@@ -62,10 +55,7 @@ const listOrderAdminSde = async (req, res) => {
             }
         }
     ]);
-    // console.log("orderItems:", orderItems);
-
-
-    // console.log(orderItems);
+   
     res.render('admin/order', {
         orderItems, currentPage,
         totalPages: Math.ceil(totalOrders / pageSize)
@@ -75,7 +65,6 @@ const listOrderAdminSde = async (req, res) => {
 //Admin View Order details 
 const orderDetailAdminSide = async (req, res) => {
     const order_id = new mongoose.Types.ObjectId(req.params.id)
-    // console.log("order_id", order_id);
 
     //getting customer details
     const customer = await Order.aggregate([
@@ -104,9 +93,6 @@ const orderDetailAdminSide = async (req, res) => {
         }
 
     ])
-
-    // const cartItems = await Order.find({ _id: order_id }).populate('customer_id')
-    // console.log("customer:", customer);
 
 
     const orderItem = await Order.aggregate([
@@ -162,26 +148,20 @@ const orderDetailAdminSide = async (req, res) => {
             }
         }
     ]);
-    // console.log("orderItem", orderItem[0]);
     const total = orderItem[0].items.map(e => e.price * e.quantity)
-    // console.log("totaaaal", total);
     res.render('admin/orderDetail', { orderItem: orderItem[0], customer: customer[0], total })
 }
 
 //change status
 const changeStatus = async (req, res) => {
     const { productId, orderId, status } = req.body
-    // console.log("req.body:", productId, orderId, status);
     const product = await Order.findOne({ _id: orderId, })
-    // console.log("RRRRR", product);
 
-    // Update the status of the product within the order
     const updatedOrder = await Order.findOneAndUpdate(
         { _id: orderId },
         { $set: { status: status } },
         { new: true }
     );
-    // console.log("RRRRgfdgR", updatedOrder);
     return res.status(200).json({ message: "status changed" })
 
 }
@@ -192,7 +172,6 @@ const createOrder = async (req, res) => {
     const { totalPrice, shipping } = await getTotal(user)
     const amount_payable = totalPrice + shipping
     let totalAmountToPay
-    // console.log("req", req.body.paymentType, amount_payable);
 
     const paymentType = req.body.paymentType
     let status, order;
@@ -203,7 +182,6 @@ const createOrder = async (req, res) => {
     }
     let items = [];
     const cartList = user.cart;
-    // console.log("cartList", cartList);
     for (let i = 0; i < cartList.length; i++) {
         items.push({
             product_id: cartList[i].product_id._id,
@@ -244,15 +222,12 @@ const createOrder = async (req, res) => {
 
     }
 
-    // console.log("order", order);
 
 
     if (paymentType === "cod") {
         const createOrder = await Order.create(order)
-        // console.log("hi its me hasna", createOrder);
 
         req.session.order = createOrder._id
-        // console.log("createOrder", createOrder);
         await Coupon.updateOne(
             { _id: req.session.coupon?.couponId },
             {
@@ -272,12 +247,9 @@ const createOrder = async (req, res) => {
 
     } else if (paymentType === "razorpay") {
         const createOrder = await Order.create(order)
-        // console.log("hi its me hasna", createOrder);
 
         req.session.order = createOrder._id
-        // console.log("createOrder", createOrder);
 
-        //updating coupon since user placed order using the coupon
         await Coupon.updateOne(
             { _id: req.session.coupon?.couponId },
             {
@@ -305,30 +277,11 @@ const createOrder = async (req, res) => {
             // console.log("order", order);
             return res.status(200).json({ message: "razorpay placed", order })
         });
-        // req.session.order = createOrder._id
-        // console.log("createOrder", createOrder);
-        // await Coupon.updateOne(
-        //     { _id: req.session.coupon?.couponId },
-        //     {
-        //         $addToSet: {
-        //             user_list: user._id 
-        //         }
-        //     }
-        // );
-
-
-        // await User.updateOne({ _id: user._id }, { $unset: { cart: '' } })
-        // req.session.coupon = {}
-        // for (let i = 0; i < items.length; i++) {
-        //     await Product.updateOne({ _id: items[i].product_id }, { $inc: { stock: -(items[i].quantity) } })
-        // }
-        // return res.status(200).json({ message: "razorpay order placed" })
+       
     }
 }
 
 const verify = async (req, res) => {
-    // console.log("req.body", req.body);
-    // console.log("payment", req.body.payment.razorpay_order_id);
     const orderId = req.body.payment.razorpay_order_id
     const paymentId = req.body.payment.razorpay_payment_id
     try {
@@ -336,9 +289,7 @@ const verify = async (req, res) => {
 
         hmac.update(orderId + '|' + paymentId);
         hmac = hmac.digest('hex')
-        // console.log(hmac);
         if (hmac === req.body.payment.razorpay_signature) {
-            // console.log("payment success")
             const orderId = req.session.order;
 
             await Order.updateOne({ _id: orderId }, { $set: { status: "paid" } })
@@ -348,7 +299,7 @@ const verify = async (req, res) => {
             return res.status(200).json({ message: "payment success" })
         }
     } catch (error) {
-        // console.log("errordisplay",);
+        console.log("errordisplay",);
     }
 }
 
