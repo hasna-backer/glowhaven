@@ -249,18 +249,39 @@ let renderViewProducts = async (req, res) => {
 
 const renderSingleProducts = async (req, res) => {
     const product = await Product.findById(req.params.id).populate("category_id");
+    console.log("step1");
     let categoryId = product.category_id
-    const category = await Category.findOne({ _id: categoryId })
-    if (!category.discount) {
-        const discountAmount = ((product.discount / 100) * product.actual_price)
-        let sellingPrice = Math.round(product.actual_price - discountAmount)
-        res.render('user/singleProduct', { product, user: req.session.user, sellingPrice })
+        console.log("step 2");
 
-    }
-    else {
-        const discountAmount = ((category.discount / 100) * product.actual_price)
-        let sellingPrice = Math.round(product.actual_price - discountAmount)
-        res.render('user/singleProduct', { product, user: req.session.user, sellingPrice })
+    const category = await Category.findOne({ _id: categoryId })
+        console.log("step 3");
+
+    try {
+        if (!category.discount) {
+                console.log("if 1");
+
+            const discountAmount = ((product.discount / 100) * product.actual_price)
+                console.log("if 2");
+
+            let sellingPrice = Math.round(product.actual_price - discountAmount)
+                console.log("if 3");
+
+            res.render('user/singleProduct', { product, user: req.session.user, sellingPrice })
+    
+        }
+        else {
+                console.log("else 1");
+
+            const discountAmount = ((category.discount / 100) * product.actual_price)
+            console.log("else 2");
+
+            let sellingPrice = Math.round(product.actual_price - discountAmount)
+                console.log("else 3");
+
+            res.render('user/singleProduct', { product, user: req.session.user, sellingPrice })
+        }
+    } catch (error) {
+        console.log(error);
     }
 
 };
