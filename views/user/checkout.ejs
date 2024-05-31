@@ -141,13 +141,13 @@
                                                                         <p> mobile:<%= add.phone %></p>
                                                                         <div class="col text-right">
 
-                                                                            <button type="button"
+                                                                            <!-- <button type="button"
                                                                                 data-modal-target="authentication-modal"
                                                                                 data-modal-toggle="authentication-modal"
                                                                                 type="button"
                                                                                 class="text-purple-700 hover:text-purple-700 border border-purple-700 hover:bg-purple-300 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 text-center me-2 mb-2 "
                                                                                 onclick="editAddress(this)">Edit</button>
-
+ -->
 
 
 
@@ -371,16 +371,36 @@
     }
 
     const removeAddress = async (element) => {
-        const id = element.getAttribute('data-address-id'); // Accessing the data attribute const
-        console.log("addressid", id);
-        try {
-            const res = await axios.delete(`/remove-address/${id}`)
-            if (res.status === 200) {
-                window.location.reload()
-            }
-        } catch (error) {
 
-        }
+        event.preventDefault();
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            iconColor: '#da63f2',
+            showCancelButton: true,
+            confirmButtonColor: "#908991",
+            cancelButtonColor: "#da63f2",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const id = element.getAttribute(
+                    'data-address-id'); // Accessing the data attribute const
+                console.log("addressid", id);
+                try {
+                    const res = await axios.delete(`/remove-address/${id}`)
+                    if (res.status === 200) {
+                        window.location.reload()
+                    }
+                } catch (error) {
+
+                }
+
+            }
+        });
+
+
+
     }
 
     //To remove coupon

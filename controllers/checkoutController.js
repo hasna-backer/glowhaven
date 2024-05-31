@@ -35,17 +35,20 @@ const renderCheckout = async (req, res) => {
 };
 
 const newAddress = async (req, res) => {
-
   const user = req.session.user.user.email;
-
   res.render('user/address', { user });
 };
 
 const submitAddress = async (req, res) => {
+  const user = await User.findOne({ email: req.session.user.user.email }).populate(['cart.product_id', 'default_address']);
   const userId = req.session.user.user._id;
-
+console.log("addr",req.body);
   let address = await Address.create({ ...req.body, customer_id: userId });
-  res.redirect('/checkout');
+  console.log("addrr",address);
+  if (!user.default_address) {
+    user.default_address = address[0];
+  }
+  return res.status(200).json({message:"address added"})
 
 };
 

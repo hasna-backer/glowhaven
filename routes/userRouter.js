@@ -48,8 +48,9 @@ router.get("/checkout/payment", checkoutController.renderPayment)
 router.get('/orders', orderController.renderOrder);
 router.get('/order-detail/:id', orderController.renderOrderDetails);
 router.post('/orders', orderController.createOrder);
+router.post('/retry-order', orderController.retryCreateOrder);
 router.post('/verify-payment', orderController.verify);
-router.get('/retry-payment', orderController.retryPayment);
+router.get('/retry-payment/:id', orderController.retryPayment);
 router.get('/invoice-download/:id', orderController.invoiceDownload);
 
 router.post('/cancel-order', orderController.cancelOrder);

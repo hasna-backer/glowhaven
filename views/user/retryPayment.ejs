@@ -19,7 +19,8 @@
 
                 <button type="button" class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4
                     focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm
-                    px-1 py-2.5 w-[200px] ml-[4.5rem] text-center mb-2" onclick="placeOrder('razorpay')">Retry</button>
+                    px-1 py-2.5 w-[200px] ml-[4.5rem] text-center mb-2" data-order-id="<%= id %>"
+                    onclick="placeOrder(this)">Retry</button>
 
 
                 <!-- <button class="content-center px-6 mx-12">Retry</button> -->
@@ -42,11 +43,11 @@
 
 <script>
     const placeOrder = async (element) => {
-        const paymentType = element;
-        console.log("paymentType", element)
+        const orderId = element.getAttribute('data-order-id');
+        console.log("paymentType", orderId)
         try {
-            const res = await axios.post('/orders', {
-                paymentType
+            const res = await axios.post('/retry-order', {
+                orderId
             })
             if (res.data.message === "razorpay placed") {
                 console.log("res.data", res.data.order.id);
@@ -68,7 +69,8 @@
                         // alert(response.razorpay_signature)
 
                         verifyPayment(response,
-                            order) //after succussfull payment we have to verify if its success in the backend
+                            order
+                        ) //after succussfull payment we have to verify if its success in the backend
                     },
                     "prefill": {
                         "name": "Gaurav Kumar",
@@ -85,7 +87,6 @@
                 var rzp1 = new Razorpay(options);
                 rzp1.on('payment.failed', function (response) {
                     alert(response.error.code);
-                    window.redirect('/retry-payment')
                     paymentFailed(response, order)
                     // alert(response.error.description);
                     // alert(response.error.source);
@@ -102,7 +103,11 @@
         }
     }
 
+    async function paymentFailed(response, order) {
+        console.log("payment failed", response, order)
+        window.redirect('/retry-payment/' + order.receipt)
 
+    }
     async function verifyPayment(payment, order) {
         console.log("gfvjhyfghjgfjhg");
         const res = await axios.post('/verify-payment', {

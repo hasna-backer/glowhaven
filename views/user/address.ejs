@@ -154,10 +154,10 @@
 
                                     </div>
 
-                                    <p class="mb-3 pb-5"> Address type preferences are used to plan your delivery.
+                                    <p class="mb-2 pb-4"> Address type preferences are used to plan your delivery.
                                         However, shipments can sometimes arrive early or later than planned. </p>
 
-                                    <div class="col-12">
+                                    <div class="col-12 mb-5">
                                         <button
                                             class="btn  w-100 text-gray-900 p-2.5 relative inline-flex items-center justify-center overflow-hidden  text-gray-900 rounded-lg group bg-gradient-to-br from-purple-50 to-pink-300 group-hover:from-purple-50 group-hover:to-pink-50 hover:text-pink-500 dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800"
                                             type="submit">
@@ -205,7 +205,7 @@
 
 
 <script>
-    document.getElementById('addform').addEventListener('submit', function (event) {
+    document.getElementById('addform').addEventListener('submit', async function (event) {
         event.preventDefault();
         console.log("validations");
         const form = event.target
@@ -345,7 +345,19 @@
 
         console.log("gfufgug", form.action);
         // If all validations pass, submit the form
-        form.submit();
+        // form.submit();
+        try {
+            const response = await axios.post('/add-address', form, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.status === 200) {
+                history.back()
+            }
+        } catch (error) {
+
+        }
 
     });
 </script>

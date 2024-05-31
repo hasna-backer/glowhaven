@@ -281,6 +281,36 @@ const createOrder = async (req, res) => {
     }
 }
 
+const retryCreateOrder = async (req, res) => {
+    
+        //managing razorpay payment
+    const { orderId } = req.body;
+            req.session.order = orderId
+
+   try {
+     const order=await Order.findOne({ _id: orderId, })
+     console.log("iddddd",req.body);
+     console.log("order",order);
+         const totalAmount = order.total_amount
+         const Razorpay = require('razorpay');
+         var instance = new Razorpay({ key_id: 'rzp_test_vkBotcfH9qvzaB', key_secret: 'SqlRJ6xEPeQJOCVv3GyFikYb' })
+ 
+         var options = {
+             amount: totalAmount * 100,  // amount in the smallest currency unit
+             currency: "INR",
+             receipt: orderId
+         };
+         instance.orders.create(options, function (err, order) {
+             // console.log("order", order);
+             return res.status(200).json({ message: "razorpay placed", order })
+         });
+        
+   } catch (error) {
+    console.log(error);
+   }
+    }
+
+
 const verify = async (req, res) => {
     const orderId = req.body.payment.razorpay_order_id
     const paymentId = req.body.payment.razorpay_payment_id
@@ -304,8 +334,14 @@ const verify = async (req, res) => {
 }
 
 const retryPayment = async (req, res) => {
-    const user = await User.findOne({ email: req.session.user.user.email })
- res.render('user/retryPayment',{user})   
+   const id= new mongoose.Types.ObjectId(req.params.id)
+    try {
+         await Order.updateOne({ _id: id }, { $set: { status: "failed payment" } })
+        const user = await User.findOne({ email: req.session.user.user.email })
+        res.render('user/retryPayment',{user,id})   
+    } catch (error) {
+        
+    }
 }
 
    
@@ -338,7 +374,7 @@ const renderOrder = async (req, res) => {
     //     { $unwind: "$prod_detail" },
     // ])
 
-    const cartItems = await Order.find({ customer_id: id }).populate('items.product_id').sort({ createdAt: -1 });
+    const cartItems = await Order.find({ customer_id: id ,status: { $ne: 'pending' }}).populate('items.product_id').sort({ createdAt: -1 });
     // console.log("order render:", cartItems.map(el => el.items));
     // console.log("cart items", cartItems);
     // console.log("view order page rendering");
@@ -431,6 +467,7 @@ module.exports = {
     renderOrder,
     renderOrderDetails,
     createOrder,
+    retryCreateOrder,
     changeStatus,
     cancelOrder,
     verify,
