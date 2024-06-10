@@ -4,15 +4,6 @@
     opacity: 1;
     /* Firefox */
   }
-
-  #details {
-    display: none;
-    padding-left: 5px;
-  }
-
-  input[type="radio"]:checked~#details {
-    display: block;
-  }
 </style>
 
 
@@ -56,18 +47,48 @@
               <div class="address-container d-flex align-items-center flex flex-col">
                 <div id="total" class="col text-left p-4 bg-slate-200	">WALLETS </div>
                 <div class="card w-100">
-                  <div class="row py-2 pb-3">
+                  <div class="row py-2 pb-3" onclick="showdetails(wallet)" id="showdet">
                     <div class="col-1 pt-2 ml-3">
                       <img src="/user-assets/images/icons8-wallet-50.png" width="50px" height="0px" alt="Snow">
 
 
                     </div>
                     <div class="col pl-0 ">
-                      <div class="card-title pt-2 pb-0">Link Your Wallet <button data-tooltip-target="tooltip-wallet"
-                          type="button"><i class="bi bi-info-circle"></i></button></div>
-                      <span>You need to have a registered upi id</span>
+                      <div class="card-title pt-2 pb-2">Pay Using Wallet <button data-tooltip-target="tooltip-wallet"
+                          type="button"></button></div>
+                      <span>You have Rs. <%= wallet_balnce %> on your wallet</span>
+
+                      <div id="wallet" class="hidden pt-2">
+                        <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                          <div class="row justify-between">
+                            <h1 class="col label text-base">Order Total</h1>
+                            <h2 class="col text-right mr-3 text-base	"> ₹<%= totalAmountToPay %></h2>
+                          </div>
+
+                          <!-- <div class="row justify-between">
+                            <h6 class="col label text-base		">COD Charges</h6>
+                            <h3 class="col text-right mr-3 text-base	"> ₹0</h3>
+
+                          </div> -->
+                          <hr class="mt-6 mb-2 mr-3">
+                          <div class="row mb-2">
+                            <div class="col label ">Amount Payable</div>
+                            <div id="total" class="col text-right mr-3">
+
+                              <b>₹<%=totalAmountToPay %> </b> </div>
+                          </div>
+                          <button type="submit" value="cod" name="paymentType" onclick="placeOrder('wallet')"
+                            class="  text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Place
+                            Order</button>
+                        </div>
+                      </div>
                     </div>
+
                   </div>
+
+
+
+
 
                 </div>
 
@@ -84,17 +105,16 @@
                 <div class="card w-100">
 
                   <% if (totalAmountToPay <= 3000) { %>
-                  <div class="row py-2 pb-3" onclick="showdetails()" id="showdetails">
+                  <div class="row py-2 pb-3" onclick="showdetails(cod)" id="showdetails">
                     <div class="col-1 pt-3 ml-3">
                       <img src="/user-assets/images/cash-on-delivery.png" width="50px" height="0px" alt="Snow"> </div>
                     <div class="col pl-0 ">
                       <div class="card-title pt-2 pb-4 justify-content-between">
                         <div class="flex  mb-0 ">
                           <label for="optionCod" class=" card-title pt-2 pb-3">
-                            Pay <%= totalAmountToPay %> on
-                            delivery</label>
+                            Pay <%= totalAmountToPay %> on delivery</label>
                         </div>
-                        <div id="details">
+                        <div id="cod" class="hidden">
                           <div class="tab-pane fade show active profile-overview" id="profile-overview">
                             <div class="row justify-between">
                               <h1 class="col label text-base	 ">Order Total</h1>
@@ -155,18 +175,17 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
-  const show = (elementId) => {
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.style.display = "block";
-    }
-  };
-
-  const showdetails = async () => {
+  const showdetails = async (element) => {
+    console.log(element);
     const div = document.getElementById("cod");
-    const detailsDiv = document.getElementById("details");
-    detailsDiv.style.display = "block"; // Show the details div
-    show('details')
+    const walletdiv = document.getElementById("wallet");
+    if (element == wallet) {
+      walletdiv.classList.remove('hidden')
+    } else {
+      div.classList.remove('hidden')
+
+    }
+
 
   }
 
@@ -180,7 +199,22 @@
         paymentType
       })
       if (res.data.message === "cod placed") {
-        window.redirect('/orders')
+        Swal.fire({
+          title: "Order success",
+          text: "order placed successfully",
+          icon: "success",
+          showCancelButton: true,
+          confirmButtonText: "view orders",
+          cancelButtonText: "continue shopping",
+        }).then((result) => {
+          console.log("result", result);
+          if (result.isConfirmed) {
+            window.redirect('/orders')
+          } else {
+            window.redirect('/')
+
+          }
+        });
       } else if (res.data.message === "razorpay placed") {
         console.log("res.data", res.data.order.id);
         const order = res.data.order
@@ -227,6 +261,24 @@
         });
         rzp1.open();
 
+      } else if (res.data.message === "wallet order placed") {
+        console.log("wallet order placed");
+        Swal.fire({
+          title: "Order success",
+          text: "order placed successfully",
+          icon: "success",
+          showCancelButton: true,
+          confirmButtonText: "view orders",
+          cancelButtonText: "continue shopping",
+        }).then((result) => {
+          console.log("result", result);
+          if (result.isConfirmed) {
+            window.redirect('/orders')
+          } else {
+            window.redirect('/')
+
+          }
+        });
       }
     } catch (error) {
       console.log("paymentfailederror", error);

@@ -77,6 +77,7 @@ const applyCoupon = async (req, res) => {
     const amount_payable = totalPrice + shipping
     const couponId = req.body.id
     const selectedCoupon = await Coupon.findOne({ _id: couponId })
+     console.log("selectedCoupon",selectedCoupon);
     if (amount_payable < selectedCoupon.minPurchaseAmount) {
         return res.status(200).json({ message: "not applicable" })
 
@@ -89,10 +90,13 @@ const applyCoupon = async (req, res) => {
 
     }
     else if (selectedCoupon.description.includes('first order')) {
+       
         const order = await Order.find({ customer_id: id, status: 'Delivered' })
-        if (order) {
+        console.log("order",order);
+        if (order.length) {
             return res.status(200).json({ message: "not firstOrder" })
         } else {
+            console.log("hiii");
             const discount = selectedCoupon.discount
             const maximumDiscount = selectedCoupon.maximumDiscount
             const used_count = selectedCoupon.used_count
@@ -103,7 +107,7 @@ const applyCoupon = async (req, res) => {
             const total_payable = amount_payable - discountAmount
 
             req.session.coupon = { total_payable, couponId, discountAmount }
-            return res.status(200).json({ message: "firstOrder", })
+            return res.status(200).json({ message: "applicable", })
 
         }
     }

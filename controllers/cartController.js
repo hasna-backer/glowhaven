@@ -15,11 +15,7 @@ const viewCart = async (req, res) => {
     // Extract product IDs from the cart
     const productIds = user.cart.map(item => item.product_id);
     // Fetch product details for each product ID
-    let products = await Products.find({
-      _id: {
-        $in: productIds
-      }
-    });
+    let products = await Products.find({ _id: {$in: productIds}});
     //calculating selling price
     const categoryId = products.category_id;
     const category = await Category.findOne({
@@ -70,8 +66,8 @@ const viewCart = async (req, res) => {
     for (let i = 0; i < combinedCartItems.length; i++) {
       totalPrice += combinedCartItems[i].price;
       totalMrp += combinedCartItems[i].mrp;
-      console.log('combinedCartItems[i].price', combinedCartItems[i].price);
-      console.log('total price', totalPrice);
+      // console.log('combinedCartItems[i].price', combinedCartItems[i].price);
+      // console.log('total price', totalPrice);
     }
     let shipping = 0;
     if (totalPrice < 1500) {
@@ -200,13 +196,7 @@ const updateQuantity = async (req, res) => {
         mrp,
         shipping
       });
-      return res.json({
-        totalPrice,
-        totalMrp,
-        price,
-        mrp,
-        shipping
-      });
+      return res.json({totalPrice,totalMrp,price,mrp,shipping});
     }
   }
 

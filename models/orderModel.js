@@ -71,7 +71,10 @@ const order_schema = new Schema({
 
         }
     },
-
+reason: {
+        type: String,
+        required: false
+    },
     status: {
         type: String,
         required: true

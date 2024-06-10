@@ -84,9 +84,21 @@ const renderPayment = async (req, res) => {
       totalAmountToPay = Math.round(req.session.coupon.total_payable);
     }
 
-    res.render('user/payment', { totalAmountToPay, user });
+    const wallet_balnce=user.wallet_history.length > 0 ? user.wallet_history[user.wallet_history.length - 1].balance : 0
+console.log("wallet_balnce",wallet_balnce);
+    res.render('user/payment', { totalAmountToPay, user ,wallet_balnce });
   }
 };
+
+const wallet = async (req, res) => {
+  const user = await User.findOne({ email: req.session.user.user.email }).populate(['cart.product_id', 'wallet_history']);
+  // console.log(user);
+  const wallet=user.wallet_history.forEach(element => {
+    console.log(element)
+  });
+
+  res.render('user/wallet',{user,wallet:user.wallet_history})
+}
 
 module.exports = {
   newAddress,
@@ -94,5 +106,6 @@ module.exports = {
   submitAddress,
   chooseAddress,
   removeAddress,
-  renderPayment
+  renderPayment,
+  wallet
 };

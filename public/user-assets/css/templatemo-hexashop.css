@@ -426,7 +426,9 @@ header
   transform: translateY(+2em);
   visibility: hidden;
   z-index: -1;
-  transition: all 0.3s ease-in-out 0s, visibility 0s linear 0.3s,
+  transition:
+    all 0.3s ease-in-out 0s,
+    visibility 0s linear 0.3s,
     z-index 0s linear 0.01s;
 }
 
@@ -624,7 +626,9 @@ header
   .header-area.header-sticky .nav li.search-icon a {
     width: 100%;
   }
-
+  .container {
+    min-height: 100dvh;
+  }
   .header-area {
     background-color: #f7f7f7;
     padding: 0px 15px;

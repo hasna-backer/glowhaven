@@ -1,6 +1,7 @@
 const { render } = require('ejs');
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
+const mongoose = require('mongoose');
 const sendmail = require('../utils/mailer');
 const generateOtp = require('../utils/generateOtp');
 const User = require('../models/userModel');
@@ -17,7 +18,9 @@ const productModel = require('../models/productModel');
  * @param {Express.Request} req
  * @param {Express.Response} res
  */
-
+const test = (req, res) => {
+    res.render('user/wallet')
+}
 
 
 let homepage = async function (req, res, next) {
@@ -180,6 +183,58 @@ let doLogin = async (req, res, next) => {
     }
 };
 
+const forgotPassword = async (req, res) => {
+   res.render('user/forgotPassword')
+}
+
+const sendOtp = async (req, res) => {
+   try {
+     const email=req.body.email
+       console.log("email", email);
+       const user = await User.findOne({ email: email })
+       console.log(user);
+       if (!user) {
+                return res.status(400).json({message:'user doesnt exist'})
+       }
+       console.log("user",user);
+     const otp = await generateOtp.generateOTP();
+     req.session.otp={email:email,otp:otp}
+     sendmail.sendMail(email, String(otp), "OTP");
+     return res.status(200).json({message:'otp send'})
+   } catch (error) {
+    console.log(error);
+   }
+}
+const verifyOtp = async (req, res) => {
+    try {
+        console.log("otp", req.body.otp);
+        console.log("session", req.session.otp.otp);
+        if (req.body.otp === req.session.otp.otp) {
+           return res.status(200).json({message:'otp same'})
+        } else {
+             return res.status(400).json({ message: "wrong otp" })
+        }
+    } catch (error) {
+        console.log(error);
+    }
+   
+}   
+
+const resetPassword = async (req, res) => {
+ res.render('user/resetPassword') 
+}
+
+const verifyPassword = async (req, res) => {
+    console.log(req.body,"hhh",req.session.otp);
+    const email = req.session.otp.email
+    console.log("email:::",email);
+    if (req.body.password === req.body.confirmPassword) {
+         password = await bcrypt.hash(req.body.password, 10);
+        const pwd = await User.findOneAndUpdate({ email: email }, { password: password })
+     return res.status(200).json({message:'password reset'})
+}
+}  
+  
 let viewProfile = async (req, res) => {
     // const { user } = req.session.user
     const address = await Address.find({ customer_id: req.session.user.user._id })
@@ -208,44 +263,115 @@ let editProfile = async (req, res) => {
 }
 
 
+// let renderViewProducts = async (req, res) => {
+//     const { search,catgry,type,sort,price } = req.query
+//     console.log("req.query",catgry,type,sort,price);
+//     try {
+//         if (!search) {
+//             const products = await Product.find({ status: { $ne: false }, delete: { $ne: true } });
+//             //stock mngt
+//             if (products.stock === 0) {
+
+//             }
+//             //calculating discount
+//             let categoryId = products.category_id
+//             const category = await Category.findOne({ _id: categoryId })
+
+//             let updatedProducts = await Promise.all(products.map(async e => {
+//                 let categoryId = e.category_id
+//                 const category = await Category.findOne({ _id: categoryId })
+//                 if (!category.discount) {
+//                     const product = e.toObject()
+//                     product.selling_price = Math.round(product.actual_price - ((product.discount / 100) * product.actual_price))
+//                     return product
+//                 } else {
+//                     const product = e.toObject()
+//                     product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price))
+//                     return product
+//                 }
+//             }))
+//             console.log("updatedProducts",updatedProducts);
+//             return res.render('user/product', { user: req.session.user, products: updatedProducts });
+//         }
+//         const products = await Product.find({
+//             product_name: { $regex: new RegExp(search, 'i') }
+//         });
+//         return res.render('user/product', { products, user: req.session.user });
+
+//     } catch (error) {
+//         console.log(error);
+//     }
+
+// };
+
+
+
 let renderViewProducts = async (req, res) => {
-    const { search } = req.query
+    const { search, catgry, type, sort, price } = req.query;
+    console.log("req.query", search, catgry, type, sort, price);
+
     try {
-        if (!search) {
-            const products = await Product.find({ status: { $ne: false }, delete: { $ne: true } });
-            //stock mngt
-            if (products.stock === 0) {
+        // Base query to find products that are not deleted and are active
+        let query = { status: { $ne: false }, delete: { $ne: true } };
 
-            }
-            //calculating discount
-            let categoryId = products.category_id
-            const category = await Category.findOne({ _id: categoryId })
-
-            let updatedProducts = await Promise.all(products.map(async e => {
-                let categoryId = e.category_id
-                const category = await Category.findOne({ _id: categoryId })
-                if (!category.discount) {
-                    const product = e.toObject()
-                    product.selling_price = Math.round(product.actual_price - ((product.discount / 100) * product.actual_price))
-                    return product
-                } else {
-                    const product = e.toObject()
-                    product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price))
-                    return product
-                }
-            }))
-            return res.render('user/product', { user: req.session.user, products: updatedProducts });
+        // Add search condition if 'search' is provided
+        if (search) {
+            query.product_name = { $regex: search, $options: 'i' };
         }
-        const products = await Product.find({
-            product_name: { $regex: new RegExp(search, 'i') }
-        });
-        return res.render('user/product', { products, user: req.session.user });
+
+        // Add category condition if 'catgry' is provided
+        if (catgry) {
+            query.category_id = new mongoose.Types.ObjectId(catgry);
+        }
+
+        // Add type condition if 'type' is provided
+        if (type) {
+            query.type = type;  
+        }
+
+        // Add price range condition if 'price' is provided
+        if (price) {
+            const [minPrice, maxPrice] = price.split('-').map(Number);
+            query.selling_price = { $gte: minPrice, $lte: maxPrice };
+        }
+
+        // Fetch products based on the constructed query
+        let products = await Product.find(query);
+
+        // Stock management
+        // products = products.filter(product => product.stock > 0);
+
+        // Calculating discount and final selling price
+        let updatedProducts = await Promise.all(products.map(async e => {
+            let categoryId = e.category_id;
+            const category = await Category.findOne({ _id: categoryId });
+            const product = e.toObject();
+
+            if (!category.discount) {
+                product.selling_price = Math.round(product.actual_price - ((product.discount / 100) * product.actual_price));
+            } else {
+                product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price));
+            }
+            return product;
+        }));
+
+        // Sorting the products if 'sort' is provided
+        if (sort === 'highToLow') {
+            updatedProducts.sort((a, b) => b.selling_price - a.selling_price);
+        } else if (sort === 'lowToHigh') {
+            updatedProducts.sort((a, b) => a.selling_price - b.selling_price);
+        }
+
+        console.log("updatedProducts", updatedProducts);
+        const categories=await Category.find({delete:{$ne:true}})
+        return res.render('user/product', { user: req.session.user, products: updatedProducts,categories });
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        res.status(500).send("Server Error");
     }
-
 };
+
 
 const renderSingleProducts = async (req, res) => {
     const product = await Product.findById(req.params.id).populate("category_id");
@@ -301,13 +427,53 @@ const searchProducts = async (req, res) => {
     }
 }
 
+//filter products
+const filter = async (req, res) => {
+    console.log("params",req.query);
+}
+
+//sort products
+const sortProducts = async (req, res) => {
+    console.log("option", req.body);
+    const option = req.body.option
+    try {
+        const products = await Product.find({ status: { $ne: false }, delete: { $ne: true } });
+        let updatedProducts = await Promise.all(products.map(async e => {
+                    let categoryId = e.category_id
+                    const category = await Category.findOne({ _id: categoryId })
+                    if (!category.discount) {
+                        const product = e.toObject()
+                        product.selling_price = Math.round(product.actual_price - ((product.discount / 100) * product.actual_price))
+                        return product
+                    } else {
+                        const product = e.toObject()
+                        product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price))
+                        return product
+                    }
+        }))
+        console.log("updatedProducts",updatedProducts);
+         if (option == "highToLow") {
+             data = updatedProducts.sort((a, b) => b.selling_price - a.selling_price);
+             console.log("data",data);
+            } else if (option == "lowToHigh") {
+                data = updatedProducts.sort((a, b) => a.selling_price - b.selling_price);
+            } else if (option == "releaseDate") {
+                data = await Product.find({ status: { $ne: false }, delete: { $ne: true } }).sort({ createdAt: 1 });
+            }
+    
+    return res.status(200).json({data})
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 //logout
 const logout = (req, res) => {
     req.session.destroy()
     res.redirect('/login')
 }
 module.exports = {
-
+test,
     homepage,
     renderSignup,
     doSignup,
@@ -317,9 +483,16 @@ module.exports = {
     renderOtp,
     verifyUser,
     resendOtp,
+    forgotPassword,
+    sendOtp,
+    verifyOtp,
+    resetPassword,
+    verifyPassword,
     renderViewProducts,
     renderSingleProducts,
     viewProfile,
     editProfile,
-    searchProducts
+    searchProducts,
+    filter,
+    sortProducts
 }

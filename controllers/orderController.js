@@ -245,7 +245,53 @@ const createOrder = async (req, res) => {
         return res.status(200).json({ message: "cod placed" })
 
 
-    } else if (paymentType === "razorpay") {
+    } else if (paymentType === "wallet") {
+        console.log("walleeeeetttttt");
+        const wallet_balnce = user.wallet_history.length > 0 ? user.wallet_history[user.wallet_history.length - 1].balance : 0
+        if (wallet_balnce < totalAmountToPay) {
+            return res.status(200).json({message:"no wallet balnce"})
+        }
+        const current_balance = wallet_balnce - totalAmountToPay
+       const walletHistoryEntry = {
+            amount: totalAmountToPay,
+            balance: current_balance,
+            status: 'Debit',
+            time: new Date()
+    };    
+    console.log("walletHistoryEntry",walletHistoryEntry);
+
+        const update_wallet=await User.findOneAndUpdate(
+            { _id: user._id  },
+            { $push: { wallet_history: walletHistoryEntry } },
+            { new: true }
+        );
+    // console.log("update_wallet", update_wallet);
+    
+
+        const createOrder = await Order.create(order)
+        const orderId = createOrder._id
+        const totalAmount = createOrder.total_amount
+        
+        req.session.order = createOrder._id
+        await Coupon.updateOne(
+            { _id: req.session.coupon?.couponId },
+            {
+                $addToSet: {
+                    user_list: user._id
+                }
+            }
+        ); 
+            await Order.updateOne({ _id: orderId }, { $set: { status: "paid" } })
+
+        await User.updateOne({ _id: user._id }, { $unset: { cart: '' } })
+        console.log("user.wallet_history",user.wallet_history);
+        req.session.coupon = {}
+        for (let i = 0; i < items.length; i++) {
+            await Product.updateOne({ _id: items[i].product_id }, { $inc: { stock: -(items[i].quantity) } })
+        }
+        return res.status(200).json({ message: "wallet order placed" })
+    }
+    else if (paymentType === "razorpay") {
         const createOrder = await Order.create(order)
 
         req.session.order = createOrder._id
@@ -450,18 +496,72 @@ const user = await User.findOne({ email: req.session.user.user.email }).populate
 
 const cancelOrder = async (req, res) => {
     // console.log(req.body);
+        const user = await User.findOne({ email: req.session.user.user.email })
+
     const { orderId } = req.body;
+    const order = await Order.findOne({ _id: orderId })
+    if (order.status === 'paid') {
+       const walletHistoryEntry = {
+            amount: order.total_amount,
+            balance: user.wallet_history.length > 0
+                ? user.wallet_history[user.wallet_history.length - 1].balance + order.total_amount
+                : order.total_amount, // Assuming initial balance is 0 if no previous entries
+            status: 'Credit',
+            time: new Date()
+    };
+    console.log("walletHistoryEntry",walletHistoryEntry);
+
+        const update_wallet=await User.findOneAndUpdate(
+            { email: req.session.user.user.email },
+            { $push: { wallet_history: walletHistoryEntry } },
+            { new: true }
+        );
+        console.log("update_wallet", update_wallet);
+        const updatedOrder = await Order.findOneAndUpdate(
+        { _id: orderId },
+        { $set: { "items.$[].status": "Cancelled", status: "Cancelled" } },
+        { new: true }
+    );
+    // console.log("RRRRgfdgR", updatedOrder);
+    return res.status(200).json({ message: "payment cancelled" })
+    }
     const updatedOrder = await Order.findOneAndUpdate(
         { _id: orderId },
         { $set: { "items.$[].status": "Cancelled", status: "Cancelled" } },
         { new: true }
     );
     // console.log("RRRRgfdgR", updatedOrder);
-    return res.status(200).json({ message: "order canccelled" })
+    return res.status(200).json({ message: "order cancelled" })
 }
 
+const returnOrder = async (req, res) => {
+    const user = await User.findOne({ email: req.session.user.user.email })
+    console.log("eeeee", req.body);
+     const { orderId,reason } = req.body;
+    const updatedOrder = await Order.findOneAndUpdate(
+        { _id: orderId },
+        { $set: { status: "Returned", reason: reason } },
+        { new: true });
+    const walletHistoryEntry = {
+            amount: updatedOrder.total_amount,
+            balance: user.wallet_history.length > 0
+                ? user.wallet_history[user.wallet_history.length - 1].balance + updatedOrder.total_amount
+                : updatedOrder.total_amount, // Assuming initial balance is 0 if no previous entries
+            status: 'Credit',
+            time: new Date()
+    };
+    console.log("walletHistoryEntry",walletHistoryEntry);
 
-module.exports = {
+        const update_wallet=await User.findOneAndUpdate(
+            { email: req.session.user.user.email },
+            { $push: { wallet_history: walletHistoryEntry } },
+            { new: true }
+        );
+    console.log("update_wallet", update_wallet);
+    return res.status(200).json({message:'return succuss'})
+}
+
+module.exports = {  
     listOrderAdminSde,
     orderDetailAdminSide,
     renderOrder,
@@ -472,5 +572,6 @@ module.exports = {
     cancelOrder,
     verify,
     invoiceDownload,
-    retryPayment
+    retryPayment,
+    returnOrder
 }

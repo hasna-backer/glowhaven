@@ -45,7 +45,7 @@ router.get('/orders', orderController.listOrderAdminSde)
 router.get('/order-details/:id', orderController.orderDetailAdminSide)
 router.post('/change-status', orderController.changeStatus)
 
-//Coupon management
+//Coupon management  
 router.get('/coupon', couponController.coupon)
 router.get('/add-coupon', couponController.renderAddCoupon)
 router.post('/add-coupon', couponController.addCoupon)

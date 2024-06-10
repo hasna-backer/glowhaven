@@ -52,6 +52,9 @@ const userSchema = new mongoose.Schema({
             amount: {
                 type: Number
             },
+            balance: {
+                type: Number
+            },
             status: {
                 type: String,
                 enum: ["Debit", "Credit"]
@@ -69,4 +72,4 @@ const userSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-module.exports = mongoose.model('User', userSchema); 
+module.exports = mongoose.model('User', userSchema);    

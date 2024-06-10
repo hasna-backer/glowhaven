@@ -1,3 +1,13 @@
+<style>
+    #details {
+        display: none;
+        padding-left: 5px;
+    }
+
+    input[type="radio"]:checked~#details {
+        display: block;
+    }
+</style>
 <%- include('../partials/header.ejs') %>
 <!-- ***** Products Area Starts ***** -->
 <section class="section pt-9" id="products">
@@ -6,7 +16,168 @@
             <div class="col-lg-12">
                 <div class="section-heading">
                     <h2>Our Latest Products</h2>
-                    <span>Check out all of our products.</span>
+                    <span class="pb-2">Check out all of our products.</span>
+                    <form>
+                        <div class="w-full bg-slate-100 border-solid p-2 pr-4 pl-4" id="showdetails">
+                            <ul class="flex flex-wrap items-center  text-gray-900 justify-between pr-4 pl-10">
+                                <li>
+                                    <button id="dropdownCategory" data-dropdown-toggle="category"
+                                        class="text-black bg-primary-700 hover:bg-primary-800  font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
+                                        type="button">
+                                        Category
+                                        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
+                                    <div id="category" class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow ">
+
+                                        <ul class="space-y-2 text-sm" aria-labelledby="dropdownCategory">
+                                            <% categories.forEach(element => { %>
+
+
+                                            <li class="flex items-center">
+                                                <input name="catgry" id="apple" type="checkbox"
+                                                    value="<%= element._id %>"
+                                                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 " />
+
+                                                <label for="apple" class="ml-2 text-sm font-medium text-gray-900   ">
+                                                    <%= element.cat_name %>
+                                                </label>
+                                            </li>
+                                            <% }) %>
+                                            <li class="flex items-center">
+                                                <input name="catgry" id="fitbit" type="checkbox" value="Fitbit"
+                                                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+
+                                                <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900   ">
+                                                    Fitbit (56)
+                                                </label>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+
+                                </li>
+                                <li>
+                                    <button id="dropdownDefault" data-dropdown-toggle="dropdown"
+                                        class="text-black bg-primary-700 hover:bg-primary-800  font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
+                                        type="button">
+                                        Price <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
+                                    <div id="dropdown" class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow ">
+
+                                        <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
+                                            <li class="flex items-center">
+                                                <input name="price" id="fitbit" type="checkbox" value="0-1000"
+                                                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+
+                                                <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900   ">
+                                                    1000 - below
+                                                </label>
+                                            </li>
+                                            <li class="flex items-center">
+                                                <input name="price" id="apple" type="checkbox" value="1000-2000"
+                                                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 " />
+
+                                                <label for="apple" class="ml-2 text-sm font-medium text-gray-900   ">
+                                                    1000 - 2000
+                                                </label>
+                                            </li>
+
+                                            <li class="flex items-center">
+                                                <input name="price" id="fitbit" type="checkbox" value="2000-3000"
+                                                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+
+                                                <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900   ">
+                                                    2000 - 3000
+                                                </label>
+                                            </li>
+                                            <li class="flex items-center">
+                                                <input name="price" id="fitbit" type="checkbox" value="3000-4000"
+                                                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+
+                                                <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900   ">
+                                                    3000 - 4000
+                                                </label>
+                                            </li>
+                                            <li class="flex items-center">
+                                                <input name="price" id="fitbit" type="checkbox" value="4000-10000"
+                                                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+
+                                                <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900   ">
+                                                    4000 - above
+                                                </label>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <button id="dropdownType" data-dropdown-toggle="type"
+                                        class="text-black bg-primary-700 hover:bg-primary-800  font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
+                                        type="button">
+                                        Skin Type
+                                        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
+                                    <div id="type" class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow ">
+
+                                        <ul class="space-y-2 text-sm" aria-labelledby="dropdownType">
+                                            <li class="flex items-center">
+                                                <input name="type" id="apple" type="checkbox" value="Oily Skin"
+                                                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 " />
+
+                                                <label for="apple" class="ml-2 text-sm font-medium text-gray-900   ">
+                                                    Oily Skin
+                                                </label>
+                                            </li>
+
+                                            <li class="flex items-center">
+                                                <input name="type" id="fitbit" type="checkbox" value="All Skin Types"
+                                                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+
+                                                <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900   ">
+                                                    Normal Skin
+                                                </label>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+
+                                </li>
+
+
+
+                                <li>
+                                    <select id="sortByDropdown" name="sort"
+                                        class="border-none bg-transparent text-black bg-primary-700 font-medium rounded-lg text-sm px-4 py-2.5 mr-8 text-center inline-flex items-center"
+                                        <!-- onchange="handleSortChange(this)" -->
+                                        >
+                                        <option value="" selected>Sort By</option>
+                                        <option value="lowToHigh">Low Price</option>
+                                        <option value="highToLow">High Price</option>
+                                        <option value="releaseDate">Release Date</option>
+                                    </select>
+                                </li>
+                                <li>
+                                    <button type="submit"
+                                        class="text-white bg-gradient-to-br from-green-300 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-xl px-5 py-2.5 text-center me-2 mb-2">Filter</button>
+
+                                </li>
+                            </ul>
+
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -120,4 +291,37 @@
 
         }
     }
+
+    //show filter
+    const show = (elementId) => {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.style.display = "block";
+        }
+    };
+
+    const showdetails = async () => {
+        // const div = document.getElementById("cod");
+        const detailsDiv = document.getElementById("showdetails");
+        console.log("detailsDiv", detailsDiv);
+        detailsDiv.style.display = "block"; // Show the details div
+        show('detailsDiv')
+
+    }
+    //sort
+    // const handleSortChange = async (element) => {
+    //     console.log("element", element.value);
+    //     const option = element.value
+    //     try {
+    //         const res = await axios.post('/sort', {
+    //             option
+    //         })
+    //         const {
+    //             data
+    //         } = res.data
+    //         console.log(data);
+    //     } catch (error) {
+
+    //     }
+    // }
 </script>

@@ -70,11 +70,15 @@
                                                                                                 </div>
                                                                                                 <div class=" d-flex
                                                 justify-content-between align-items-center">
+
+
+
                                                 <p class="mb-0">Qty:&nbsp;
                                                     <select name="qty" id="qty" onchange="quantity(this)"
                                                         class="border-none"
                                                         data-product-id="<%= product.prod_detail._id %>">
-                                                        <% for(let i=1; i <=5; i++) { %>
+                                                        <% let maxStock = product.prod_detail.stock < 5 ? product.prod_detail.stock : 5; %>
+                                                        <% for(let i=1; i <= maxStock; i++) { %>
                                                         <option value="<%= i %>" <% if (product.cart.quantity==i) { %>
                                                             selected <% } %>> <%= i %>
                                                         </option>

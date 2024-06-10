@@ -106,13 +106,15 @@ const salesReport = async (req, res) => {
   const today = new Date();
   const prevdate = today.setDate(today.getDate() - 30);
   const startDate = req.query.startDate ? new Date(req.query.startDate) : new Date(prevdate);
-  const endDate = req.query.endDate ? new Date(req.query.endDate) : new Date();
+const endDate = req.query.endDate ? new Date(req.query.endDate) : new Date();
+  endDate.setDate(endDate.getDate() + 1);
+  console.log("endDate", endDate);
 
   const details = await Order.aggregate([
     {
       $match: {
         createdAt: { $gte: startDate, $lte: endDate },
-        status: { $nin: ['Cancelled', 'Failed'] },
+        status: { $nin: ['Cancelled', 'Failed','pending'] },
       },
     },
     { $sort: { createdAt: -1 } },
@@ -163,6 +165,8 @@ const salesReport = async (req, res) => {
     // console.log("coupon", order.coupon);
   });
   // console.log("details", details);
+    endDate.setDate(endDate.getDate() - 1);
+
   res.render('admin/report', { details, startDate, endDate });
 };
 
@@ -186,6 +190,7 @@ const downloadExcel = async (req, res) => {
     // console.log("date", prevdate);
     const startDate = req.query.startDate ? new Date(req.query.startDate) : new Date(prevdate);
     const endDate = req.query.endDate ? new Date(req.query.endDate) : new Date();
+    endDate.setDate(endDate.getDate() + 1);
 
     const orders = await Order.aggregate([
       {
@@ -232,7 +237,6 @@ const downloadExcel = async (req, res) => {
           'createdAt': 1,
           'name': '$customer.name',
           'product_name': '$products.product_name',
-          // "products": 1,
           'category_discount': '$category.discount',
         }
       },
@@ -268,8 +272,9 @@ const getSalesReportPdf = async (req, res) => {
     const today = new Date();
     const prevdate = today.setDate(today.getDate() - 30);
     const startDate = req.query.startDate ? new Date(req.query.startDate) : new Date(prevdate);
-    const endDate = req.query.endDate ? new Date(req.query.endDate) : new Date();
-
+const endDate = req.query.endDate ? new Date(req.query.endDate) : new Date();
+    endDate.setDate(endDate.getDate() + 1);
+    console.log("endDate", endDate);
     const orders = await Order.aggregate([
       { $sort: { createdAt: -1 } },
       {
@@ -321,7 +326,7 @@ const getSalesReportPdf = async (req, res) => {
       },
 
     ]);
-
+    endDate.setDate(endDate.getDate() - 1);
     res.render('admin/pdf', {
       startDate,
       endDate,
