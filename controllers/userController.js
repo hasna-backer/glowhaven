@@ -72,28 +72,32 @@ let renderSignup = async (req, res) => {
 }
 
 let doSignup = async (req, res) => {
-    const { name, email, pass, phone } = req.body
-    // console.log(req.body);
-    const isExist = await User.findOne({ email: email })
-    // console.log('is exist : ', isExist)
-    if (isExist == null) {
-        let user = new User();
-        user.email = email
-        user.password = await bcrypt.hash(pass, 10);
-        user.name = name
-        user.phone = phone
-        const newUser = await user.save();
-        req.session.user = newUser;
-        // console.log("new user:", newUser)
-        if (newUser) {
-            res.status(200).json({ message: 'signup succes!' })
+    try {
+        const { name, email, pass, phone } = req.body
+        console.log(req.body);
+        const isExist = await User.findOne({ email: email })
+        // console.log('is exist : ', isExist)
+        if (isExist == null) {
+            let user = new User();
+            user.email = email
+            user.password = await bcrypt.hash(pass, 10);
+            user.name = name
+            user.phone = phone
+            const newUser = await user.save();
+            req.session.user = newUser;
+            // console.log("new user:", newUser)
+            if (newUser) {
+                res.status(200).json({ message: 'signup succes!' })
+            }
         }
-    }
-    else {
-        console.log('flash triggered')
-        res.status(400).json({ error: 'Email already exist!' })
-        // req.flash('error', 'Email already exist!')
-
+        else {
+            console.log('flash triggered')
+            res.status(400).json({ error: 'Email already exist!' })
+            // req.flash('error', 'Email already exist!')
+    
+        }
+    } catch (error) {
+        console.log(error);
     }
 }
 
