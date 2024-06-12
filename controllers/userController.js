@@ -245,9 +245,13 @@ const verifyPassword = async (req, res) => {
   
 let viewProfile = async (req, res) => {
     // const { user } = req.session.user
-    const address = await Address.find({ customer_id: req.session.user.user._id })
-    const user = await User.findOne({ email: req.session.user.user.email })
-    res.render('user/profile', { user, address })
+    try {
+        const address = await Address.find({ customer_id: req.session.user.user._id })
+        const user = await User.findOne({ email: req.session.user.user.email })
+        res.render('user/profile', { user, address })
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 // let renderEditProfile = async (req, res) => {
