@@ -16,7 +16,7 @@ const authAdmin = (req, res, next) => {
         return res.status(401).send('Unauthorized');
     }
     next();
-}
+}   
 
 // const authUser = (req, res, next) => {
 //     if (req.session.user && req.session.user.isLoggedin) {

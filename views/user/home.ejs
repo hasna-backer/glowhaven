@@ -533,8 +533,9 @@
             const res = await axios.post('/add-to-wishlist', {
                 id
             })
-            added()
-            if (res.status === 200) {
+            console.log(res.data);
+            if (res.data.message === 'added to wishlist') {
+                added()
                 let timerInterval;
                 Swal.fire({
                     title: "Added to Wishlist",
@@ -548,6 +549,22 @@
                     }
                 });
 
+            } else if (res.data.message === 'already in the wishlist') {
+                added()
+                let timerInterval;
+                Swal.fire({
+                    title: "Already in the Wishlist",
+                    showConfirmButton: false,
+                    timer: 1000,
+
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        console.log("I was closed by the timer");
+                    }
+                });
+            } else {
+                window.redirect('/login')
             }
 
         } catch (error) {
@@ -563,9 +580,11 @@
                 id,
                 quantity: 1
             })
-            const max = res.data.message;
-            console.log("response", max);
+            const max = res.data;
+            console.log("response", res.request.responseURL);
+            console.log("response", res.data.message);
             if (res.data.message === "maximum product") {
+                console.log("max");
                 let timerInterval;
                 Swal.fire({
                     title: "The maximum quantity allowed for purchase is 5",
@@ -577,12 +596,13 @@
                         console.log("I was closed by the timer");
                     }
                 });
-            } else {
+            } else if (res.data.message === "product added") {
+                console.log("hiiii");
                 let timerInterval;
                 Swal.fire({
                     title: "Added to cart",
                     showConfirmButton: false,
-                    timer: 700,
+                    timer: 1000,
 
                 }).then((result) => {
                     /* Read more about handling dismissals below */
@@ -590,6 +610,8 @@
                         console.log("I was closed by the timer");
                     }
                 });
+            } else if (res.request.responseURL == 'http://localhost:4000/login') {
+                window.redirect('/login')
             }
         } catch (error) {
 

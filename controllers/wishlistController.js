@@ -17,10 +17,15 @@ let renderWishlilst = async (req, res) => {
 
 //user side
 let addToWishlilst = async (req, res) => {
-    const userId = req.session.user.user._id
+    if (!req.session.user) {
+        return res.status(200).json({ message: "user not available" })
+    }
+    console.log("helloooo");
+    const userId = req.session.user.user._id      
     const { id } = req.body
+    console.log(id);
     const product = await User.find({ 'wish_list.product_id': id })
-    if (product.length === 0) {
+    if (product.length === 0) {  
         const wishlist = await User.findOneAndUpdate({ _id: userId },
             {
                 $addToSet: {
@@ -29,7 +34,10 @@ let addToWishlilst = async (req, res) => {
                     }
                 }
             }, { new: true })
-        return res.status(200).json({ message: " added to wishlist" })
+        return res.status(200).json({ message: "added to wishlist" })
+    } else {
+     return res.status(200).json({ message: "already in the wishlist" })
+
     }
 
 }

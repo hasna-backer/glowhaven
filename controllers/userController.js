@@ -40,15 +40,19 @@ let homepage = async function (req, res, next) {
             const product = e.toObject()
             product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price))
             // console.log("b", product);
-            return product
+            return product  
         }
     }))
-    const userId = req.session.user.user._id;
-    // console.log("userId", userId)
+    if (req.session.user) {
+            const userId = req.session.user.user._id;
+// console.log("userId", userId)
     const user = await User.findOne({ _id: userId });
-    // console.log("user", user)
-    res.render('user/home', { title: 'Express', user, products: updatedProducts });
-    // console.log("user===", user)
+    console.log("user", user.name)
+    return res.render('user/home', { title: 'Express', user:user.name, products: updatedProducts });
+    }
+       return res.render('user/home', { title: 'Express',user:'', products: updatedProducts });
+
+    // console.log("user===", user)  
 
 }
 
@@ -330,10 +334,7 @@ let renderViewProducts = async (req, res) => {
         }
 
         // Add price range condition if 'price' is provided
-        if (price) {
-            const [minPrice, maxPrice] = price.split('-').map(Number);
-            query.selling_price = { $gte: minPrice, $lte: maxPrice };
-        }
+        
 
         // Fetch products based on the constructed query
         let products = await Product.find(query);
@@ -352,8 +353,22 @@ let renderViewProducts = async (req, res) => {
             } else {
                 product.selling_price = Math.round(product.actual_price - ((category.discount / 100) * product.actual_price));
             }
+            
             return product;
         }));
+
+console.log("updatedProducts",updatedProducts);
+
+        if (price) {
+            const [minPrice, maxPrice] = price.split('-').map(Number);
+            console.log(minPrice, maxPrice);
+            // query.selling_price = { $gte: minPrice, $lte: maxPrice };
+            // console.log(query);
+            updatedProducts = updatedProducts.filter( product => product.selling_price < maxPrice && product.selling_price > minPrice)
+        }
+
+        // console.log("updatedProducts",updatedProducts);
+
 
         // Sorting the products if 'sort' is provided
         if (sort === 'highToLow') {
@@ -362,7 +377,7 @@ let renderViewProducts = async (req, res) => {
             updatedProducts.sort((a, b) => a.selling_price - b.selling_price);
         }
 
-        console.log("updatedProducts", updatedProducts);
+        console.log("updatedProducts", updatedProducts.map(e => e.selling_price));
         const categories=await Category.find({delete:{$ne:true}})
         return res.render('user/product', { user: req.session.user, products: updatedProducts,categories });
 

@@ -351,14 +351,18 @@
         const id = document.getElementById('id').value;
         const id2 = document.getElementById('id')
         console.log(id2);
-        added()
+
         try {
             const res = await axios.post('/add-to-cart', {
                 id,
                 quantity: 1
             })
-            if (res.status === 200) {
+            console.log("res", res.request.responseURL);
+            if (res.request.responseURL == 'http://localhost:4000/login') {
+                window.redirect('/login')
 
+            } else if (res.status === 200) {
+                added()
             }
         } catch (error) {
 

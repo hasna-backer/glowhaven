@@ -73,7 +73,9 @@
                                                     <button type="button" class="btn btn-sm"
                                                         data-product-id="<%= product._id %>"
                                                         onclick="remove(this)">Remove</button>
-                                                    <button type="button" class="btn btn-sm  ">Move to
+                                                    <button type="button" class="btn btn-sm  "
+                                                        data-product-id="<%= product._id %>" id="addtocart"
+                                                        onclick="addToCart(this)">Move to
                                                         Cart</button>
                                                 </div>
                                         </div>
@@ -123,6 +125,15 @@
 
 
 <script>
+    const added = () => {
+        const button = document.getElementById('addtowishlist');
+        const icon = button.querySelector('i.fa.fa-heart');
+        icon.style.color = "red"; // Change the color of the icon
+        console.log("icon", icon);
+
+
+    }
+
     /**
      * @param {HTMLSelectElement} element
      */
@@ -191,6 +202,58 @@
 
 
 
+    const addToCart = async (element) => {
+        const id = element.getAttribute('data-product-id')
+        try {
+            const res = await axios.post('/add-to-cart', {
+                id,
+                quantity: 1
+            })
+            const max = res.data;
+            console.log("response", res.request.responseURL);
+            console.log("response", res.data.message);
+            if (res.data.message === "maximum product") {
+                console.log("max");
+                let timerInterval;
+                Swal.fire({
+                    title: "The maximum quantity allowed for purchase is 5",
+                    showConfirmButton: false,
+                    timer: 1000,
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        console.log("I was closed by the timer");
+                    }
+                });
+            } else if (res.data.message === "product added") {
+                console.log("hiiii");
+                let timerInterval;
+                Swal.fire({
+                    title: "Added to cart",
+                    showConfirmButton: false,
+                    timer: 1000,
+
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        console.log("I was closed by the timer");
+                    }
+                });
+            } else if (res.data.message === "no stock") {
+                let timerInterval;
+                Swal.fire({
+                    title: "out of stock",
+                    showConfirmButton: false,
+                    timer: 1000,
+
+                })
+            } else if (res.request.responseURL == 'http://localhost:4000/login') {
+                window.redirect('/login')
+            }
+        } catch (error) {
+
+        }
+    }
 
 
 

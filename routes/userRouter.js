@@ -10,7 +10,7 @@ const couponController = require('../controllers/couponController')
 const { authUser } = require('../middlewares/authMiddleware')
 
 // User actions  
-router.get('/', authUser , userController.homepage);
+router.get('/', userController.homepage);
 router.get('/test', userController.test);
 
 router.get('/signup', userController.renderSignup);
@@ -28,8 +28,8 @@ router.post('/reset-password', userController.verifyPassword);
 router.get('/logout', userController.logout);
 
 // Products based routes
-router.get('/product', authUser,userController.renderViewProducts);
-router.get('/product-details/:id',authUser, userController.renderSingleProducts);
+router.get('/product',userController.renderViewProducts);
+router.get('/product-details/:id', userController.renderSingleProducts);
 router.post('/search', userController.searchProducts);
 // router.post('/sort', userController.sortProducts);
 
@@ -41,34 +41,34 @@ router.post('/edit-profile', authUser, userController.editProfile);
 
 //cart    
 router.get('/view-cart',authUser, cartController.viewCart)
-router.post('/add-to-cart', cartController.addToCart)
-router.post('/update-quantity', cartController.updateQuantity)
-router.delete('/remove-item', cartController.removeItem)
+router.post('/add-to-cart', authUser,cartController.addToCart)
+router.post('/update-quantity',authUser, cartController.updateQuantity)
+router.delete('/remove-item',authUser, cartController.removeItem)
 
 // checkout
 router.get('/checkout',authUser, checkoutController.renderCheckout)
 router.get('/add-address',authUser, checkoutController.newAddress)
-router.post('/add-address', checkoutController.submitAddress)
-router.delete('/remove-address/:id', checkoutController.removeAddress)
-router.post('/choose-address', checkoutController.chooseAddress)
+router.post('/add-address',authUser, checkoutController.submitAddress)
+router.delete('/remove-address/:id', authUser,checkoutController.removeAddress)
+router.post('/choose-address',authUser, checkoutController.chooseAddress)
 router.get("/checkout/payment", authUser, checkoutController.renderPayment)
-router.get('/wallet', checkoutController.wallet)
+router.get('/wallet', authUser,checkoutController.wallet)
 
 
 // Orders
 router.get('/orders',authUser, orderController.renderOrder);
 router.get('/order-detail/:id', authUser,orderController.renderOrderDetails);
-router.post('/orders', orderController.createOrder);
-router.post('/retry-order', orderController.retryCreateOrder);
-router.post('/verify-payment', orderController.verify);
+router.post('/orders', authUser,orderController.createOrder);
+router.post('/retry-order', authUser,orderController.retryCreateOrder);
+router.post('/verify-payment', authUser,orderController.verify);
 router.get('/retry-payment/:id',authUser, orderController.retryPayment);
 router.get('/invoice-download/:id',authUser, orderController.invoiceDownload);
 
-router.post('/cancel-order', orderController.cancelOrder);
-router.post('/return-order', orderController.returnOrder);
+router.post('/cancel-order', authUser,orderController.cancelOrder);
+router.post('/return-order', authUser,orderController.returnOrder);
 
 
-//wishlist 
+//wishlist   
 router.get('/wishlist',authUser,wishlistController.renderWishlilst);
 router.post('/add-to-wishlist', wishlistController.addToWishlilst);
 router.delete('/delete-wishlist', wishlistController.deleteWishlilst);

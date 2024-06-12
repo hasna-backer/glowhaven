@@ -215,6 +215,12 @@ const addToCart = async (req, res) => {
   } = await User.findOne({
     _id: userId
   });
+  const product_stock = await Products.findOne({ _id: id })
+  console.log("stock", product_stock);
+  if (product_stock.stock <= 0) {
+        return res.status(200).json({message: 'no stock'});
+  }
+  
   console.log('cart', cart);
   const existingProduct = cart.find((el) => el.product_id.toString() === id);
   console.log('existing prod', existingProduct);
@@ -239,9 +245,7 @@ const addToCart = async (req, res) => {
     console.log('this product exists, quantity updated');
     console.log(cart);
 
-    return res.status(200).json({
-      message: 'product added  succesful'
-    });
+    return res.status(200).json({message: 'product added'});
 
   }
   const updatedCart = await User.findOneAndUpdate({
